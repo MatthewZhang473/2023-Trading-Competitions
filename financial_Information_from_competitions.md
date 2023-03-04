@@ -86,3 +86,11 @@ By: write an autotrader to price the ETF, execute trades, and manage risk.
 ## Some confusing rules:
 
 1. **Positions** will be limited to 100 lots: traders are allowed to hold a maximum of 100 lots of a particular asset at any given time during the trading round.
+
+    Here the position means the number of assets you own.
+
+## Side notes:
+
+- What is an example of a short position?
+
+    For example, you enter a short position on 100 shares of stock XYZ at $80, but instead of falling, the stock rises to $100. You'll have to spend $10,000 to pay back your borrowed shares—at a loss of $2,000.
