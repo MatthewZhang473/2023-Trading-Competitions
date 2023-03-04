@@ -94,3 +94,6 @@ By: write an autotrader to price the ETF, execute trades, and manage risk.
 - What is an example of a short position?
 
     For example, you enter a short position on 100 shares of stock XYZ at $80, but instead of falling, the stock rises to $100. You'll have to spend $10,000 to pay back your borrowed shares—at a loss of $2,000.
+
+- Profit and Loss Calculation in IMC:
+    Profit calculations have been verified by the team based on your doubts. Confirmation is there - they are correct. When position is taken by Trader you spend some SEASHELLS on it and receive certain volume of product (BANANAS or PEARLS in tutorial round). PnL calculation is done based on hidden price visible to trading components only (bots) which varies over time. Bots put orders on market depending on configuration which is also hidden. We hope this explains situation
