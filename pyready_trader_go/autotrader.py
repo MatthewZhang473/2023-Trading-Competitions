@@ -25,7 +25,11 @@ from ready_trader_go import BaseAutoTrader, Instrument, Lifespan, MAXIMUM_ASK, M
 
 LOT_SIZE = 10
 POSITION_LIMIT = 100
-TICK_SIZE_IN_CENTS = 100
+TICK_SIZE_IN_CENTS = 100 # MAtt: Tick size is the minimum change in price allowed
+
+# Matthew: ensures bid / ask are at least 1 tick away from the minimum / maximum,
+# // is integer division (4 //3 = 1)
+# MINIMUM_BID = 1, MAXIMUM_ASK = 2**31 -1
 MIN_BID_NEAREST_TICK = (MINIMUM_BID + TICK_SIZE_IN_CENTS) // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 MAX_ASK_NEAREST_TICK = MAXIMUM_ASK // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 
@@ -43,9 +47,14 @@ class AutoTrader(BaseAutoTrader):
     def __init__(self, loop: asyncio.AbstractEventLoop, team_name: str, secret: str):
         """Initialise a new instance of the AutoTrader class."""
         super().__init__(loop, team_name, secret)
+        #Matthew: this order_ids is an iterator, we uses it to generate new (unique) order ids.
         self.order_ids = itertools.count(1)
+        # Matthew: The seld.bids are the bid orders you currently have on the market,
+        # it is a set, so you cannot change the element inside, but you can remove and put in new elements
         self.bids = set()
         self.asks = set()
+        # Matt: self.ask_id is used to give an id to all the orders you send later,
+        # once sent, the id will be stored in self.asks
         self.ask_id = self.ask_price = self.bid_id = self.bid_price = self.position = 0
 
     def on_error_message(self, client_order_id: int, error_message: bytes) -> None:
@@ -81,12 +90,16 @@ class AutoTrader(BaseAutoTrader):
                          sequence_number)
         if instrument == Instrument.FUTURE:
             price_adjustment = - (self.position // LOT_SIZE) * TICK_SIZE_IN_CENTS
+
+            # Matthew: Watch here, new_bid_price = 0 (no new bid) if bid_prices[0] == 0 (no bid price in the market).
             new_bid_price = bid_prices[0] + price_adjustment if bid_prices[0] != 0 else 0
             new_ask_price = ask_prices[0] + price_adjustment if ask_prices[0] != 0 else 0
 
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
                 self.bid_id = 0
+            # Matthew: I think what is does is: if you have a new_ask_price and you have a previous ask order,
+            # you then need to cancel the previous order and insert a new order (using the code below)
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0
@@ -96,10 +109,15 @@ class AutoTrader(BaseAutoTrader):
                 self.bid_price = new_bid_price
                 self.send_insert_order(self.bid_id, Side.BUY, new_bid_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
                 self.bids.add(self.bid_id)
-
+            # Matthew: asd_id == 0 means you don't have ask order for the moment,
+            # new_ask_price != 0 means you have a new ask price that you want to update,
+            # self.position > -POSITION_LIMIT you can still buy more, this is very important!!!
             if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT:
+                #Matthew: generate an unique id for this new ask order
                 self.ask_id = next(self.order_ids)
                 self.ask_price = new_ask_price
+                # Side.SELL means it is a sell order
+                # GOOD_FOR_DAY is same as limited order
                 self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
                 self.asks.add(self.ask_id)
 
