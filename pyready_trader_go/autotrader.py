@@ -15,6 +15,12 @@
 #     You should have received a copy of the GNU Affero General Public
 #     License along with Ready Trader Go.  If not, see
 #     <https://www.gnu.org/licenses/>.
+
+
+#########Customized import for local use, MUST remove for submission #########
+# import csv
+##############################################################################
+
 import asyncio
 import itertools
 
@@ -33,6 +39,8 @@ TICK_SIZE_IN_CENTS = 100 # MAtt: Tick size is the minimum change in price allowe
 MIN_BID_NEAREST_TICK = (MINIMUM_BID + TICK_SIZE_IN_CENTS) // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 MAX_ASK_NEAREST_TICK = MAXIMUM_ASK // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 
+ETF_HISTORIES = []
+FUTURE_HISTORIES = []
 
 class AutoTrader(BaseAutoTrader):
     """Example Auto-trader.
@@ -89,6 +97,20 @@ class AutoTrader(BaseAutoTrader):
         self.logger.info("received order book for instrument %d with sequence number %d", instrument,
                          sequence_number)
         if instrument == Instrument.FUTURE:
+
+            ################ Matthew's code for storing the price changes ################
+            curr_time = self.event_loop.time()
+            price_log = HistoryLog(instrument=instrument, time=curr_time,
+                                   ask_prices=ask_prices, ask_volumes=ask_volumes,
+                                   bid_prices=bid_prices, bid_volumes=bid_volumes)
+            FUTURE_HISTORIES.append(price_log)
+            self.logger.info("(FUTURE) Added price info to log. Time = %.1f, WAP = %.2f", price_log.time, price_log.WAP)
+
+            # write the time, best_ask, best_bid, WAP into the csv file
+            #write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
+
+            ##############################################################################
+
             price_adjustment = - (self.position // LOT_SIZE) * TICK_SIZE_IN_CENTS
 
             # Matthew: Watch here, new_bid_price = 0 (no new bid) if bid_prices[0] == 0 (no bid price in the market).
@@ -120,6 +142,21 @@ class AutoTrader(BaseAutoTrader):
                 # GOOD_FOR_DAY is same as limited order
                 self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
                 self.asks.add(self.ask_id)
+
+        elif instrument == Instrument.ETF:
+
+            ################ Matthew's code for storing the price changes ################
+            curr_time = self.event_loop.time()
+            price_log = HistoryLog(instrument=instrument, time=curr_time,
+                                   ask_prices=ask_prices, ask_volumes=ask_volumes,
+                                   bid_prices=bid_prices, bid_volumes=bid_volumes)
+            ETF_HISTORIES.append(price_log)
+            self.logger.info("(ETF) Added price info to log. Time = %.1f, WAP = %.2f",price_log.time, price_log.WAP)
+
+            # write the time, best_ask, best_bid, WAP into the csv file
+            # write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
+
+            ##############################################################################
 
     def on_order_filled_message(self, client_order_id: int, price: int, volume: int) -> None:
         """Called when one of your orders is filled, partially or fully.
@@ -173,3 +210,70 @@ class AutoTrader(BaseAutoTrader):
         """
         self.logger.info("received trade ticks for instrument %d with sequence number %d", instrument,
                          sequence_number)
+
+    def OrderCalc(pos: int, pos_lim: int, WAP: float, 
+                  volatility: float, total_volatility: float,
+                  tick_size_in_cents: int,best_ask:float, best_bid:float):
+        """
+        Given the current position and market parameters, amend the current orders.
+        """
+        
+        
+        return
+
+############# Matthew's Class for storing prices #######################
+
+class HistoryLog:
+    """
+    A class used to store the Weigted-average price at a given time.
+    """
+    def __init__(self, instrument: int, time,
+                 ask_prices: List[int], ask_volumes: List[int],
+                 bid_prices: List[int], bid_volumes: List[int]):
+        self.instrument = instrument
+        self.time = time
+        self.ask_prices = ask_prices
+        self.ask_volumes = ask_volumes
+        self.bid_prices = bid_prices
+        self.bid_volumes = bid_volumes
+        self.WAP =  self.find_WAP()# The WAP is the volume weigted average price, it is an index to show the market price
+
+    def find_WAP(self):
+        best_ask_price = self.ask_prices[0]
+        best_ask_vol = self.ask_volumes[0]
+        best_bid_price = self.bid_prices[0]
+        best_bid_vol = self.bid_volumes[0]
+
+        # if there is no order in the market
+        if best_ask_price == 0 and best_bid_price == 0:
+            self.WAP = 0
+        # if there is no ask in the market, we use the best bid as the WAP
+        elif best_ask_price == 0:
+            self.WAP = best_bid_price
+        # if there is no ask in the market, we use the best ask as the WAP
+        elif best_bid_price == 0:
+            self.WAP = best_ask_price
+        else:
+            self.WAP = (best_ask_price * best_bid_vol + best_bid_price * best_ask_vol) / (best_ask_vol + best_bid_vol)
+        return self.WAP
+##############################################################################
+
+
+
+
+################Matthew's code for write to csv##################
+
+# def write2file(instrument: int, row_list):
+#     if instrument == 0:
+#         csv_name = 'Future.csv'
+#     elif instrument == 1:
+#         csv_name = 'ETF.csv'
+#     else:
+#         raise ValueError("Wrong instrument number = %d", instrument)
+
+#     with open(csv_name, 'a', newline='') as file:
+#         writer = csv.writer(file)
+#         writer.writerow(row_list)
+
+##################################################################
+
