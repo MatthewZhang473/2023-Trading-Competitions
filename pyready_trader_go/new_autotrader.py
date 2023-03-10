@@ -18,11 +18,13 @@
 
 
 #########Customized import for local use, MUST remove for submission #########
-# import csv
+import csv
 ##############################################################################
 
 import asyncio
 import itertools
+import numpy as np
+
 
 from typing import List
 
@@ -98,6 +100,8 @@ class AutoTrader(BaseAutoTrader):
                          sequence_number)
         if instrument == Instrument.FUTURE:
 
+            # We don't operate for future orderbook
+
             ################ Matthew's code for storing the price changes ################
             curr_time = self.event_loop.time()
             price_log = HistoryLog(instrument=instrument, time=curr_time,
@@ -111,39 +115,9 @@ class AutoTrader(BaseAutoTrader):
 
             ##############################################################################
 
-            price_adjustment = - (self.position // LOT_SIZE) * TICK_SIZE_IN_CENTS
-
-            # Matthew: Watch here, new_bid_price = 0 (no new bid) if bid_prices[0] == 0 (no bid price in the market).
-            new_bid_price = bid_prices[0] + price_adjustment if bid_prices[0] != 0 else 0
-            new_ask_price = ask_prices[0] + price_adjustment if ask_prices[0] != 0 else 0
-
-            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
-                self.send_cancel_order(self.bid_id)
-                self.bid_id = 0
-            # Matthew: I think what is does is: if you have a new_ask_price and you have a previous ask order,
-            # you then need to cancel the previous order and insert a new order (using the code below)
-            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
-                self.send_cancel_order(self.ask_id)
-                self.ask_id = 0
-
-            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT:
-                self.bid_id = next(self.order_ids)
-                self.bid_price = new_bid_price
-                self.send_insert_order(self.bid_id, Side.BUY, new_bid_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
-                self.bids.add(self.bid_id)
-            # Matthew: asd_id == 0 means you don't have ask order for the moment,
-            # new_ask_price != 0 means you have a new ask price that you want to update,
-            # self.position > -POSITION_LIMIT you can still buy more, this is very important!!!
-            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT:
-                #Matthew: generate an unique id for this new ask order
-                self.ask_id = next(self.order_ids)
-                self.ask_price = new_ask_price
-                # Side.SELL means it is a sell order
-                # GOOD_FOR_DAY is same as limited order
-                self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
-                self.asks.add(self.ask_id)
-
         elif instrument == Instrument.ETF:
+
+            # We recalculate the order when receiving the ETF orderbook
 
             ################ Matthew's code for storing the price changes ################
             curr_time = self.event_loop.time()
@@ -157,6 +131,24 @@ class AutoTrader(BaseAutoTrader):
             # write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
 
             ##############################################################################
+            
+            ############# Operate when orderbook of ETF updates ############
+
+            if len(ETF_HISTORIES) >= 50:
+                partial_sigma = FindVolatility(ETF_HISTORIES[-5:])
+                total_sigma = FindVolatility(ETF_HISTORIES[-50:])
+            else:
+                partial_sigma = 1
+                total_sigma = 1
+            sigma_ratio = partial_sigma / total_sigma if total_sigma != 0 else 3
+            write2file(instrument=instrument, row_list=[sigma_ratio,partial_sigma,total_sigma])
+
+            self.OrderCalc(pos=self.position, pos_lim=POSITION_LIMIT, WAP=price_log.WAP,
+                           volatility=partial_sigma, total_volatility=total_sigma, volatility_ratio=sigma_ratio,
+                           tick_size_in_cents=TICK_SIZE_IN_CENTS,
+                           best_ask=ask_prices[0], best_bid=bid_prices[0])
+
+            ################################################################
 
     def on_order_filled_message(self, client_order_id: int, price: int, volume: int) -> None:
         """Called when one of your orders is filled, partially or fully.
@@ -301,17 +293,32 @@ class HistoryLog:
 
 ################Matthew's code for write to csv##################
 
-# def write2file(instrument: int, row_list):
-#     if instrument == 0:
-#         csv_name = 'Future.csv'
-#     elif instrument == 1:
-#         csv_name = 'ETF.csv'
-#     else:
-#         raise ValueError("Wrong instrument number = %d", instrument)
+def write2file(instrument: int, row_list):
+    if instrument == 0:
+        csv_name = 'Future.csv'
+    elif instrument == 1:
+        csv_name = 'ETF.csv'
+    else:
+        raise ValueError("Wrong instrument number = %d", instrument)
 
-#     with open(csv_name, 'a', newline='') as file:
-#         writer = csv.writer(file)
-#         writer.writerow(row_list)
+    with open(csv_name, 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(row_list)
 
 ##################################################################
 
+###########Volatility Calculator############
+def FindVolatility(history: List[HistoryLog]):
+    """
+    Calculate the volatility of a section of history prices.
+    """
+    n = len(history)
+    sum_log_returns = 0
+    for i in range(1,n):
+        # avoid division by zero that might occur at the beginning.
+        log_return = np.log(history[i].WAP/history[i-1].WAP) if history[i-1].WAP != 0 else 0
+        sum_log_returns += log_return ** 2
+    sigma = np.sqrt(sum_log_returns / n)
+    return sigma
+
+###########################################
