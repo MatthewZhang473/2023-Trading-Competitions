@@ -66,6 +66,7 @@ class AutoTrader(BaseAutoTrader):
         # Matt: self.ask_id is used to give an id to all the orders you send later,
         # once sent, the id will be stored in self.asks
         self.ask_id = self.ask_price = self.bid_id = self.bid_price = self.position = 0
+        self.first_it = True
 
     def on_error_message(self, client_order_id: int, error_message: bytes) -> None:
         """Called when the exchange detects an error.
@@ -133,6 +134,9 @@ class AutoTrader(BaseAutoTrader):
             ##############################################################################
             
             ############# Operate when orderbook of ETF updates ############
+            if self.first_it:
+                self.first_it = False
+                return
 
             if len(ETF_HISTORIES) >= 50:
                 partial_sigma = FindVolatility(ETF_HISTORIES[-5:])
@@ -209,47 +213,72 @@ class AutoTrader(BaseAutoTrader):
         """
         Given the current position and market parameters, amend the current orders.
         """
+        market_spread = (best_ask - best_bid)/2
 
+        ##### Cancel ordered when the spread is too small #####
+        if market_spread < 2*tick_size_in_cents:
+            if self.bid_id != 0:
+                self.send_cancel_order(self.bid_id)
+                self.bid_id = 0
+            if self.ask_id != 0:
+                self.send_cancel_order(self.ask_id)
+                self.ask_id = 0
+            return
+        #######################################################
+
+        ######### Use WAP +- delta * spread  to determine the price change ###########
+        delta = 1.2 # manually specify this parameter delta
         WAP_tick = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
+        # self.logger.info("(Price Calc) WAP_tick = %f, best_bid = %f, best_ask = %f", WAP_tick, best_bid, best_ask)
+        price_change = (delta * market_spread// tick_size_in_cents) * tick_size_in_cents
+        price_change = max(2*tick_size_in_cents, price_change) # ensure the price change is not too small
 
-        if volatility >= total_volatility:
-            price_change = (3 * volatility * WAP// tick_size_in_cents) * tick_size_in_cents
-        elif volatility < total_volatility:
-            price_change = (3 * total_volatility*WAP// tick_size_in_cents) * tick_size_in_cents
-        
-        new_bid_price = WAP_tick - price_change -tick_size_in_cents
-        new_ask_price = WAP_tick + price_change +tick_size_in_cents
+        ##############################################################################
 
-        if new_bid_price <= best_bid:
-            new_bid_price = best_bid
-        else:
-            new_bid_price *=1
-        
-        if new_ask_price >= best_ask:
-            new_ask_price = best_ask
-        else:
-            new_ask_price *=1
-       
-        # if pos >= pos_lim and self.bid_id != 0 and self.ask_id != 0:
-        #     self.send_cancel_order(self.bid_id)
-        #     self.send_cancel_order(self.ask_id)
-        
+
+        ##### Inventory control######
+        alpha = 1 * market_spread
+        offset = 30
+        scale = 5
+        if self.position > 0:
+            normalized_pos = (self.position - offset)/scale
+            WAP_tick -= (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+            self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+                        -(alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+        if self.position < 0:
+            normalized_pos = -(self.position + offset)/scale
+            WAP_tick += (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+            self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+                        (alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+        #############################
+
+
+        ##### calculate total price######
+        new_bid_price = WAP_tick - price_change
+        new_ask_price = WAP_tick + price_change
+        #################################
+
+        ########### Send the order while maintaining position limit #########
         if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
             self.send_cancel_order(self.bid_id)
             self.bid_id = 0
         if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
             self.send_cancel_order(self.ask_id)
             self.ask_id = 0
-        if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT:
+        if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - 10:
             self.bid_id = next(self.order_ids)
             self.bid_price = new_bid_price
-            self.send_insert_order(self.bid_id, Side.BUY, new_bid_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+            self.logger.info("(Bid) order inserted, price = %f (%s)", new_bid_price, type(new_bid_price))
+            self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
             self.bids.add(self.bid_id)
-        if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT:
+        if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + 10:
             self.ask_id = next(self.order_ids)
             self.ask_price = new_ask_price
-            self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+            self.logger.info("(Ask) order inserted, price = %f (%s)", new_ask_price, type(new_ask_price))
+            self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
             self.asks.add(self.ask_id)
+
+        #####################################################################
 
 ############# Matthew's Class for storing prices #######################
 
@@ -322,3 +351,13 @@ def FindVolatility(history: List[HistoryLog]):
     return sigma
 
 ###########################################
+
+#######sigmoid#########
+
+def sigmoid(x:float):
+    """
+    Sigmoid function
+    """
+    y = 1 / (1+np.exp(-x))
+    return y
+######################
