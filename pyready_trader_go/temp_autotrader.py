@@ -143,21 +143,24 @@ class AutoTrader(BaseAutoTrader):
             ##############################################################################
             
             ############# Operate when orderbook of ETF updates ############
-            if self.first_it:
-                self.first_it = False
-                return
 
-            if len(ETF_HISTORIES) >= 50:
-                partial_sigma = FindVolatility(ETF_HISTORIES[-5:])
-                total_sigma = FindVolatility(ETF_HISTORIES[-50:])
-            else:
-                partial_sigma = 1
-                total_sigma = 1
-            sigma_ratio = partial_sigma / total_sigma if total_sigma != 0 else 3
-            #write2file(instrument=instrument, row_list=[sigma_ratio,partial_sigma,total_sigma])
+            # Matthew: I forgot why I try to skip the first iteration... seems fine now
+            # if self.first_it:
+            #     self.first_it = False
+            #     return
 
-            self.OrderCalc(pos=self.position, pos_lim=POSITION_LIMIT, WAP=price_log.WAP,
-                           volatility=partial_sigma, total_volatility=total_sigma, volatility_ratio=sigma_ratio,
+            # Previous calculation for volatlity
+            # if len(ETF_HISTORIES) >= 50:
+            #     partial_sigma = FindVolatility(ETF_HISTORIES[-5:])
+            #     total_sigma = FindVolatility(ETF_HISTORIES[-50:])
+            # else:
+            #     partial_sigma = 1
+            #     total_sigma = 1
+            # sigma_ratio = partial_sigma / total_sigma if total_sigma != 0 else 3
+            # #write2file(instrument=instrument, row_list=[sigma_ratio,partial_sigma,total_sigma])
+
+            self.OrderCalc(WAP=price_log.WAP,
+                           volatility=1, total_volatility=1, volatility_ratio=1, # Matt:we are not using volatility at the moment.
                            tick_size_in_cents=TICK_SIZE_IN_CENTS,
                            best_ask=ask_prices[0], best_bid=bid_prices[0])
 
@@ -225,16 +228,17 @@ class AutoTrader(BaseAutoTrader):
                 self.TRADING_HISTORIES.append(trade_price_log)
         ########################################################################################################
 
-    def OrderCalc(self, pos: int, pos_lim: int, WAP: float, 
-                    volatility: float, total_volatility: float,volatility_ratio: float,
-                    tick_size_in_cents: int,best_ask:float, best_bid:float):
+    def OrderCalc(self, WAP: float, 
+                  volatility: float, total_volatility: float,volatility_ratio: float,
+                  tick_size_in_cents: int,best_ask:float, best_bid:float):
             """
             Given the current position and market parameters, amend the current orders.
             """
             market_spread = (best_ask - best_bid)/2
 
             ##### Cancel ordered when the spread is too small #####
-            if market_spread < 2*tick_size_in_cents:
+            beta = 2
+            if market_spread < beta*tick_size_in_cents:
                 if self.bid_id != 0:
                     self.send_cancel_order(self.bid_id)
                     self.bid_id = 0
@@ -245,7 +249,7 @@ class AutoTrader(BaseAutoTrader):
             #######################################################
 
             ######### Use WAP +- delta * spread  to determine the price change ###########
-            delta = 1.2 # manually specify this parameter delta
+            delta = 1.5# manually specify this parameter delta
             WAP_tick = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
             # self.logger.info("(Price Calc) WAP_tick = %f, best_bid = %f, best_ask = %f", WAP_tick, best_bid, best_ask)
             price_change = (delta * market_spread// tick_size_in_cents) * tick_size_in_cents
@@ -254,7 +258,7 @@ class AutoTrader(BaseAutoTrader):
             ##############################################################################
 
 
-            ##### Inventory control######
+            ##### Sigmoid Inventory Control######
             alpha = 1 * market_spread
             offset = 30
             scale = 5
@@ -283,13 +287,13 @@ class AutoTrader(BaseAutoTrader):
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0
-            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - 10:
+            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - LOT_SIZE:
                 self.bid_id = next(self.order_ids)
                 self.bid_price = new_bid_price
                 self.logger.info("(Bid) order inserted, price = %f (%s)", new_bid_price, type(new_bid_price))
                 self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
                 self.bids.add(self.bid_id)
-            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + 10:
+            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + LOT_SIZE:
                 self.ask_id = next(self.order_ids)
                 self.ask_price = new_ask_price
                 self.logger.info("(Ask) order inserted, price = %f (%s)", new_ask_price, type(new_ask_price))
