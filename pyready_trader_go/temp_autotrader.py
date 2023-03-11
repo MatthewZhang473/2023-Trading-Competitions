@@ -96,6 +96,8 @@ class AutoTrader(BaseAutoTrader):
         prices are reported along with the volume available at each of those
         price levels.
         """
+        self.WAP_TIME_HISTORIES = WAP_TIME_HISTORIES 
+        self.TRADING_HISTORIES = TRADING_HISTORIES
         self.logger.info("received order book for instrument %d with sequence number %d", instrument,
                          sequence_number)
         if instrument == Instrument.FUTURE:
@@ -130,6 +132,12 @@ class AutoTrader(BaseAutoTrader):
             # write the time, best_ask, best_bid, WAP into the csv file
             # write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
 
+            ##############################################################################
+            self.WAP_TIME_HISTORIES = []
+            for trade in self.TRADING_HISTORIES:
+                self.WAP_TIME_HISTORIES.append(trade.WAP_time)
+            self.TRADING_HISTORIES = []
+            self.logger.info("(Trade log) A sample trade WAP is %f", self.WAP_TIME_HISTORIES[-1])
             ##############################################################################
             
             ############# Operate when orderbook of ETF updates ############
@@ -200,8 +208,18 @@ class AutoTrader(BaseAutoTrader):
         If there are less than five prices on a side, then zeros will appear at
         the end of both the prices and volumes arrays.
         """
+        self.TRADING_HISTORIES = TRADING_HISTORIES
         self.logger.info("received trade ticks for instrument %d with sequence number %d", instrument,
                          sequence_number)
+
+        #################### -- Payton's code to record trading info during the time interval between order book updated --#####################       
+        if instrument == Instrument.ETF:
+                curr_time = self.event_loop.time()
+                trade_price_log = TradingLog(instrument=instrument, time=curr_time,
+                                    ask_prices=ask_prices, ask_volumes=ask_volumes,
+                                    bid_prices=bid_prices, bid_volumes=bid_volumes)
+                self.TRADING_HISTORIES.append(trade_price_log)
+        ##############################################
 
     def OrderCalc(self, pos: int, pos_lim: int, WAP: float, 
                   volatility: float, total_volatility: float,volatility_ratio: float,
@@ -251,6 +269,31 @@ class AutoTrader(BaseAutoTrader):
             self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
             self.asks.add(self.ask_id)
 
+############# Payton's Class for storing trading during time interval #######################
+
+class TradingLog:
+    '''A class records the trading on market between one time interval as well as 0.25 seconds.'''
+    def __init__(self, instrument: int, time, calc: List[int],
+                 ask_prices: List[int],ask_volumes: List[int], 
+                 bid_prices: List[int], bid_volumes: List[int]):
+        self.instrument = instrument
+        self.ask_prices = ask_prices
+        self.ask_volumes = ask_volumes
+        self.bid_prices = bid_prices
+        self.bid_volumes = bid_volumes
+        self.calc = calc
+        self.WAP_time = self.find_WAP_time() # try to calculate the weighted average market price every 0.25 second
+    
+    def find_WAP_time(self):
+        for bid_p, ask_p, bid_v, ask_v in zip(self.bid_prices,self.ask_prices,self.bid_volumes,self.ask_volumes):
+            result = bid_p * ask_v + ask_p * bid_v
+            self.calc.append(result)
+        result_time = sum(self.calc)
+        bid_volumes_time = sum(self.bid_volumes) 
+        ask_volumes_time = sum(self.ask_volumes)
+        self.WAP_time = result_time / (bid_volumes_time + ask_volumes_time)    
+        return self.WAP_time
+    
 ############# Matthew's Class for storing prices #######################
 
 class HistoryLog:
