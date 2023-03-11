@@ -203,15 +203,53 @@ class AutoTrader(BaseAutoTrader):
         self.logger.info("received trade ticks for instrument %d with sequence number %d", instrument,
                          sequence_number)
 
-    def OrderCalc(pos: int, pos_lim: int, WAP: float, 
-                  volatility: float, total_volatility: float,
+    def OrderCalc(self, pos: int, pos_lim: int, WAP: float, 
+                  volatility: float, total_volatility: float,volatility_ratio: float,
                   tick_size_in_cents: int,best_ask:float, best_bid:float):
         """
         Given the current position and market parameters, amend the current orders.
         """
+
+        WAP_tick = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
+
+        if volatility >= total_volatility:
+            price_change = (3 * volatility * WAP// tick_size_in_cents) * tick_size_in_cents
+        elif volatility < total_volatility:
+            price_change = (3 * total_volatility*WAP// tick_size_in_cents) * tick_size_in_cents
         
+        new_bid_price = WAP_tick - price_change -tick_size_in_cents
+        new_ask_price = WAP_tick + price_change +tick_size_in_cents
+
+        if new_bid_price <= best_bid:
+            new_bid_price = best_bid
+        else:
+            new_bid_price *=1
         
-        return
+        if new_ask_price >= best_ask:
+            new_ask_price = best_ask
+        else:
+            new_ask_price *=1
+       
+        # if pos >= pos_lim and self.bid_id != 0 and self.ask_id != 0:
+        #     self.send_cancel_order(self.bid_id)
+        #     self.send_cancel_order(self.ask_id)
+        
+        if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
+            self.send_cancel_order(self.bid_id)
+            self.bid_id = 0
+        if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
+            self.send_cancel_order(self.ask_id)
+            self.ask_id = 0
+        if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT:
+            self.bid_id = next(self.order_ids)
+            self.bid_price = new_bid_price
+            self.send_insert_order(self.bid_id, Side.BUY, new_bid_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+            self.bids.add(self.bid_id)
+        if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT:
+            self.ask_id = next(self.order_ids)
+            self.ask_price = new_ask_price
+            self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+            self.asks.add(self.ask_id)
 
 ############# Matthew's Class for storing prices #######################
 
