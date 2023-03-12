@@ -18,24 +18,25 @@
 
 
 #########Customized import for local use, MUST remove for submission #########
-# import csv
+#import csv
 ##############################################################################
 
 import asyncio
 import itertools
+import numpy as np
+
 
 from typing import List
 
 from ready_trader_go import BaseAutoTrader, Instrument, Lifespan, MAXIMUM_ASK, MINIMUM_BID, Side
 
 
-LOT_SIZE = 10
+LOT_SIZE = 33
 POSITION_LIMIT = 100
 TICK_SIZE_IN_CENTS = 100 # MAtt: Tick size is the minimum change in price allowed
 
 # Matthew: ensures bid / ask are at least 1 tick away from the minimum / maximum,
 # // is integer division (4 //3 = 1)
-# MINIMUM_BID = 1, MAXIMUM_ASK = 2**31 -1
 MIN_BID_NEAREST_TICK = (MINIMUM_BID + TICK_SIZE_IN_CENTS) // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 MAX_ASK_NEAREST_TICK = MAXIMUM_ASK // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 
@@ -64,6 +65,8 @@ class AutoTrader(BaseAutoTrader):
         # Matt: self.ask_id is used to give an id to all the orders you send later,
         # once sent, the id will be stored in self.asks
         self.ask_id = self.ask_price = self.bid_id = self.bid_price = self.position = 0
+        self.TRADING_HISTORIES = []
+        self.first_it = True
 
     def on_error_message(self, client_order_id: int, error_message: bytes) -> None:
         """Called when the exchange detects an error.
@@ -98,6 +101,8 @@ class AutoTrader(BaseAutoTrader):
                          sequence_number)
         if instrument == Instrument.FUTURE:
 
+            # We don't operate for future orderbook
+
             ################ Matthew's code for storing the price changes ################
             curr_time = self.event_loop.time()
             price_log = HistoryLog(instrument=instrument, time=curr_time,
@@ -111,39 +116,9 @@ class AutoTrader(BaseAutoTrader):
 
             ##############################################################################
 
-            price_adjustment = - (self.position // LOT_SIZE) * TICK_SIZE_IN_CENTS
-
-            # Matthew: Watch here, new_bid_price = 0 (no new bid) if bid_prices[0] == 0 (no bid price in the market).
-            new_bid_price = bid_prices[0] + price_adjustment if bid_prices[0] != 0 else 0
-            new_ask_price = ask_prices[0] + price_adjustment if ask_prices[0] != 0 else 0
-
-            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
-                self.send_cancel_order(self.bid_id)
-                self.bid_id = 0
-            # Matthew: I think what is does is: if you have a new_ask_price and you have a previous ask order,
-            # you then need to cancel the previous order and insert a new order (using the code below)
-            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
-                self.send_cancel_order(self.ask_id)
-                self.ask_id = 0
-
-            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT:
-                self.bid_id = next(self.order_ids)
-                self.bid_price = new_bid_price
-                self.send_insert_order(self.bid_id, Side.BUY, new_bid_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
-                self.bids.add(self.bid_id)
-            # Matthew: asd_id == 0 means you don't have ask order for the moment,
-            # new_ask_price != 0 means you have a new ask price that you want to update,
-            # self.position > -POSITION_LIMIT you can still buy more, this is very important!!!
-            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT:
-                #Matthew: generate an unique id for this new ask order
-                self.ask_id = next(self.order_ids)
-                self.ask_price = new_ask_price
-                # Side.SELL means it is a sell order
-                # GOOD_FOR_DAY is same as limited order
-                self.send_insert_order(self.ask_id, Side.SELL, new_ask_price, LOT_SIZE, Lifespan.GOOD_FOR_DAY)
-                self.asks.add(self.ask_id)
-
         elif instrument == Instrument.ETF:
+
+            # We recalculate the order when receiving the ETF orderbook
 
             ################ Matthew's code for storing the price changes ################
             curr_time = self.event_loop.time()
@@ -157,6 +132,39 @@ class AutoTrader(BaseAutoTrader):
             # write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
 
             ##############################################################################
+
+            ################ Payton's code for recording the WAP_time ##################
+            WAP_TIME_HISTORIES = []
+            for trade in self.TRADING_HISTORIES:
+                WAP_TIME_HISTORIES.append(trade.WAP_time)
+            self.TRADING_HISTORIES = []
+            self.logger.info("(TRADE LOG) %d trade ticks occuered between orderbook updates and is recorded.", len(WAP_TIME_HISTORIES))
+            #write2file(instrument=instrument, row_list=[price_log.time, ask_prices[0], bid_prices[0], price_log.WAP] + WAP_TIME_HISTORIES)
+            ##############################################################################
+            
+            ############# Operate when orderbook of ETF updates ############
+
+            # Matthew: I forgot why I try to skip the first iteration... seems fine now
+            # if self.first_it:
+            #     self.first_it = False
+            #     return
+
+            # Previous calculation for volatlity
+            # if len(ETF_HISTORIES) >= 50:
+            #     partial_sigma = FindVolatility(ETF_HISTORIES[-5:])
+            #     total_sigma = FindVolatility(ETF_HISTORIES[-50:])
+            # else:
+            #     partial_sigma = 1
+            #     total_sigma = 1
+            # sigma_ratio = partial_sigma / total_sigma if total_sigma != 0 else 3
+            # #write2file(instrument=instrument, row_list=[sigma_ratio,partial_sigma,total_sigma])
+
+            self.OrderCalc(WAP=price_log.WAP,
+                           volatility=1, total_volatility=1, volatility_ratio=1, # Matt:we are not using volatility at the moment.
+                           tick_size_in_cents=TICK_SIZE_IN_CENTS,
+                           best_ask=ask_prices[0], best_bid=bid_prices[0])
+
+            ################################################################
 
     def on_order_filled_message(self, client_order_id: int, price: int, volume: int) -> None:
         """Called when one of your orders is filled, partially or fully.
@@ -211,16 +219,117 @@ class AutoTrader(BaseAutoTrader):
         self.logger.info("received trade ticks for instrument %d with sequence number %d", instrument,
                          sequence_number)
 
-    def OrderCalc(pos: int, pos_lim: int, WAP: float, 
-                  volatility: float, total_volatility: float,
-                  tick_size_in_cents: int,best_ask:float, best_bid:float):
-        """
-        Given the current position and market parameters, amend the current orders.
-        """
-        
-        
-        return
+        ####### Payton's code to record trading info during the time interval between order book updated ######       
+        if instrument == Instrument.ETF:
+                curr_time = self.event_loop.time()
+                trade_price_log = TradingLog(instrument=instrument, time=curr_time,
+                                    ask_prices=ask_prices, ask_volumes=ask_volumes,
+                                    bid_prices=bid_prices, bid_volumes=bid_volumes)
+                self.TRADING_HISTORIES.append(trade_price_log)
+        ########################################################################################################
 
+    def OrderCalc(self, WAP: float, 
+                  volatility: float, total_volatility: float,volatility_ratio: float,
+                  tick_size_in_cents: int,best_ask:float, best_bid:float):
+            """
+            Given the current position and market parameters, amend the current orders.
+            """
+            market_spread = (best_ask - best_bid)/2
+
+            ##### Cancel ordered when the spread is too small #####
+            beta = 2
+            if market_spread < beta*tick_size_in_cents:
+                if self.bid_id != 0:
+                    self.send_cancel_order(self.bid_id)
+                    self.bid_id = 0
+                if self.ask_id != 0:
+                    self.send_cancel_order(self.ask_id)
+                    self.ask_id = 0
+                return
+            #######################################################
+
+            ######### Use WAP +- delta * spread  to determine the price change ###########
+            delta = 1.5# manually specify this parameter delta
+            WAP_tick = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
+            # self.logger.info("(Price Calc) WAP_tick = %f, best_bid = %f, best_ask = %f", WAP_tick, best_bid, best_ask)
+            price_change = (delta * market_spread// tick_size_in_cents) * tick_size_in_cents
+            price_change = max(2*tick_size_in_cents, price_change) # ensure the price change is not too small
+
+            ##############################################################################
+
+
+            ##### Sigmoid Inventory Control######
+            alpha = 1 * market_spread
+            offset = 30
+            scale = 5
+            if self.position > 0:
+                normalized_pos = (self.position - offset)/scale
+                WAP_tick -= (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+                self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+                            -(alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+            if self.position < 0:
+                normalized_pos = -(self.position + offset)/scale
+                WAP_tick += (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+                self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+                            (alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+            #############################
+
+
+            ##### calculate total price######
+            new_bid_price = WAP_tick - price_change
+            new_ask_price = WAP_tick + price_change
+            #################################
+
+            ########### Send the order while maintaining position limit #########
+            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
+                self.send_cancel_order(self.bid_id)
+                self.bid_id = 0
+            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
+                self.send_cancel_order(self.ask_id)
+                self.ask_id = 0
+            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - LOT_SIZE:
+                self.bid_id = next(self.order_ids)
+                self.bid_price = new_bid_price
+                self.logger.info("(Bid) order inserted, price = %f (%s)", new_bid_price, type(new_bid_price))
+                self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+                self.bids.add(self.bid_id)
+            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + LOT_SIZE:
+                self.ask_id = next(self.order_ids)
+                self.ask_price = new_ask_price
+                self.logger.info("(Ask) order inserted, price = %f (%s)", new_ask_price, type(new_ask_price))
+                self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+                self.asks.add(self.ask_id)
+
+            #####################################################################
+
+############# Payton's Class for storing trading during time interval ################
+
+class TradingLog:
+    '''A class that records the trades on market in small time interval.'''
+    def __init__(self, instrument: int,time,
+                 ask_prices: List[int],ask_volumes: List[int], 
+                 bid_prices: List[int], bid_volumes: List[int]):
+        self.instrument = instrument
+        self.time = time
+        self.ask_prices = ask_prices
+        self.ask_volumes = ask_volumes
+        self.bid_prices = bid_prices
+        self.bid_volumes = bid_volumes
+        self.WAP_time = self.find_WAP_time() # WAP_time is the trade based WAP
+    
+    def find_WAP_time(self):
+        calc =[]
+        for bid_p, ask_p, bid_v, ask_v in zip(self.bid_prices,self.ask_prices,self.bid_volumes,self.ask_volumes):
+            result = bid_p * bid_v+ ask_p * ask_v
+            calc.append(result)
+        result_time = sum(calc)
+        bid_volumes_time = sum(self.bid_volumes) 
+        ask_volumes_time = sum(self.ask_volumes)
+        self.WAP_time = result_time / (bid_volumes_time + ask_volumes_time)    
+        return self.WAP_time
+
+######################################################################################
+    
 ############# Matthew's Class for storing prices #######################
 
 class HistoryLog:
@@ -277,3 +386,28 @@ class HistoryLog:
 
 ##################################################################
 
+###########Volatility Calculator############
+def FindVolatility(history: List[HistoryLog]):
+    """
+    Calculate the volatility of a section of history prices.
+    """
+    n = len(history)
+    sum_log_returns = 0
+    for i in range(1,n):
+        # avoid division by zero that might occur at the beginning.
+        log_return = np.log(history[i].WAP/history[i-1].WAP) if history[i-1].WAP != 0 else 0
+        sum_log_returns += log_return ** 2
+    sigma = np.sqrt(sum_log_returns / n)
+    return sigma
+
+###########################################
+
+#######sigmoid#########
+
+def sigmoid(x:float):
+    """
+    Sigmoid function
+    """
+    y = 1 / (1+np.exp(-x))
+    return y
+######################

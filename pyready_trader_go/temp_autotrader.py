@@ -31,7 +31,7 @@ from typing import List
 from ready_trader_go import BaseAutoTrader, Instrument, Lifespan, MAXIMUM_ASK, MINIMUM_BID, Side
 
 
-LOT_SIZE = 10
+LOT_SIZE = 33
 POSITION_LIMIT = 100
 TICK_SIZE_IN_CENTS = 100 # MAtt: Tick size is the minimum change in price allowed
 
