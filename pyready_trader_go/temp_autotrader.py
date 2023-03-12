@@ -126,7 +126,7 @@ class AutoTrader(BaseAutoTrader):
                                    ask_prices=ask_prices, ask_volumes=ask_volumes,
                                    bid_prices=bid_prices, bid_volumes=bid_volumes)
             ETF_HISTORIES.append(price_log)
-            self.logger.info("(ETF) Added price info to log. Time = %.1f, WAP = %.2f",price_log.time, price_log.WAP)
+            self.logger.info("(ETF) Added price info to log. Time = %.1f, WAP = %.2f, best_bid = %d, best_ask = %d",price_log.time, price_log.WAP, ask_prices[0], bid_prices[0])
 
             # write the time, best_ask, best_bid, WAP into the csv file
             # write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
