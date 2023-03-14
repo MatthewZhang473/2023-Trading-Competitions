@@ -8,4 +8,4 @@ May also check this website from [another competition](https://imc-prosperity.no
 DO LOOK AT THIS: [code instruction](https://imc-prosperity.notion.site/Writing-an-Algorithm-in-Python-c44b46f32941430fa1eccb6ff054be26) 
 Any notes, resources and code related will be summarized here
 
-Data Analysis (Colab Notebooks)[https://drive.google.com/drive/folders/1Fgm5Nda74t2e5EvVe_v23A51SJ6Wb-9E?usp=sharing]
+Data Analysis [Colab Notebooks](https://drive.google.com/drive/folders/1Fgm5Nda74t2e5EvVe_v23A51SJ6Wb-9E?usp=sharing)
