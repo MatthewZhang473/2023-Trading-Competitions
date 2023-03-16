@@ -67,6 +67,7 @@ class AutoTrader(BaseAutoTrader):
         self.ask_id = self.ask_price = self.bid_id = self.bid_price = self.position = 0
         self.TRADING_HISTORIES = []
         self.first_it = True
+        self.prev_pos = 0
 
     def on_error_message(self, client_order_id: int, error_message: bytes) -> None:
         """Called when the exchange detects an error.
@@ -108,7 +109,7 @@ class AutoTrader(BaseAutoTrader):
             price_log = HistoryLog(instrument=instrument, time=curr_time,
                                    ask_prices=ask_prices, ask_volumes=ask_volumes,
                                    bid_prices=bid_prices, bid_volumes=bid_volumes)
-            FUTURE_HISTORIES.append(price_log)
+            #FUTURE_HISTORIES.append(price_log)
             self.logger.info("(FUTURE) Added price info to log. Time = %.1f, WAP = %.2f", price_log.time, price_log.WAP)
 
             # write the time, best_ask, best_bid, WAP into the csv file
@@ -125,8 +126,8 @@ class AutoTrader(BaseAutoTrader):
             price_log = HistoryLog(instrument=instrument, time=curr_time,
                                    ask_prices=ask_prices, ask_volumes=ask_volumes,
                                    bid_prices=bid_prices, bid_volumes=bid_volumes)
-            ETF_HISTORIES.append(price_log)
-            self.logger.info("(ETF) Added price info to log. Time = %.1f, WAP = %.2f",price_log.time, price_log.WAP)
+            #ETF_HISTORIES.append(price_log)
+            self.logger.info("(ETF) Added price info to log. Time = %.1f, WAP = %.2f, total_WAP = %.2f, best_bid = %d, best_ask = %d",price_log.time, price_log.WAP, price_log.total_WAP, bid_prices[0], ask_prices[0])
 
             # write the time, best_ask, best_bid, WAP into the csv file
             # write2file(instrument=instrument, row_list=[curr_time, ask_prices[0], bid_prices[0], price_log.WAP])
@@ -134,20 +135,22 @@ class AutoTrader(BaseAutoTrader):
             ##############################################################################
 
             ################ Payton's code for recording the WAP_time ##################
-            WAP_TIME_HISTORIES = []
-            for trade in self.TRADING_HISTORIES:
-                WAP_TIME_HISTORIES.append(trade.WAP_time)
-            self.TRADING_HISTORIES = []
-            self.logger.info("(TRADE LOG) %d trade ticks occuered between orderbook updates and is recorded.", len(WAP_TIME_HISTORIES))
+            # WAP_TIME_HISTORIES = []
+            # for trade in self.TRADING_HISTORIES:
+            #     WAP_TIME_HISTORIES.append(trade.WAP_time)
+            # self.TRADING_HISTORIES = []
+            # self.logger.info("(TRADE LOG) %d trade ticks occuered between orderbook updates and is recorded.", len(WAP_TIME_HISTORIES))
             #write2file(instrument=instrument, row_list=[price_log.time, ask_prices[0], bid_prices[0], price_log.WAP] + WAP_TIME_HISTORIES)
             ##############################################################################
             
             ############# Operate when orderbook of ETF updates ############
 
-            # Matthew: I forgot why I try to skip the first iteration... seems fine now
-            # if self.first_it:
-            #     self.first_it = False
-            #     return
+            # Matthew: Very hard code
+            ######skip first iteration#########
+            if self.first_it:
+                self.first_it = False
+                return
+            ###################################
 
             # Previous calculation for volatlity
             # if len(ETF_HISTORIES) >= 50:
@@ -220,12 +223,12 @@ class AutoTrader(BaseAutoTrader):
                          sequence_number)
 
         ####### Payton's code to record trading info during the time interval between order book updated ######       
-        if instrument == Instrument.ETF:
-                curr_time = self.event_loop.time()
-                trade_price_log = TradingLog(instrument=instrument, time=curr_time,
-                                    ask_prices=ask_prices, ask_volumes=ask_volumes,
-                                    bid_prices=bid_prices, bid_volumes=bid_volumes)
-                self.TRADING_HISTORIES.append(trade_price_log)
+        # if instrument == Instrument.ETF:
+        #         curr_time = self.event_loop.time()
+        #         trade_price_log = TradingLog(instrument=instrument, time=curr_time,
+        #                             ask_prices=ask_prices, ask_volumes=ask_volumes,
+        #                             bid_prices=bid_prices, bid_volumes=bid_volumes)
+        #         self.TRADING_HISTORIES.append(trade_price_log)
         ########################################################################################################
 
     def OrderCalc(self, WAP: float, 
@@ -236,20 +239,21 @@ class AutoTrader(BaseAutoTrader):
             """
             market_spread = (best_ask - best_bid)/2
 
+
             ##### Cancel ordered when the spread is too small #####
-            beta = 2
-            if market_spread < beta*tick_size_in_cents:
-                if self.bid_id != 0:
-                    self.send_cancel_order(self.bid_id)
-                    self.bid_id = 0
-                if self.ask_id != 0:
-                    self.send_cancel_order(self.ask_id)
-                    self.ask_id = 0
-                return
+            # beta = 2
+            # if market_spread < beta*tick_size_in_cents:
+            #     if self.bid_id != 0:
+            #         self.send_cancel_order(self.bid_id)
+            #         self.bid_id = 0
+            #     if self.ask_id != 0:
+            #         self.send_cancel_order(self.ask_id)
+            #         self.ask_id = 0
+            #     return
             #######################################################
 
             ######### Use WAP +- delta * spread  to determine the price change ###########
-            delta = 1.5# manually specify this parameter delta
+            delta = 1.2# manually specify this parameter delta
             WAP_tick = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
             # self.logger.info("(Price Calc) WAP_tick = %f, best_bid = %f, best_ask = %f", WAP_tick, best_bid, best_ask)
             price_change = (delta * market_spread// tick_size_in_cents) * tick_size_in_cents
@@ -257,6 +261,18 @@ class AutoTrader(BaseAutoTrader):
 
             ##############################################################################
 
+            ######## Change the delta by market spread ############
+            beta = 2
+            if self.prev_pos == 0:
+                self.prev_pos = self.position
+            else:
+                # position change from the last orderbook update
+                pos_change = self.position - self.prev_pos
+                self.prev_pos = self.position
+                if market_spread < beta*tick_size_in_cents:
+                    self.logger.info("(Protect) Position change = %d, enlarge spread to %d", pos_change, price_change/tick_size_in_cents + 5)
+                    price_change += 5*tick_size_in_cents
+            #################################################################
 
             ##### Sigmoid Inventory Control######
             alpha = 1 * market_spread
@@ -325,8 +341,7 @@ class TradingLog:
         result_time = sum(calc)
         bid_volumes_time = sum(self.bid_volumes) 
         ask_volumes_time = sum(self.ask_volumes)
-        self.WAP_time = result_time / (bid_volumes_time + ask_volumes_time)    
-        return self.WAP_time
+        return  result_time / (bid_volumes_time + ask_volumes_time)    
 
 ######################################################################################
     
@@ -346,6 +361,7 @@ class HistoryLog:
         self.bid_prices = bid_prices
         self.bid_volumes = bid_volumes
         self.WAP =  self.find_WAP()# The WAP is the volume weigted average price, it is an index to show the market price
+        self.total_WAP = self.find_total_WAP()
 
     def find_WAP(self):
         best_ask_price = self.ask_prices[0]
@@ -355,16 +371,23 @@ class HistoryLog:
 
         # if there is no order in the market
         if best_ask_price == 0 and best_bid_price == 0:
-            self.WAP = 0
-        # if there is no ask in the market, we use the best bid as the WAP
-        elif best_ask_price == 0:
-            self.WAP = best_bid_price
-        # if there is no ask in the market, we use the best ask as the WAP
-        elif best_bid_price == 0:
-            self.WAP = best_ask_price
+            return 0
         else:
-            self.WAP = (best_ask_price * best_bid_vol + best_bid_price * best_ask_vol) / (best_ask_vol + best_bid_vol)
-        return self.WAP
+            return (best_ask_price * best_bid_vol + best_bid_price * best_ask_vol) / (best_ask_vol + best_bid_vol)
+
+    def find_total_WAP(self):
+        """
+        Return the total_WAP, as numpy float.
+        Total_WAP is the weighted sum of all the orders in the orderbook, 
+        it reveals information of the total demand & supply.
+        """
+        total_volume = sum(self.ask_volumes) + sum(self.bid_volumes)
+        if total_volume == 0:
+            return 0
+        else:
+            return (np.dot(self.ask_prices, self.ask_volumes) + np.dot(self.bid_prices,self.bid_volumes)) / total_volume 
+
+
 ##############################################################################
 
 
