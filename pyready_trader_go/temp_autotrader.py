@@ -68,7 +68,6 @@ class AutoTrader(BaseAutoTrader):
         self.TRADING_HISTORIES = []
         self.first_it = True
         self.prev_pos = 0
-        self.danger = False
 
     def on_error_message(self, client_order_id: int, error_message: bytes) -> None:
         """Called when the exchange detects an error.
@@ -258,44 +257,37 @@ class AutoTrader(BaseAutoTrader):
             WAP_tick = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
             # self.logger.info("(Price Calc) WAP_tick = %f, best_bid = %f, best_ask = %f", WAP_tick, best_bid, best_ask)
             price_change = (delta * market_spread// tick_size_in_cents) * tick_size_in_cents
-            price_change = max(2*tick_size_in_cents, price_change) # ensure the price change is not too small
+            price_change = max(1*tick_size_in_cents, price_change) # ensure the price change is not too small
 
             ##############################################################################
 
             ######## Change the delta by market spread ############
-            beta = 2
-            if self.prev_pos == 0:
-                self.prev_pos = self.position
-            else:
-                # position change from the last orderbook update
-                pos_change = self.position - self.prev_pos
-                self.prev_pos = self.position
-                if abs(pos_change) >= 1*LOT_SIZE:
-                    if self.danger == False:
-                        self.logger.info("(Protect) Position change = %d, enlarge spread to %d", pos_change, price_change/tick_size_in_cents + 5)
-                        self.danger = True
-                    else:
-                        self.danger = False
-
-            if self.danger:
-                price_change += 5 * tick_size_in_cents
-
+            # beta = 2
+            # if self.prev_pos == 0:
+            #     self.prev_pos = self.position
+            # else:
+            #     # position change from the last orderbook update
+            #     pos_change = self.position - self.prev_pos
+            #     self.prev_pos = self.position
+            #     if market_spread < beta*tick_size_in_cents:
+            #         self.logger.info("(Protect) Position change = %d, enlarge spread to %d", pos_change, price_change/tick_size_in_cents + 5)
+            #         price_change += 5*tick_size_in_cents
             #################################################################
 
             ##### Sigmoid Inventory Control######
-            alpha = 1 * market_spread
-            offset = 30
-            scale = 5
-            if self.position > 0:
-                normalized_pos = (self.position - offset)/scale
-                WAP_tick -= (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
-                self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
-                            -(alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
-            if self.position < 0:
-                normalized_pos = -(self.position + offset)/scale
-                WAP_tick += (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
-                self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
-                            (alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+            # alpha = 1 * market_spread
+            # offset = 30
+            # scale = 5
+            # if self.position > 0:
+            #     normalized_pos = (self.position - offset)/scale
+            #     WAP_tick -= (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+            #     self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+            #                 -(alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+            # if self.position < 0:
+            #     normalized_pos = -(self.position + offset)/scale
+            #     WAP_tick += (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+            #     self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+            #                 (alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
             #############################
 
 
@@ -307,21 +299,23 @@ class AutoTrader(BaseAutoTrader):
             ########### Send the order while maintaining position limit #########
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
-                self.bid_id = 0
+                #self.bid_id = 0
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
-                self.ask_id = 0
-            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - LOT_SIZE:
+                #self.ask_id = 0
+            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT:
                 self.bid_id = next(self.order_ids)
                 self.bid_price = new_bid_price
                 self.logger.info("(Bid) order inserted, price = %f (%s)", new_bid_price, type(new_bid_price))
-                self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+                bid_size = POSITION_LIMIT - self.position
+                self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), bid_size, Lifespan.GOOD_FOR_DAY)
                 self.bids.add(self.bid_id)
-            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + LOT_SIZE:
+            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT:
                 self.ask_id = next(self.order_ids)
                 self.ask_price = new_ask_price
                 self.logger.info("(Ask) order inserted, price = %f (%s)", new_ask_price, type(new_ask_price))
-                self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+                ask_size = self.position + POSITION_LIMIT 
+                self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), ask_size, Lifespan.GOOD_FOR_DAY)
                 self.asks.add(self.ask_id)
 
             #####################################################################

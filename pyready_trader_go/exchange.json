@@ -37,6 +37,7 @@
   },
   "Traders": {
     "autotrader": "secret",
-    "temp_autotrader": "secret"
+    "temp_autotrader": "secret",
+    "new_autotrader": "secret"
   }
 }
