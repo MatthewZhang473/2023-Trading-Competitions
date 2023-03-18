@@ -103,7 +103,8 @@ class AutoTrader(BaseAutoTrader):
         
         # If Future is cheaper than ETF
         if etf_futures_price_diff > 0:
-            orderSize = min((etf_futures_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT+self.position)
+            #orderSize = min((etf_futures_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT+self.position)
+            orderSize = POSITION_LIMIT+self.position
             self.logger.info("(Add ASK Order) orderSize = %d, position = %d", orderSize, self.position)
             new_ask_price = etf_best_ask
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
@@ -117,7 +118,8 @@ class AutoTrader(BaseAutoTrader):
         
         # If ETF is cheaper than Future
         if futures_etf_price_diff > 0:  
-            orderSize = min((futures_etf_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT-self.position)
+            #orderSize = min((futures_etf_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT-self.position)
+            orderSize = POSITION_LIMIT-self.position
             self.logger.info("(Add BID Order) orderSize = %d, position = %d", orderSize, self.position)
             new_bid_price =  etf_best_bid
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
