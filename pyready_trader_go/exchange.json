@@ -39,6 +39,7 @@
     "autotrader": "secret",
     "temp_autotrader": "secret",
     "new_autotrader": "secret",
+    "next_autotrader": "secret",
     "framework_autotrader":"secret"
   }
 }
