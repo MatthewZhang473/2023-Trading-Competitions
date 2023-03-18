@@ -147,9 +147,9 @@ class AutoTrader(BaseAutoTrader):
 
             # Matthew: Very hard code
             ######skip first iteration#########
-            if self.first_it:
-                self.first_it = False
-                return
+            # if self.first_it:
+            #     self.first_it = False
+            #     return
             ###################################
 
             # Previous calculation for volatlity
@@ -239,6 +239,10 @@ class AutoTrader(BaseAutoTrader):
             """
             market_spread = (best_ask - best_bid)/2
 
+            ## Dont send order if WAP is zero ##
+            if WAP == 0:
+                return
+            ####################################
 
             ##### Cancel ordered when the spread is too small #####
             # beta = 2
