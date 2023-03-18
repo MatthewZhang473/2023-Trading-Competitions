@@ -109,7 +109,7 @@ class AutoTrader(BaseAutoTrader):
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
                 self.bid_id = 0
-            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - 2* LOT_SIZE and instrument == Instrument.FUTURE:
+            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - LOT_SIZE and instrument == Instrument.FUTURE:
                 self.logger.info("%d bid order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
                 self.bid_id = next(self.order_ids)
                 self.bids.add(self.bid_id)
@@ -120,7 +120,7 @@ class AutoTrader(BaseAutoTrader):
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0
-            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + 2* LOT_SIZE and instrument == Instrument.ETF:
+            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT +  LOT_SIZE and instrument == Instrument.ETF:
                 self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
                 self.ask_id = next(self.order_ids)
                 self.asks.add(self.ask_id)
