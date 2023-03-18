@@ -88,11 +88,13 @@ class AutoTrader(BaseAutoTrader):
                          sequence_number)
         if instrument == Instrument.FUTURE:
             self.futures_best_ask = ask_prices[0]
-            self.futures_best_bid = ask_prices[0]
+            self.futures_best_bid = bid_prices[0]
+            self.logger.info("print types" + str(type(self.futures_best_ask))+ str(type(self.futures_best_bid)))
+            self.logger.info("future best ask and bid updates with %d and %d", self.futures_best_ask, self.futures_best_bid)
         if instrument == Instrument.ETF:
             self.etf_best_ask = ask_prices[0]
-            self.etf_best_bid = ask_prices[0]
-
+            self.etf_best_bid = bid_prices[0]
+            self.logger.info("etf best ask and bid updates with %d and %d", self.etf_best_ask, self.etf_best_bid)
         self.orderCalc(self.etf_best_bid, self.etf_best_ask, self.futures_best_ask, self.futures_best_bid, instrument)
 
     def orderCalc(self, etf_best_bid:int , etf_best_ask:int, futures_best_ask:int, futures_best_bid:int, instrument):
@@ -102,41 +104,49 @@ class AutoTrader(BaseAutoTrader):
 
         
         if etf_futures_price_diff > 0:
-            self.bid_id = next(self.order_ids)
+            
             new_bid_price =  futures_best_bid
-            if self.bid_id != 0 and new_bid_price not in (new_bid_price, 0):
+            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
                 self.bid_id = 0
             if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - 2* LOT_SIZE and instrument == Instrument.FUTURE:
-                self.logger.log("%d bid order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.logger.info("%d bid order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.bid_id = next(self.order_ids)
+                self.bids.add(self.bid_id)
                 self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
             
-            self.ask_id = next(self.order_ids)
+            
             new_ask_price = etf_best_ask
-            if self.ask_id != 0 and new_ask_price not in (new_ask_price, 0):
+            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0
             if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + 2* LOT_SIZE and instrument == Instrument.ETF:
-                self.logger.log("%d ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.ask_id = next(self.order_ids)
+                self.asks.add(self.ask_id)
                 self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
         
         if futures_etf_price_diff > 0:  
-            self.bid_id = next(self.order_ids)
+            
             new_bid_price =  etf_best_bid
-            if self.bid_id != 0 and new_bid_price not in (new_bid_price, 0):
+            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
                 self.bid_id = 0
             if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - 2* LOT_SIZE and instrument == Instrument.ETF:
-                self.logger.log("%d bid order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.logger.info("%s bid order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.bid_id = next(self.order_ids)
+                self.bids.add(self.bid_id)
                 self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
             
-            self.ask_id = next(self.order_ids)
+            
             new_ask_price = futures_best_ask
-            if self.ask_id != 0 and new_ask_price not in (new_ask_price, 0):
+            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0
             if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + 2 *LOT_SIZE and instrument == Instrument.FUTURE:
-                self.logger.log("%d ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.logger.info("%s ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.ask_id = next(self.order_ids)
+                self.asks.add(self.ask_id)
                 self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
     
     def on_order_filled_message(self, client_order_id: int, price: int, volume: int) -> None:
