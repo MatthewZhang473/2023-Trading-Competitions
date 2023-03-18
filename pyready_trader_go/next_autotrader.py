@@ -104,27 +104,17 @@ class AutoTrader(BaseAutoTrader):
         # If Future is cheaper than ETF
         if etf_futures_price_diff > 0:
             
-            new_bid_price =  futures_best_bid
-            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
-                self.send_cancel_order(self.bid_id)
-                self.bid_id = 0
-            if self.bid_id == 0 and new_bid_price != 0 and self.position < POSITION_LIMIT - LOT_SIZE and instrument == Instrument.FUTURE:
-                self.logger.info("%d bid order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
-                self.bid_id = next(self.order_ids)
-                self.bids.add(self.bid_id)
-                self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
-            
-            
             new_ask_price = etf_best_ask
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0
             if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT +  LOT_SIZE and instrument == Instrument.ETF:
-                self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
+                self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_ask_price, LOT_SIZE)
                 self.ask_id = next(self.order_ids)
                 self.asks.add(self.ask_id)
                 self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
         
+        # If ETF is cheaper than Future
         if futures_etf_price_diff > 0:  
             
             new_bid_price =  etf_best_bid
@@ -137,16 +127,6 @@ class AutoTrader(BaseAutoTrader):
                 self.bids.add(self.bid_id)
                 self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
             
-            
-            new_ask_price = futures_best_ask
-            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
-                self.send_cancel_order(self.ask_id)
-                self.ask_id = 0
-            if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT + 2 *LOT_SIZE and instrument == Instrument.FUTURE:
-                self.logger.info("%s ask order send with price %d and lot size%d", instrument, new_bid_price, LOT_SIZE)
-                self.ask_id = next(self.order_ids)
-                self.asks.add(self.ask_id)
-                self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
     
     def on_order_filled_message(self, client_order_id: int, price: int, volume: int) -> None:
         """Called when one of your orders is filled, partially or fully.

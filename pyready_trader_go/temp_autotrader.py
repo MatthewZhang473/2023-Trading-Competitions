@@ -239,6 +239,9 @@ class AutoTrader(BaseAutoTrader):
             """
             market_spread = (best_ask - best_bid)/2
 
+            if WAP == 0:
+                return
+
 
             ##### Cancel ordered when the spread is too small #####
             # beta = 2
