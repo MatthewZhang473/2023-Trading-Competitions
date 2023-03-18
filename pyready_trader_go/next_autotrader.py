@@ -23,7 +23,7 @@ from typing import List
 from ready_trader_go import BaseAutoTrader, Instrument, Lifespan, MAXIMUM_ASK, MINIMUM_BID, Side
 
 
-LOT_SIZE = 10
+LOT_SIZE = 30
 POSITION_LIMIT = 100
 TICK_SIZE_IN_CENTS = 100
 MIN_BID_NEAREST_TICK = (MINIMUM_BID + TICK_SIZE_IN_CENTS) // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
@@ -98,8 +98,8 @@ class AutoTrader(BaseAutoTrader):
         self.orderCalc(self.etf_best_bid, self.etf_best_ask, self.futures_best_ask, self.futures_best_bid, instrument)
 
     def orderCalc(self, etf_best_bid:int , etf_best_ask:int, futures_best_ask:int, futures_best_bid:int, instrument):
-        etf_futures_price_diff = etf_best_bid - futures_best_ask
-        futures_etf_price_diff = futures_best_bid - etf_best_ask
+        etf_futures_price_diff = etf_best_bid - futures_best_ask ##-1*TICK_SIZE_IN_CENTS
+        futures_etf_price_diff = futures_best_bid - etf_best_ask ##+1*TICK_SIZE_IN_CENTS
         
         # If Future is cheaper than ETF
         if etf_futures_price_diff > 0:
@@ -107,7 +107,7 @@ class AutoTrader(BaseAutoTrader):
             new_ask_price = etf_best_ask
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
-                self.ask_id = 0
+                self.ask_id = 0 # note that this may lead to double-order for market-making algos
             if self.ask_id == 0 and new_ask_price != 0 and self.position > -POSITION_LIMIT +  LOT_SIZE and instrument == Instrument.ETF:
                 self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_ask_price, LOT_SIZE)
                 self.ask_id = next(self.order_ids)
