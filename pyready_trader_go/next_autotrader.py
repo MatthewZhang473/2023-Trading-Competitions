@@ -51,7 +51,13 @@ class AutoTrader(BaseAutoTrader):
         self.futures_best_bid:int =0
         self.etf_best_ask:int = 0
         self.etf_best_bid:int = 0
-
+        ### Test for cancel speed###
+        self.unsuccesful_sent_counter = 0
+        ############################
+        ###The size of previous ask/bid order ###
+        self.prevAskSize = 0
+        self.prevBidSize = 0
+        #########################################
     
 
 
@@ -100,34 +106,38 @@ class AutoTrader(BaseAutoTrader):
     def orderCalc(self, etf_best_bid:int , etf_best_ask:int, futures_best_ask:int, futures_best_bid:int, instrument):
         etf_futures_price_diff = etf_best_bid - futures_best_ask ##-1*TICK_SIZE_IN_CENTS
         futures_etf_price_diff = futures_best_bid - etf_best_ask ##+1*TICK_SIZE_IN_CENTS
-        
+
         # If Future is cheaper than ETF
         if etf_futures_price_diff > 0:
-            orderSize = min((etf_futures_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT+self.position)
+            orderSize = min((etf_futures_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT+self.position - self.prevAskSize) # take consider of the prevAskSize to avoid breach
             self.logger.info("(Add ASK Order) orderSize = %d, position = %d", orderSize, self.position)
             new_ask_price = etf_best_ask
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0 # note that this may lead to double-order for market-making algos
-            if self.ask_id == 0 and new_ask_price != 0 and self.position >= (-POSITION_LIMIT +  orderSize) and instrument == Instrument.ETF:
+            if self.ask_id == 0 and new_ask_price != 0 and self.position >= (-POSITION_LIMIT +  orderSize)  and orderSize > 0 and instrument == Instrument.ETF:
                 self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_ask_price, orderSize)
                 self.ask_id = next(self.order_ids)
                 self.asks.add(self.ask_id)
                 self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), orderSize, Lifespan.GOOD_FOR_DAY)
-        
+                self.prevAskSize = orderSize # update the previous ask size
+                self.prevBidSize = 0
+
         # If ETF is cheaper than Future
         if futures_etf_price_diff > 0:  
-            orderSize = min((futures_etf_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT-self.position)
+            orderSize = min((futures_etf_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT-self.position - self.prevBidSize)
             self.logger.info("(Add BID Order) orderSize = %d, position = %d", orderSize, self.position)
             new_bid_price =  etf_best_bid
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
                 self.bid_id = 0
-            if self.bid_id == 0 and new_bid_price != 0 and self.position <= (POSITION_LIMIT - orderSize) and instrument == Instrument.ETF:
+            if self.bid_id == 0 and new_bid_price != 0 and self.position <= (POSITION_LIMIT - orderSize) and orderSize > 0 and instrument == Instrument.ETF:
                 self.logger.info("%s bid order send with price %d and lot size%d", instrument, new_bid_price, orderSize)
                 self.bid_id = next(self.order_ids)
                 self.bids.add(self.bid_id)
                 self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), orderSize, Lifespan.GOOD_FOR_DAY)
+                self.prevBidSize = orderSize
+                self.prevAskSize = 0
             
     
     def on_order_filled_message(self, client_order_id: int, price: int, volume: int) -> None:
