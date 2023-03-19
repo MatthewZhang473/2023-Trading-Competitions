@@ -43,7 +43,8 @@
     "new_autotrader": "secret",
     "next_autotrader": "secret",
     "nice_autotrader": "secret",
-    "framework_autotrader":"secret"
-    
+    "framework_autotrader":"secret",
+    "nope_autotrader":"secret"
+
   }
 }
