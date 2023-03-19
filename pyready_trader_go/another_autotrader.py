@@ -114,7 +114,9 @@ class AutoTrader(BaseAutoTrader):
             new_ask_price = etf_best_ask
             ## diff ##
             if etf_futures_price_diff >= 3*TICK_SIZE_IN_CENTS:
-                new_ask_price -= 2*TICK_SIZE_IN_CENTS
+                new_ask_price -= 1*TICK_SIZE_IN_CENTS
+                if etf_futures_price_diff >= 5*TICK_SIZE_IN_CENTS:
+                    new_ask_price -= 1*TICK_SIZE_IN_CENTS
             ##########
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
@@ -134,7 +136,9 @@ class AutoTrader(BaseAutoTrader):
             new_bid_price =  etf_best_bid
             ## diff ##
             if futures_etf_price_diff >= 3*TICK_SIZE_IN_CENTS:
-                new_bid_price += 2*TICK_SIZE_IN_CENTS
+                new_bid_price += 1*TICK_SIZE_IN_CENTS
+                if futures_etf_price_diff >= 5*TICK_SIZE_IN_CENTS:
+                    new_bid_price += 1*TICK_SIZE_IN_CENTS
             ##########
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
