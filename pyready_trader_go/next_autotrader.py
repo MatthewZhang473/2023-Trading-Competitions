@@ -17,14 +17,15 @@
 #     <https://www.gnu.org/licenses/>.
 import asyncio
 import itertools
-
+import numpy as np
 from typing import List
 
 from ready_trader_go import BaseAutoTrader, Instrument, Lifespan, MAXIMUM_ASK, MINIMUM_BID, Side
 
 
 LOT_SIZE = 10
-POSITION_LIMIT = 100
+MAKR_POSITION_LIMIT = 10
+ARB_POSITION_LIMIT = 90
 TICK_SIZE_IN_CENTS = 100
 MIN_BID_NEAREST_TICK = (MINIMUM_BID + TICK_SIZE_IN_CENTS) // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
 MAX_ASK_NEAREST_TICK = MAXIMUM_ASK // TICK_SIZE_IN_CENTS * TICK_SIZE_IN_CENTS
@@ -57,6 +58,10 @@ class AutoTrader(BaseAutoTrader):
         ###The size of previous ask/bid order ###
         self.prevAskSize = 0
         self.prevBidSize = 0
+        self.TRADING_HISTORIES = []
+        self.prev_WAP = 0
+        
+
         #########################################
     
 
@@ -93,15 +98,126 @@ class AutoTrader(BaseAutoTrader):
         self.logger.info("received order book for instrument %d with sequence number %d", instrument,
                          sequence_number)
         if instrument == Instrument.FUTURE:
+            curr_time = self.event_loop.time()
+            price_log = HistoryLog(instrument=instrument, time=curr_time,
+                                   ask_prices=ask_prices, ask_volumes=ask_volumes,
+                                   bid_prices=bid_prices, bid_volumes=bid_volumes)
+
             self.futures_best_ask = ask_prices[0]
             self.futures_best_bid = bid_prices[0]
             self.logger.info("print types" + str(type(self.futures_best_ask))+ str(type(self.futures_best_bid)))
             self.logger.info("future best ask and bid updates with %d and %d", self.futures_best_ask, self.futures_best_bid)
         if instrument == Instrument.ETF:
+            curr_time = self.event_loop.time()
+            price_log = HistoryLog(instrument=instrument, time=curr_time,
+                                   ask_prices=ask_prices, ask_volumes=ask_volumes,
+                                   bid_prices=bid_prices, bid_volumes=bid_volumes)
+
             self.etf_best_ask = ask_prices[0]
             self.etf_best_bid = bid_prices[0]
             self.logger.info("etf best ask and bid updates with %d and %d", self.etf_best_ask, self.etf_best_bid)
+        self.OrdermakrCalc(WAP=price_log.WAP,
+                           volatility=1, total_volatility=1, volatility_ratio=1, # Matt:we are not using volatility at the moment.
+                           tick_size_in_cents=TICK_SIZE_IN_CENTS,
+                           best_ask=ask_prices[0], best_bid=bid_prices[0])        
         self.orderCalc(self.etf_best_bid, self.etf_best_ask, self.futures_best_ask, self.futures_best_bid, instrument)
+
+
+
+    def OrdermakrCalc(self, WAP: float, 
+                  volatility: float, total_volatility: float,volatility_ratio: float,
+                  tick_size_in_cents: int,best_ask:float, best_bid:float):
+            """
+            Given the current position and market parameters, amend the current orders.
+            """
+            market_spread = (best_ask - best_bid)/2
+
+            ## Dont send order if WAP is zero ##
+            if WAP == 0:
+                return
+            ####################################
+
+            ##### Cancel order when the spread is too small #####
+            # beta = 2
+            # if market_spread < beta*tick_size_in_cents:
+            #     if self.bid_id != 0:
+            #         self.send_cancel_order(self.bid_id)
+            #         self.bid_id = 0
+            #     if self.ask_id != 0:
+            #         self.send_cancel_order(self.ask_id)
+            #         self.ask_id = 0
+            #     return
+            #######################################################
+
+            ######### Use WAP +- delta * spread  to determine the price change ###########
+            delta = 1.2# manually specify this parameter delta
+            truePrice = (WAP // tick_size_in_cents) * tick_size_in_cents # try to make WAP times as tick_size_in_cents
+            price_change = (delta * market_spread// tick_size_in_cents) * tick_size_in_cents
+            price_change = max(2*tick_size_in_cents, price_change) # ensure the price change is not too small
+            ##############################################################################
+
+            ######## Change the delta if market price varies rapidly ########
+            gamma = 3
+            if self.prev_WAP == 0:
+                self.prev_WAP = WAP
+            else:
+                # position change from the last orderbook update
+                WAP_change = WAP - self.prev_WAP
+                self.prev_WAP = WAP
+                if abs(WAP_change) > gamma*tick_size_in_cents:
+                    self.logger.info("(Protect) Price change = %d, enlarge spread to %d", price_change, price_change/tick_size_in_cents + 5)
+                    price_change = 5*tick_size_in_cents
+            #################################################################
+
+            ##### Increase spread when the spread is too small #####
+            beta = 1
+            if market_spread < beta*tick_size_in_cents:
+                price_change = 5*tick_size_in_cents
+            #######################################################
+
+
+            ##### Sigmoid Inventory Control######
+            alpha = 1 * market_spread
+            offset = 30
+            scale = 5
+            if self.position > 0:
+                normalized_pos = (self.position - offset)/scale
+                truePrice -= (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+                self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+                            -(alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+            if self.position < 0:
+                normalized_pos = -(self.position + offset)/scale
+                truePrice += (alpha * (sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents
+                self.logger.info("(INVENT) Position = %d, Price change = %d",self.position,
+                            (alpha*(sigmoid(normalized_pos))// tick_size_in_cents) * tick_size_in_cents)
+            #############################
+
+
+            ##### calculate total price######
+            new_bid_price = truePrice - price_change
+            new_ask_price = truePrice + price_change
+            #################################
+
+            ########### Send the order while maintaining position limit #########
+            if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
+                self.send_cancel_order(self.bid_id)
+                self.bid_id = 0
+            if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
+                self.send_cancel_order(self.ask_id)
+                self.ask_id = 0
+            if self.bid_id == 0 and new_bid_price != 0 and self.position < MAKR_POSITION_LIMIT - LOT_SIZE:
+                self.bid_id = next(self.order_ids)
+                self.bid_price = new_bid_price
+                self.logger.info("(Bid) order inserted, price = %f (%s)", new_bid_price, type(new_bid_price))
+                self.send_insert_order(self.bid_id, Side.BUY, int(new_bid_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+                self.bids.add(self.bid_id)
+            if self.ask_id == 0 and new_ask_price != 0 and self.position > -MAKR_POSITION_LIMIT + LOT_SIZE:
+                self.ask_id = next(self.order_ids)
+                self.ask_price = new_ask_price
+                self.logger.info("(Ask) order inserted, price = %f (%s)", new_ask_price, type(new_ask_price))
+                self.send_insert_order(self.ask_id, Side.SELL, int(new_ask_price), LOT_SIZE, Lifespan.GOOD_FOR_DAY)
+                self.asks.add(self.ask_id)
+
 
     def orderCalc(self, etf_best_bid:int , etf_best_ask:int, futures_best_ask:int, futures_best_bid:int, instrument):
         etf_futures_price_diff = etf_best_bid - futures_best_ask ##-1*TICK_SIZE_IN_CENTS
@@ -109,13 +225,17 @@ class AutoTrader(BaseAutoTrader):
 
         # If Future is cheaper than ETF
         if etf_futures_price_diff > 0:
-            orderSize = min((etf_futures_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT+self.position - self.prevAskSize) # take consider of the prevAskSize to avoid breach
+            orderSize = min((etf_futures_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, ARB_POSITION_LIMIT+self.position - self.prevAskSize) # take consider of the prevAskSize to avoid breach
             self.logger.info("(Add ASK Order) orderSize = %d, position = %d", orderSize, self.position)
             new_ask_price = etf_best_ask
+            ## diff ##
+            if etf_futures_price_diff >= 3*TICK_SIZE_IN_CENTS:
+                new_ask_price -= 1*TICK_SIZE_IN_CENTS
+            ##########
             if self.ask_id != 0 and new_ask_price not in (self.ask_price, 0):
                 self.send_cancel_order(self.ask_id)
                 self.ask_id = 0 # note that this may lead to double-order for market-making algos
-            if self.ask_id == 0 and new_ask_price != 0 and self.position >= (-POSITION_LIMIT +  orderSize)  and orderSize > 0 and instrument == Instrument.ETF:
+            if self.ask_id == 0 and new_ask_price != 0 and self.position >= (-ARB_POSITION_LIMIT +  orderSize)  and orderSize > 0 and instrument == Instrument.ETF:
                 self.logger.info("%d ask order send with price %d and lot size%d", instrument, new_ask_price, orderSize)
                 self.ask_id = next(self.order_ids)
                 self.asks.add(self.ask_id)
@@ -125,13 +245,17 @@ class AutoTrader(BaseAutoTrader):
 
         # If ETF is cheaper than Future
         if futures_etf_price_diff > 0:  
-            orderSize = min((futures_etf_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE, POSITION_LIMIT-self.position - self.prevBidSize)
+            orderSize = min((futures_etf_price_diff//TICK_SIZE_IN_CENTS)* LOT_SIZE,ARB_POSITION_LIMIT-self.position - self.prevBidSize)
             self.logger.info("(Add BID Order) orderSize = %d, position = %d", orderSize, self.position)
             new_bid_price =  etf_best_bid
+            ## diff ##
+            if futures_etf_price_diff >= 3*TICK_SIZE_IN_CENTS:
+                new_bid_price += 1*TICK_SIZE_IN_CENTS
+            ##########
             if self.bid_id != 0 and new_bid_price not in (self.bid_price, 0):
                 self.send_cancel_order(self.bid_id)
                 self.bid_id = 0
-            if self.bid_id == 0 and new_bid_price != 0 and self.position <= (POSITION_LIMIT - orderSize) and orderSize > 0 and instrument == Instrument.ETF:
+            if self.bid_id == 0 and new_bid_price != 0 and self.position <= (ARB_POSITION_LIMIT - orderSize) and orderSize > 0 and instrument == Instrument.ETF:
                 self.logger.info("%s bid order send with price %d and lot size%d", instrument, new_bid_price, orderSize)
                 self.bid_id = next(self.order_ids)
                 self.bids.add(self.bid_id)
@@ -192,3 +316,98 @@ class AutoTrader(BaseAutoTrader):
         """
         self.logger.info("received trade ticks for instrument %d with sequence number %d", instrument,
                          sequence_number)
+        
+
+
+class TradingLog:
+    '''A class that records the trades on market in small time interval.'''
+    def __init__(self, instrument: int,time,
+                 ask_prices: List[int],ask_volumes: List[int], 
+                 bid_prices: List[int], bid_volumes: List[int]):
+        self.instrument = instrument
+        self.time = time
+        self.ask_prices = ask_prices
+        self.ask_volumes = ask_volumes
+        self.bid_prices = bid_prices
+        self.bid_volumes = bid_volumes
+        self.WAP_time = self.find_WAP_time() # WAP_time is the trade based WAP
+    
+    def find_WAP_time(self):
+        calc =[]
+        for bid_p, ask_p, bid_v, ask_v in zip(self.bid_prices,self.ask_prices,self.bid_volumes,self.ask_volumes):
+            result = bid_p * bid_v+ ask_p * ask_v
+            calc.append(result)
+        result_time = sum(calc)
+        bid_volumes_time = sum(self.bid_volumes) 
+        ask_volumes_time = sum(self.ask_volumes)
+        return  result_time / (bid_volumes_time + ask_volumes_time)    
+
+######################################################################################
+    
+############# Matthew's Class for storing prices #######################
+
+class HistoryLog:
+    """
+    A class used to store the Weigted-average price at a given time.
+    """
+    def __init__(self, instrument: int, time,
+                 ask_prices: List[int], ask_volumes: List[int],
+                 bid_prices: List[int], bid_volumes: List[int]):
+        self.instrument = instrument
+        self.time = time
+        self.ask_prices = ask_prices
+        self.ask_volumes = ask_volumes
+        self.bid_prices = bid_prices
+        self.bid_volumes = bid_volumes
+        self.WAP =  self.find_WAP()# The WAP is the volume weigted average price, it is an index to show the market price
+        self.total_WAP = self.find_total_WAP()
+
+    def find_WAP(self):
+        best_ask_price = self.ask_prices[0]
+        best_ask_vol = self.ask_volumes[0]
+        best_bid_price = self.bid_prices[0]
+        best_bid_vol = self.bid_volumes[0]
+
+        # if there is no order in the market
+        if best_ask_price == 0 and best_bid_price == 0:
+            return 0
+        else:
+            return (best_ask_price * best_bid_vol + best_bid_price * best_ask_vol) / (best_ask_vol + best_bid_vol)
+
+    def find_total_WAP(self):
+        """
+        Return the total_WAP, as numpy float.
+        Total_WAP is the weighted sum of all the orders in the orderbook, 
+        it reveals information of the total demand & supply.
+        """
+        total_volume = sum(self.ask_volumes) + sum(self.bid_volumes)
+        if total_volume == 0:
+            return 0
+        else:
+            return (np.dot(self.ask_prices, self.ask_volumes) + np.dot(self.bid_prices,self.bid_volumes)) / total_volume 
+
+
+def FindVolatility(history: List[HistoryLog]):
+    """
+    Calculate the volatility of a section of history prices.
+    """
+    n = len(history)
+    sum_log_returns = 0
+    for i in range(1,n):
+        # avoid division by zero that might occur at the beginning.
+        log_return = np.log(history[i].WAP/history[i-1].WAP) if history[i-1].WAP != 0 else 0
+        sum_log_returns += log_return ** 2
+    sigma = np.sqrt(sum_log_returns / n)
+    return sigma
+
+###########################################
+
+#######sigmoid#########
+
+def sigmoid(x:float):
+    """
+    Sigmoid function
+    """
+    y = 1 / (1+np.exp(-x))
+    return y
+######################
