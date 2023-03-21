@@ -93,10 +93,10 @@ class Trader:
         delta = 0.8 # delta defines the ratio of our bid-ask spread to the gross market spread
         
         orders = []
-        mm_bid_price = mid_price - delta * market_spread
+        mm_bid_price = round(mid_price - delta * market_spread)
         mm_bid_vol = min(lot_size, pos_lim-pos)
-        mm_ask_price = mid_price + delta * market_spread
-        mm_ask_vol = -min(lot_size, pos-pos_lim)
+        mm_ask_price = round(mid_price + delta * market_spread)
+        mm_ask_vol = -min(lot_size, pos+pos_lim)
         orders.append(Order(product, mm_bid_price, mm_bid_vol))
         orders.append(Order(product, mm_ask_price, mm_ask_vol))
 
