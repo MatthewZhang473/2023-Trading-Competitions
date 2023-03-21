@@ -1,11 +1,13 @@
 from typing import Dict, List, Tuple
 from datamodel import OrderDepth, TradingState, Order, Symbol, Trade, Product, Position
 import json
+import numpy as np
 
 
 class Trader:
     def __init__(self) -> None:
         self.cash = 0
+        self.window = Window(20)
         self.LAST_ROUND = 99900
         # comment out a category to disable it in the logs
         self.logger = Logger([
@@ -71,6 +73,7 @@ class Trader:
         and outputs a list of orders to be sent
         """
 
+        # mid price calculation
         mid_prices, best_bids, best_asks = self.calculate_mid_prices(
             state.order_depths)
         self.logger.log(mid_prices, "mid_price")
@@ -85,22 +88,45 @@ class Trader:
         if state.timestamp == self.LAST_ROUND:
             self.logger.log(f"final profit = {profit}", "final_profit")
 
-        print(json.dumps(state.toJSON(), indent=4, sort_keys=True))
+        self.logger.log(json.dumps(
+            state.toJSON(), indent=4, sort_keys=True), "debug")
+
+        ### TRADING ALGORITHM ###
+
         result = {}
 
-        banana_orders = self.market_making(
-            "BANANAS", 20, best_bids["BANANAS"], best_asks["BANANAS"], state.position)
-        result['BANANAS'] = banana_orders
+        ### BANANAS TRADING ###
+        BANANA = "BANANAS"
+        banana_orders = self.window_calc(BANANA, self.window, mid_prices[BANANA],
+                                         best_bids[BANANA], best_asks[BANANA],
+                                         state.position[BANANA] if BANANA in state.position else 0, 20)
+        result[BANANA] = banana_orders
         self.logger.log(
-            f"Making banana orders by market making:\n{banana_orders}", "orders")
+            f"Making banana orders by sliding window:\n{banana_orders}", "orders")
+        self.window.push(mid_prices[BANANA])
 
+        # banana_orders = self.market_making_calc(
+        #     BANANA, 20, best_bids[BANANA], best_asks[BANANA], state.position)
+        # result[BANANA] = banana_orders
+        # self.logger.log(
+        #     f"Making banana orders by market making:\n{banana_orders}", "orders")
+
+        ### PEARLS TRADING ###
+        PEARL = "PEARLS"
+        pearl_orders = self.mean_reversal_calc(
+            PEARL, 20, best_bids[PEARL], best_asks[PEARL], state.position)
+        result[PEARL] = pearl_orders
+        self.logger.log(
+            f"Making pearl orders by mena reversal:\n{pearl_orders}", "orders")
+
+        ### RETURN RESULT ###
         self.logger.divider_big()
         return result
 
-    def market_making(self, product: str, pos_lim: int,
-                      best_bid: int, best_ask: int,
-                      position: Dict[Product, Position], history: list = [],
-                      WAP: float = 0, sigma: float = 0):
+    def market_making_calc(self, product: str, pos_lim: int,
+                           best_bid: int, best_ask: int,
+                           position: Dict[Product, int], history: list = [],
+                           WAP: float = 0, sigma: float = 0) -> List[Order]:
         """
         Given the current orderbook and trade history, calculate the new ask/bid price and volume.
 
@@ -116,22 +142,134 @@ class Trader:
         Return values:
         orders --  a list of all orders
         """
-        self.logger.log(f"{position}")
         pos = position[product] if product in position else 0
 
         market_spread = (best_ask - best_bid)/2  # note is may be a float
         mid_price = (best_ask + best_bid) / 2  # note this may be a float
 
-        lot_size = 5  # the quantity of our orders
-        delta = 0.8  # delta defines the ratio of our bid-ask spread to the gross market spread
+        ## Cancel the trade if the market spread is too small ##
+        if market_spread * 2 < 3:
+            return []
 
+        # #########################################################
+
+        # ## Sigmoid Inventory Control##
+        # alpha = 1 * market_spread
+        # offset = 10
+        # scale = 1.5
+        # if pos > 0:
+        #     normalized_pos = (pos - offset)/scale
+        #     mid_price -= round(alpha * self.sigmoid(normalized_pos))
+        # if pos < 0:
+        #     normalized_pos = -(pos + offset)/scale
+        #     mid_price += round(alpha * self.sigmoid(normalized_pos))
+        # ###############################
+
+        lot_size = 5  # the quantity of our orders
+        # delta = 0.8  # delta defines the ratio of our bid-ask spread to the gross market spread
         orders = []
-        mm_bid_price = round(mid_price - delta * market_spread)
+
+        mm_bid_price = best_bid + 1
         mm_bid_vol = min(lot_size, pos_lim-pos)
-        mm_ask_price = round(mid_price + delta * market_spread)
+        mm_ask_price = best_ask - 1
         mm_ask_vol = -min(lot_size, pos+pos_lim)
-        orders.append(Order(product, mm_bid_price, mm_bid_vol))
-        orders.append(Order(product, mm_ask_price, mm_ask_vol))
+
+        if pos <= 2 * lot_size:
+            orders.append(Order(product, mm_bid_price, mm_bid_vol))  # buy
+        else:
+            mm_ask_price -= 1
+            mm_ask_vol *= 2
+        if pos >= -2 * lot_size:
+            orders.append(Order(product, mm_ask_price, mm_ask_vol))  # sell
+        else:
+            mm_bid_price += 1
+            mm_bid_vol *= 2
+
+        return orders
+
+    def sigmoid(self, x: float):
+        """
+        Sigmoid function
+        """
+        y = 1 / (1+np.exp(-x))
+        return y
+
+    def mean_reversal_calc(self, product: str, pos_lim: int,
+                           best_bid: int, best_ask: int,
+                           position: Dict[Product, int], history: list = [],
+                           WAP: float = 0, sigma: float = 0) -> List[Order]:
+        """
+        Given the current orderbook and trade history, calculate the new ask/bid price and volume.
+
+        Input arguments:
+        product -- the product traded on
+        best_bid -- the current best bid price
+        best_ask -- the current best ask price
+        pos -- the current position
+        history -- list of mid prices of the last 10 timestamps
+        WAP -- the current weighted average price
+        sigma -- the volatility (standard deviation)
+
+        Return values:
+        orders --  a list of all orders
+        """
+        pos = position[product] if product in position else 0
+
+        true_price = 10000
+        lot_size = 5
+        orders = []
+        min_profit_margin = 1  # minimum acceptable price
+        alpha = 1  # alpha is a parameter that scale the bid/ask volume
+
+        mr_ask_price = 0  # mr for mean reversal
+        mr_bid_price = 0
+
+        # Buy / Sell, with volume proportional to the profit margin
+        buy_profit_margin = true_price - best_ask
+        if buy_profit_margin >= min_profit_margin:
+            mr_ask_price = best_ask
+            mr_ask_vol = min(alpha*buy_profit_margin*lot_size, pos_lim-pos)
+        sell_profit_margin = best_bid - true_price
+        if sell_profit_margin >= min_profit_margin:
+            mr_bid_price = best_bid
+            mr_bid_vol = -min(alpha*sell_profit_margin*lot_size, pos+pos_lim)
+
+        # send the orders
+        if mr_bid_price != 0:
+            orders.append(Order(product, mr_bid_price, mr_bid_vol))
+        if mr_ask_price != 0:
+            orders.append(Order(product, mr_ask_price, mr_ask_vol))
+
+        return orders
+
+    def window_calc(self, product: Product, window, mid_price: float,
+                    best_bid, best_ask,
+                    position: float, position_limit: float) -> List[Order]:
+        orders = []
+
+        margin = 1
+        self.logger.log(
+            f"margin = {margin}", "debug")
+
+        upper, lower = window.upper_lower_bounds(n=2)
+        self.logger.log(f"upper: {upper}, lower: {lower}")
+        # if mid price is above upper bound, sell
+        if mid_price > upper:
+            max_sell = -(position + position_limit)
+            orders.append(Order(product, mid_price -
+                          margin, max_sell))
+        # if mid price is below lower bound, buy
+        elif mid_price < lower:
+            max_buy = position_limit - position  # sign accounted for
+            orders.append(Order(product, mid_price +
+                          margin, max_buy))
+        # else just clear position
+        # elif abs(mid_price-window.avg()) < window.std():
+        else:
+            clear_amount = -position
+            # price = mid_price - margin if clear_amount < 0 else mid_price + margin
+            price = best_ask - margin if position > 0 else best_bid + margin
+            orders.append(Order(product, price, clear_amount))
 
         return orders
 
@@ -163,3 +301,23 @@ class Logger:
     def divider_big(self):
         if "format" in self.categories:
             print("="*100)
+
+
+class Window:
+    def __init__(self, size) -> None:
+        self.size = size
+        self.contents = []
+
+    def push(self, item) -> None:
+        self.contents.append(item)
+        if (len(self.contents) > self.size):
+            self.contents.pop(0)
+
+    def avg(self) -> float:
+        return float(sum(self.contents)/len(self.contents) if len(self.contents) > 0 else 0)
+
+    def std(self) -> float:
+        return float(np.std(self.contents))
+
+    def upper_lower_bounds(self, n=2) -> Tuple[float, float]:
+        return (self.avg()+n*self.std(), self.avg()-n*self.std())
