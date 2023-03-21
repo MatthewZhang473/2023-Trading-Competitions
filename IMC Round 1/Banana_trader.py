@@ -69,7 +69,7 @@ class Trader:
                 # Depending on the logic above
         return result
 
-    def MarketMakingCalc(self, product:str, pos_lim:int,
+    def market_making_calc(self, product:str, pos_lim:int,
                          best_bid:int, best_ask:int,
                          pos:float, history:list = [], 
                          WAP:float = 0,sigma:float = 0):
