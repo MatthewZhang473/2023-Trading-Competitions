@@ -2,6 +2,7 @@
 
 from typing import Dict, List
 from datamodel import OrderDepth, TradingState, Order
+import numpy as np
 
 
 class Trader:
@@ -67,7 +68,8 @@ class Trader:
                 # These possibly contain buy or sell orders for PEARLS
                 # Depending on the logic above
         return result
-    def marketMakingCalc(product:str, pos_lim:int,
+
+    def MarketMakingCalc(self, product:str, pos_lim:int,
                          best_bid:int, best_ask:int,
                          pos:float, history:list = [], 
                          WAP:float = 0,sigma:float = 0):
@@ -89,10 +91,28 @@ class Trader:
         market_spread = (best_ask - best_bid)/2 # note is may be a float
         mid_price = (best_ask + best_bid) / 2 # note this may be a float
 
+        ## Cancel the trade if the market spread is too small ##
+        if market_spread <= 3:
+            return
+        #########################################################
+
+        ## Sigmoid Inventory Control##
+        alpha = 1 * market_spread
+        offset = 10
+        scale = 1.5
+        if pos > 0:
+            normalized_pos = (pos - offset)/scale
+            mid_price -= round(alpha * self.sigmoid(normalized_pos))
+        if pos < 0:
+            normalized_pos = -(pos + offset)/scale
+            mid_price += round(alpha * self.sigmoid(normalized_pos))
+        ###############################
+
+
         lot_size = 5 # the quantity of our orders
-        delta = 0.8 # delta defines the ratio of our bid-ask spread to the gross market spread
-        
+        delta = 0.8 # delta defines the ratio of our bid-ask spread to the gross market spread        
         orders = []
+
         mm_bid_price = round(mid_price - delta * market_spread)
         mm_bid_vol = min(lot_size, pos_lim-pos)
         mm_ask_price = round(mid_price + delta * market_spread)
@@ -101,3 +121,12 @@ class Trader:
         orders.append(Order(product, mm_ask_price, mm_ask_vol))
 
         return orders
+    
+    #######sigmoid#########
+    def sigmoid(x:float):
+        """
+        Sigmoid function
+        """
+        y = 1 / (1+np.exp(-x))
+        return y
+    ######################
