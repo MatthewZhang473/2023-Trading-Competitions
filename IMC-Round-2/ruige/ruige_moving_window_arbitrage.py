@@ -384,10 +384,10 @@ class Trader:
         sell_volume_product_1 = 0
         sell_volume_product_2 = 0
         
-        reserve_proportion_small = 0.7
+        reserve_proportion = 0.7
         diff = 25
 
-        proportion_per_timestamp = 0.5
+        proportion_per_timestamp = 0.15
         
         # margin buy 1 sell 2
         margin_1 =  best_bid_price_product_1 * lot_size_product_1 - best_ask_price_product_2 * lot_size_product_2
@@ -406,11 +406,11 @@ class Trader:
             elif len(self.coconut_window.contents) == self.coconut_window.size:
                 if self.coconut_window.avg() > margin_1:
                     max_number_buy_lots = min(best_ask_volume_product_2,\
-                                            (position_limit_product_2 - position_product_2))//lot_size_product_2
+                                            (position_limit_product_2 - position_product_2)*proportion_per_timestamp)//lot_size_product_2
 
                     # how many lots of product 1 can I sell from the order book, without breaching position limit
                     max_number_sell_lots = min(best_bid_volume_product_1,\
-                                            (position_limit_product_1 + position_product_1))//lot_size_product_1
+                                            (position_limit_product_1 + position_product_1)*proportion_per_timestamp)//lot_size_product_1
                     
                     number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
                     
@@ -445,11 +445,11 @@ class Trader:
             elif len(self.pina_coladas_window.contents) == self.pina_coladas_window.size:
                 if np.mean(self.pina_coladas_window.contents) > margin_2:
                     max_number_buy_lots = min(best_ask_volume_product_1,\
-                                            (position_limit_product_1 - position_product_1))// lot_size_product_1
+                                            (position_limit_product_1 - position_product_1)*proportion_per_timestamp)// lot_size_product_1
                     
                     # how many lots of product 2 can I sell from the order book, without breaching position limit
                     max_number_sell_lots = min(best_bid_volume_product_2,\
-                                            (position_limit_product_2 + position_product_2))//lot_size_product_2
+                                            (position_limit_product_2 + position_product_2)*proportion_per_timestamp)//lot_size_product_2
                     number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
                     
                     buy_volume_product_1 = number_trade_lots * lot_size_product_1
