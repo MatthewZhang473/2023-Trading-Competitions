@@ -8,6 +8,8 @@ class Trader:
     def __init__(self) -> None:
         self.cash = 0
         self.window = Window(10)
+        self.cb_pa_window = Window(4)
+        self.pb_ca_window = Window(4)
         self.LAST_ROUND = 99900
         self.position_limits = {
             "BANANAS": 20,
@@ -125,7 +127,7 @@ class Trader:
         result[PEARL] = pearl_orders
         self.logger.log(
             f"Making pearl orders by mena reversal:\n{pearl_orders}", "orders")
-        
+
         ## COCONUT AND PINA COLADAS TRADING ###
         COCONUTS = "COCONUTS"
         PINA_COLADAS = "PINA_COLADAS"
@@ -135,35 +137,86 @@ class Trader:
         COCONUTS_best_bid_price = best_bids[COCONUTS]
         COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
         COCONUTS_best_ask_price = best_asks[COCONUTS]
-        COCONUTS_best_ask_volume = abs(state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
+        COCONUTS_best_ask_volume = abs(
+            state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
         PINAS_best_bid_price = best_bids[PINA_COLADAS]
         PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
         PINAS_best_ask_price = best_asks[PINA_COLADAS]
-        PINAS_best_ask_volume = abs(state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
+        PINAS_best_ask_volume = abs(
+            state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
         arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\
-            self.arbitrage_calc(product_1=COCONUTS, product_2=PINA_COLADAS,
-                                best_bid_price_product_1=COCONUTS_best_bid_price, 
-                                best_ask_price_product_1=COCONUTS_best_ask_price,
-                                best_bid_volume_product_1=COCONUTS_best_bid_volume,
-                                best_ask_volume_product_1=COCONUTS_best_ask_volume,
-                                best_bid_price_product_2=PINAS_best_bid_price,
-                                best_ask_price_product_2=PINAS_best_ask_price,
-                                best_bid_volume_product_2=PINAS_best_bid_volume,
-                                best_ask_volume_product_2=PINAS_best_ask_volume,
-                                position_product_1=state.position[COCONUTS] if COCONUTS in state.position else 0,
-                                position_product_2=state.position[PINA_COLADAS] if PINA_COLADAS in state.position else 0,
-                                product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
-                                lot_size_product_1=COCONUTS_LOT_SIZE,
-                                lot_size_product_2=PINA_COLADAS_LOT_SIZE,
-                                position_limit_product_1=self.position_limits[COCONUTS],
-                                position_limit_product_2=self.position_limits[PINA_COLADAS])
+            self.window_arbitrage_calc(state.timestamp,
+                                       self.cb_pa_window, self.pb_ca_window,
+                                       product_1=COCONUTS, product_2=PINA_COLADAS,
+                                       mid_price_product_1=mid_prices[COCONUTS],
+                                       mid_price_product_2=mid_prices[PINA_COLADAS],
+                                       best_bid_price_product_1=COCONUTS_best_bid_price,
+                                       best_ask_price_product_1=COCONUTS_best_ask_price,
+                                       best_bid_volume_product_1=COCONUTS_best_bid_volume,
+                                       best_ask_volume_product_1=COCONUTS_best_ask_volume,
+                                       best_bid_price_product_2=PINAS_best_bid_price,
+                                       best_ask_price_product_2=PINAS_best_ask_price,
+                                       best_bid_volume_product_2=PINAS_best_bid_volume,
+                                       best_ask_volume_product_2=PINAS_best_ask_volume,
+                                       position_product_1=state.position[COCONUTS] if COCONUTS in state.position else 0,
+                                       position_product_2=state.position[
+                                           PINA_COLADAS] if PINA_COLADAS in state.position else 0,
+                                       product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
+                                       lot_size_product_1=COCONUTS_LOT_SIZE,
+                                       lot_size_product_2=PINA_COLADAS_LOT_SIZE,
+                                       position_limit_product_1=self.position_limits[COCONUTS],
+                                       position_limit_product_2=self.position_limits[PINA_COLADAS])
         result[COCONUTS] = arbitrage_COCONUTS_orders
         result[PINA_COLADAS] = arbitrage_PINAS_orders
         self.logger.log(
-            f"Making COCONUTS orders by arbitrage:\n{arbitrage_COCONUTS_orders}", "orders")
+            f"Making COCONUTS orders by window arbitrage:\n{arbitrage_COCONUTS_orders}", "orders")
         self.logger.log(
-            f"Making PINAS orders by arbitrage:\n{arbitrage_PINAS_orders}", "orders")
+            f"Making PINAS orders by window arbitrage:\n{arbitrage_PINAS_orders}", "orders")
+        cbpa_diff = COCONUTS_best_bid_price * COCONUTS_LOT_SIZE - \
+            PINAS_best_ask_price * PINA_COLADAS_LOT_SIZE
+        pbca_diff = PINAS_best_bid_price * PINA_COLADAS_LOT_SIZE - \
+            COCONUTS_best_ask_price * COCONUTS_LOT_SIZE
+        self.cb_pa_window.push(cbpa_diff)
+        self.pb_ca_window.push(pbca_diff)
 
+        # COCONUTS = "COCONUTS"
+        # PINA_COLADAS = "PINA_COLADAS"
+        # COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
+        # COCONUTS_LOT_SIZE = 15
+        # PINA_COLADAS_LOT_SIZE = 8
+        # COCONUTS_best_bid_price = best_bids[COCONUTS]
+        # COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
+        # COCONUTS_best_ask_price = best_asks[COCONUTS]
+        # COCONUTS_best_ask_volume = abs(
+        #     state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
+        # PINAS_best_bid_price = best_bids[PINA_COLADAS]
+        # PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
+        # PINAS_best_ask_price = best_asks[PINA_COLADAS]
+        # PINAS_best_ask_volume = abs(
+        #     state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
+        # arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\
+        #     self.arbitrage_calc(product_1=COCONUTS, product_2=PINA_COLADAS,
+        #                         best_bid_price_product_1=COCONUTS_best_bid_price,
+        #                         best_ask_price_product_1=COCONUTS_best_ask_price,
+        #                         best_bid_volume_product_1=COCONUTS_best_bid_volume,
+        #                         best_ask_volume_product_1=COCONUTS_best_ask_volume,
+        #                         best_bid_price_product_2=PINAS_best_bid_price,
+        #                         best_ask_price_product_2=PINAS_best_ask_price,
+        #                         best_bid_volume_product_2=PINAS_best_bid_volume,
+        #                         best_ask_volume_product_2=PINAS_best_ask_volume,
+        #                         position_product_1=state.position[COCONUTS] if COCONUTS in state.position else 0,
+        #                         position_product_2=state.position[PINA_COLADAS] if PINA_COLADAS in state.position else 0,
+        #                         product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
+        #                         lot_size_product_1=COCONUTS_LOT_SIZE,
+        #                         lot_size_product_2=PINA_COLADAS_LOT_SIZE,
+        #                         position_limit_product_1=self.position_limits[COCONUTS],
+        #                         position_limit_product_2=self.position_limits[PINA_COLADAS])
+        # result[COCONUTS] = arbitrage_COCONUTS_orders
+        # result[PINA_COLADAS] = arbitrage_PINAS_orders
+        # self.logger.log(
+        #     f"Making COCONUTS orders by arbitrage:\n{arbitrage_COCONUTS_orders}", "orders")
+        # self.logger.log(
+        #     f"Making PINAS orders by arbitrage:\n{arbitrage_PINAS_orders}", "orders")
 
         ### RETURN RESULT ###
         self.logger.divider_big()
@@ -328,22 +381,6 @@ class Trader:
                 margin *= adaptive_multiplier
             max_buy = position_limit - position  # sign accounted for
             orders.append(Order(product, best_bid + margin, max_buy))
-        # do normal market making if there are no spikes
-        # elif abs(position) < lot_size:
-        #     if (best_bid-best_ask) < 3:
-        #         return []
-        #     mm_bid_price = best_bid + 1
-        #     mm_bid_vol = min(lot_size, position_limit-position)
-        #     mm_ask_price = best_ask - 1
-        #     mm_ask_vol = -min(lot_size, position+position_limit)
-        #     if position > 2 * lot_size:
-        #         mm_ask_price -= 1
-        #         mm_ask_vol *= 2
-        #     if position < -2 * lot_size:
-        #         mm_bid_price += 1
-        #         mm_bid_vol *= 2
-        #     orders.append(Order(product, mm_bid_price, mm_bid_vol))  # buy
-        #     orders.append(Order(product, mm_ask_price, mm_ask_vol))  # sell
         # else just clear position gradually
         else:
             # price = mid_price - margin if clear_amount < 0 else mid_price + margin
@@ -354,11 +391,139 @@ class Trader:
 
         return orders
 
+    def window_arbitrage_calc(self, timestamp, cb_pa_window, pb_ca_window, product_1: Product, product_2: Product,
+                              mid_price_product_1, mid_price_product_2,
+                              best_bid_price_product_1: int, best_ask_price_product_1: int,
+                              best_bid_volume_product_1: int, best_ask_volume_product_1: int,
+                              best_bid_price_product_2: int, best_ask_price_product_2: int,
+                              best_bid_volume_product_2: int, best_ask_volume_product_2: int,
+                              position_product_1: int, position_product_2: int,
+                              product_1_over_product_2_value_ratio: float,
+                              lot_size_product_1: int, lot_size_product_2: int,
+                              position_limit_product_1: int, position_limit_product_2: int) -> List[Order]:
+        """
+        Arbitrage between two related products.
+
+        Input Arguments:
+        window -- BLG window of price difference (1-2)
+        product_1 -- the main product we trade on
+        product_2 -- the related product we hedge (take reverse trades on) 
+                         to reduce risk
+        product_1_over_product_2_value_ratio -- the ratio of prices between two related products
+        lot_size_product -- 15 for COCONAS (price at 8k), 8 for PINA (price at 15k)
+        """
+        if timestamp < self.cb_pa_window.size * 100:
+            return []
+
+        n = 1.3
+        margin = 2
+        trade_amount = 120
+        clear_limit = 10000
+
+        self.logger.log(
+            f"WINDOW ARBITRAGE PARAMETERS: n={n}, margin={margin}, trade_amount={trade_amount},clear_limit={clear_limit}")
+
+        product_1_orders = []
+        product_2_orders = []
+
+        buy_volume_product_1 = 0
+        buy_volume_product_2 = 0
+        sell_volume_product_1 = 0
+        sell_volume_product_2 = 0
+
+        cbpa_upper, cb_pa_lower = cb_pa_window.upper_lower_bounds(n)
+        pbca_upper, pbca_lower = pb_ca_window.upper_lower_bounds(n)
+
+        cbpa_diff = best_bid_price_product_1 * lot_size_product_1 - \
+            best_ask_price_product_2 * lot_size_product_2
+        pbca_diff = best_bid_price_product_2 * lot_size_product_2 - \
+            best_ask_price_product_1 * lot_size_product_1
+
+        # sell product 1 and buy product 2
+        if cbpa_diff > cbpa_upper\
+                and -position_product_1 < position_limit_product_1 and position_product_2 < position_limit_product_2:
+            self.logger.log(
+                f"sell product 1 and buy product 2 because cbpa_dff {cbpa_diff} > cbpa upper {cbpa_upper}", "debug")
+            # how many lots of product 2 can I buy from the order book, without breaching position limit
+            max_number_buy_lots = min(
+                trade_amount,
+                best_ask_volume_product_2,
+                position_limit_product_2 - position_product_2)//lot_size_product_2
+
+            # how many lots of product 1 can I sell from the order book, without breaching position limit
+            max_number_sell_lots = min(
+                trade_amount,
+                best_bid_volume_product_1,
+                position_limit_product_1 + position_product_1)//lot_size_product_1
+
+            # the number of lots I can trade, this is the smaller of the two
+            number_trade_lots = min(max_number_buy_lots, max_number_sell_lots)
+            buy_volume_product_2 = number_trade_lots * lot_size_product_2
+            sell_volume_product_1 = number_trade_lots * lot_size_product_1
+
+        # buy product 1 and sell product 2
+        elif pbca_diff > pbca_upper\
+                and position_product_1 < position_limit_product_1 and -position_product_2 < position_limit_product_2:
+            self.logger.log(
+                f"buy product 1 and sell product 2 because pbca diff {pbca_diff} > pbca upper {pbca_upper}", "debug")
+            # how many lots of product 2 can I buy from the order book, without breaching position limit
+            max_number_buy_lots = min(
+                trade_amount,
+                best_ask_volume_product_1,
+                position_limit_product_1 - position_product_1)//lot_size_product_1
+
+            # how many lots of product 1 can I sell from the order book, without breaching position limit
+            max_number_sell_lots = min(
+                trade_amount,
+                best_bid_volume_product_2,
+                position_limit_product_2 + position_product_2)//lot_size_product_2
+
+            # the number of lots I can trade, this is the smaller of the two
+            number_trade_lots = min(max_number_buy_lots, max_number_sell_lots)
+            buy_volume_product_1 = number_trade_lots * lot_size_product_1
+            sell_volume_product_2 = number_trade_lots * lot_size_product_2
+
+        # else:  # clear
+        #     if position_product_1 > 0:  # need to sell
+        #         sell_volume_product_1 = min(clear_limit, position_product_1)
+        #     else:  # need to buy
+        #         buy_volume_product_1 = min(clear_limit, -position_product_1)
+        #     if position_product_2 > 0:
+        #         sell_volume_product_2 = min(clear_limit, position_product_2)
+        #     else:  # need to buy
+        #         buy_volume_product_2 = min(clear_limit, -position_product_2)
+
+        # buy_price_product_2 = best_bid_price_product_2 + margin
+        # sell_price_product_1 = best_ask_price_product_1 - margin
+        # buy_price_product_1 = best_bid_price_product_1 + margin
+        # sell_price_product_2 = best_ask_price_product_2 - margin
+
+        buy_price_product_2 = best_ask_price_product_2
+        sell_price_product_1 = best_bid_price_product_1
+        buy_price_product_1 = best_ask_price_product_1
+        sell_price_product_2 = best_bid_price_product_2
+
+        # Send orders
+        # if we can sell product 1 and buy product 2
+        # N.B. I assumed all the volumes given are positive
+        product_1_orders.append(
+            Order(product_1, sell_price_product_1, -sell_volume_product_1))
+        product_2_orders.append(
+            Order(product_2, buy_price_product_2, buy_volume_product_2))
+
+        # if we can sell product 2 and buy product 1
+        product_2_orders.append(
+            Order(product_2, sell_price_product_2, -sell_volume_product_2))
+        product_1_orders.append(
+            Order(product_1, buy_price_product_1, buy_volume_product_1))
+
+        return (product_1_orders, product_2_orders)
+
     def arbitrage_calc(self, product_1: Product, product_2: Product,
                        best_bid_price_product_1: int, best_ask_price_product_1: int,
-                       best_bid_volume_product_1:int, best_ask_volume_product_1: int,
+                       best_bid_volume_product_1: int, best_ask_volume_product_1: int,
                        best_bid_price_product_2: int, best_ask_price_product_2: int,
-                       best_bid_volume_product_2:int, best_ask_volume_product_2: int,
+                       best_bid_volume_product_2: int, best_ask_volume_product_2: int,
                        position_product_1: int, position_product_2: int,
                        product_1_over_product_2_value_ratio: float,
                        lot_size_product_1: int, lot_size_product_2: int,
@@ -373,7 +538,7 @@ class Trader:
         product_1_over_product_2_value_ratio -- the ratio of prices between two related products
         lot_size_product -- 15 for COCONAS (price at 8k), 8 for PINA (price at 15k)
         """
-        
+
         product_1_orders = []
         product_2_orders = []
 
@@ -388,53 +553,59 @@ class Trader:
             # buy in product 2, sell product 1
 
             # how many lots of product 2 can I buy from the order book, without breaching position limit
-            max_number_buy_lots = min(best_ask_volume_product_2,\
+            max_number_buy_lots = min(best_ask_volume_product_2,
                                       position_limit_product_2 - position_product_2)//lot_size_product_2
 
             # how many lots of product 1 can I sell from the order book, without breaching position limit
-            max_number_sell_lots = min(best_bid_volume_product_1,\
+            max_number_sell_lots = min(best_bid_volume_product_1,
                                        position_limit_product_1 - position_product_1)//lot_size_product_1
-            
-            number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
-            
+
+            # the number of lots I can trade, this is the smaller of the two
+            number_trade_lots = min(max_number_buy_lots, max_number_sell_lots)
+
             buy_volume_product_2 = number_trade_lots * lot_size_product_2
             sell_volume_product_1 = number_trade_lots * lot_size_product_1
             buy_price_product_2 = best_ask_price_product_2
             sell_price_product_1 = best_bid_price_product_1
-    
+
         # if normalized product 1 is cheaper than prodcut 2
         if best_bid_price_product_2 * product_1_over_product_2_value_ratio > best_ask_price_product_1:
             # buy in product 1, sell product 2
 
             # how many lots of product 1 can I buy from the order book, without breaching position limit
-            max_number_buy_lots = min(best_ask_volume_product_1,\
-                                      position_limit_product_1 - position_product_1)// lot_size_product_1
-            
+            max_number_buy_lots = min(best_ask_volume_product_1,
+                                      position_limit_product_1 - position_product_1) // lot_size_product_1
+
             # how many lots of product 2 can I sell from the order book, without breaching position limit
-            max_number_sell_lots = min(best_bid_volume_product_2,\
-                                    position_limit_product_2 + position_product_2)//lot_size_product_2
-            number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
-            
+            max_number_sell_lots = min(best_bid_volume_product_2,
+                                       position_limit_product_2 + position_product_2)//lot_size_product_2
+            # the number of lots I can trade, this is the smaller of the two
+            number_trade_lots = min(max_number_buy_lots, max_number_sell_lots)
+
             buy_volume_product_1 = number_trade_lots * lot_size_product_1
             sell_volume_product_2 = number_trade_lots * lot_size_product_2
             buy_price_product_1 = best_ask_price_product_1
             sell_price_product_2 = best_bid_price_product_2
 
         # Send orders
-        if sell_volume_product_1!=0 and buy_volume_product_2!=0:
+        if sell_volume_product_1 != 0 and buy_volume_product_2 != 0:
             # if we can sell product 1 and buy product 2
-            
+
             # N.B. I assumed all the volumes given are positive
-            product_1_orders.append(Order(product_1, sell_price_product_1, -sell_volume_product_1))
-            product_2_orders.append(Order(product_2, buy_price_product_2, buy_volume_product_2))
+            product_1_orders.append(
+                Order(product_1, sell_price_product_1, -sell_volume_product_1))
+            product_2_orders.append(
+                Order(product_2, buy_price_product_2, buy_volume_product_2))
 
-        if sell_volume_product_2!=0 and buy_volume_product_1!=0:
+        if sell_volume_product_2 != 0 and buy_volume_product_1 != 0:
             # if we can sell product 2 and buy product 1
-            product_2_orders.append(Order(product_2, sell_price_product_2, -sell_volume_product_2))
-            product_1_orders.append(Order(product_1, buy_price_product_1, buy_volume_product_1))
+            product_2_orders.append(
+                Order(product_2, sell_price_product_2, -sell_volume_product_2))
+            product_1_orders.append(
+                Order(product_1, buy_price_product_1, buy_volume_product_1))
 
-        return (product_1_orders,product_2_orders)
-        
+        return (product_1_orders, product_2_orders)
+
 
 class Logger:
     """
