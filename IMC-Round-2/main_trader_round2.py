@@ -1,5 +1,5 @@
 from typing import Dict, List, Tuple
-from datamodel import OrderDepth, TradingState, Order, Symbol, Trade, Product, Position
+from datamodel import OrderDepth, TradingState, Order, Symbol, Trade, Product, Position, Listing
 import json
 import numpy as np
 
@@ -7,19 +7,28 @@ import numpy as np
 class Trader:
     def __init__(self) -> None:
         self.cash = 0
+
         self.window = Window(10)
         self.cb_pa_window = Window(4)
         self.pb_ca_window = Window(4)
+        self.coconut_window = Window(10)
+
+        self.last_sell_price = 0
+        self.last_bought_price = 1000000
         self.LAST_ROUND = 99900
+
         self.position_limits = {
             "BANANAS": 20,
             "PEARLS": 20,
             "COCONUTS": 600,
             "PINA_COLADAS": 300
         }
+
         # comment out a category to disable it in the logs
         self.logger = Logger([
             "format",
+            # "bananas",
+            "position",
             "profit",
             "final_profit",
             "cash",
@@ -43,14 +52,20 @@ class Trader:
                     self.logger.log_sell(trade)
                     self.cash += trade.price * trade.quantity
 
+    def calculate_position(self, listing: Dict[Symbol, Listing], position: Dict[Product, Position]) -> Dict[Product, Position]:
+        """add missing product with 0 to the position dictionary"""
+        for product in listing.keys():
+            if product not in position:
+                position[product] = 0
+        for product in position:
+            self.logger.log(
+                f"{Product}'s position = {position[product]}", "position")
+
     def calculate_last_round_profit(self, position: Dict[Product, Position], mid_prices: Dict[Symbol, Position]):
         """what the profit would be if it is last round"""
         profit = self.cash
         for product in position:
             mid_price = mid_prices[product]
-            self.logger.log(
-                f"{product}'s position = {position[product]}, with mid_price = {mid_price}",
-                "debug")
             profit += position[product] * mid_price
         return profit
 
@@ -84,11 +99,12 @@ class Trader:
         # mid price calculation
         mid_prices, best_bids, best_asks = self.calculate_mid_prices(
             state.order_depths)
-        self.logger.log(mid_prices, "mid_price")
+
+        # calculate and print positions
+        positions = self.calculate_position(state.listings, state.position)
 
         # profit calculation
         self.calculate_cash(state.own_trades, state.timestamp)
-        self.logger.log(f"out position now is {state.position}", "debug")
         self.logger.log(f"cash now is {self.cash}", "cash")
 
         profit = self.calculate_last_round_profit(state.position, mid_prices)
@@ -96,8 +112,7 @@ class Trader:
         if state.timestamp == self.LAST_ROUND:
             self.logger.log(f"final profit = {profit}", "final_profit")
 
-        self.logger.log(json.dumps(
-            state.toJSON(), indent=4, sort_keys=True), "debug")
+        self.logger.log(state.toJSON(), "debug")
 
         ### TRADING ALGORITHM ###
 
@@ -114,19 +129,13 @@ class Trader:
             f"Making banana orders by sliding window:\n{banana_orders}", "orders")
         self.window.push(mid_prices[BANANA])
 
-        # banana_orders = self.market_making_calc(
-        #     BANANA, 20, best_bids[BANANA], best_asks[BANANA], state.position)
-        # result[BANANA] = banana_orders
-        # self.logger.log(
-        #     f"Making banana orders by market making:\n{banana_orders}", "orders")
-
         ### PEARLS TRADING ###
         PEARL = "PEARLS"
         pearl_orders = self.mean_reversal_calc(
             PEARL, 20, best_bids[PEARL], best_asks[PEARL], state.position)
         result[PEARL] = pearl_orders
         self.logger.log(
-            f"Making pearl orders by mena reversal:\n{pearl_orders}", "orders")
+            f"Making pearl orders by mean reversal:\n{pearl_orders}", "orders")
 
         ## COCONUT AND PINA COLADAS TRADING ###
         COCONUTS = "COCONUTS"
@@ -158,9 +167,8 @@ class Trader:
                                        best_ask_price_product_2=PINAS_best_ask_price,
                                        best_bid_volume_product_2=PINAS_best_bid_volume,
                                        best_ask_volume_product_2=PINAS_best_ask_volume,
-                                       position_product_1=state.position[COCONUTS] if COCONUTS in state.position else 0,
-                                       position_product_2=state.position[
-                                           PINA_COLADAS] if PINA_COLADAS in state.position else 0,
+                                       position_product_1=positions[COCONUTS],
+                                       position_product_2=positions[PINA_COLADAS],
                                        product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
                                        lot_size_product_1=COCONUTS_LOT_SIZE,
                                        lot_size_product_2=PINA_COLADAS_LOT_SIZE,
@@ -178,45 +186,6 @@ class Trader:
             COCONUTS_best_ask_price * COCONUTS_LOT_SIZE
         self.cb_pa_window.push(cbpa_diff)
         self.pb_ca_window.push(pbca_diff)
-
-        # COCONUTS = "COCONUTS"
-        # PINA_COLADAS = "PINA_COLADAS"
-        # COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
-        # COCONUTS_LOT_SIZE = 15
-        # PINA_COLADAS_LOT_SIZE = 8
-        # COCONUTS_best_bid_price = best_bids[COCONUTS]
-        # COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
-        # COCONUTS_best_ask_price = best_asks[COCONUTS]
-        # COCONUTS_best_ask_volume = abs(
-        #     state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
-        # PINAS_best_bid_price = best_bids[PINA_COLADAS]
-        # PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
-        # PINAS_best_ask_price = best_asks[PINA_COLADAS]
-        # PINAS_best_ask_volume = abs(
-        #     state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
-        # arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\
-        #     self.arbitrage_calc(product_1=COCONUTS, product_2=PINA_COLADAS,
-        #                         best_bid_price_product_1=COCONUTS_best_bid_price,
-        #                         best_ask_price_product_1=COCONUTS_best_ask_price,
-        #                         best_bid_volume_product_1=COCONUTS_best_bid_volume,
-        #                         best_ask_volume_product_1=COCONUTS_best_ask_volume,
-        #                         best_bid_price_product_2=PINAS_best_bid_price,
-        #                         best_ask_price_product_2=PINAS_best_ask_price,
-        #                         best_bid_volume_product_2=PINAS_best_bid_volume,
-        #                         best_ask_volume_product_2=PINAS_best_ask_volume,
-        #                         position_product_1=state.position[COCONUTS] if COCONUTS in state.position else 0,
-        #                         position_product_2=state.position[PINA_COLADAS] if PINA_COLADAS in state.position else 0,
-        #                         product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
-        #                         lot_size_product_1=COCONUTS_LOT_SIZE,
-        #                         lot_size_product_2=PINA_COLADAS_LOT_SIZE,
-        #                         position_limit_product_1=self.position_limits[COCONUTS],
-        #                         position_limit_product_2=self.position_limits[PINA_COLADAS])
-        # result[COCONUTS] = arbitrage_COCONUTS_orders
-        # result[PINA_COLADAS] = arbitrage_PINAS_orders
-        # self.logger.log(
-        #     f"Making COCONUTS orders by arbitrage:\n{arbitrage_COCONUTS_orders}", "orders")
-        # self.logger.log(
-        #     f"Making PINAS orders by arbitrage:\n{arbitrage_PINAS_orders}", "orders")
 
         ### RETURN RESULT ###
         self.logger.divider_big()
@@ -365,7 +334,7 @@ class Trader:
 
         upper, lower = window.upper_lower_bounds(n)
         upper2, lower2 = window.upper_lower_bounds(m)
-        self.logger.log(f"upper: {upper}, lower: {lower}")
+        self.logger.log(f"upper: {upper}, lower: {lower}", "bananas")
 
         # has consecutive spikes prevention
         # if mid price is above upper bound, sell
@@ -381,9 +350,9 @@ class Trader:
                 margin *= adaptive_multiplier
             max_buy = position_limit - position  # sign accounted for
             orders.append(Order(product, best_bid + margin, max_buy))
+
         # else just clear position gradually
         else:
-            # price = mid_price - margin if clear_amount < 0 else mid_price + margin
             price = best_ask - margin if position > 0 else best_bid + margin
             clear_amount = min(-position, clear_limit) if position < 0 else - \
                 min(position, clear_limit)
@@ -415,10 +384,11 @@ class Trader:
         if timestamp < self.cb_pa_window.size * 100:
             return []
 
-        n = 1.3
-        margin = 2
-        trade_amount = 120
-        clear_limit = 10000
+        n = 1
+        m = 2
+        margin = 1
+        trade_amount = 1200
+        clear_limit = 100
 
         self.logger.log(
             f"WINDOW ARBITRAGE PARAMETERS: n={n}, margin={margin}, trade_amount={trade_amount},clear_limit={clear_limit}")
@@ -431,8 +401,17 @@ class Trader:
         sell_volume_product_1 = 0
         sell_volume_product_2 = 0
 
+        # cbpa_upper = cb_pa_window.avg() + 10
         cbpa_upper, cb_pa_lower = cb_pa_window.upper_lower_bounds(n)
+        cbpa_upper2, cb_pa_lower = cb_pa_window.upper_lower_bounds(m)
+        # pbca_upper = pb_ca_window.avg() + 10
         pbca_upper, pbca_lower = pb_ca_window.upper_lower_bounds(n)
+        pbca_upper2, pbca_lower = pb_ca_window.upper_lower_bounds(m)
+
+        if cbpa_upper < pbca_upper:
+            cbpa_upper += 30
+        else:
+            pbca_upper += 30
 
         cbpa_diff = best_bid_price_product_1 * lot_size_product_1 - \
             best_ask_price_product_2 * lot_size_product_2
@@ -447,13 +426,13 @@ class Trader:
             # how many lots of product 2 can I buy from the order book, without breaching position limit
             max_number_buy_lots = min(
                 trade_amount,
-                best_ask_volume_product_2,
+                # best_ask_volume_product_2,
                 position_limit_product_2 - position_product_2)//lot_size_product_2
 
             # how many lots of product 1 can I sell from the order book, without breaching position limit
             max_number_sell_lots = min(
                 trade_amount,
-                best_bid_volume_product_1,
+                # best_bid_volume_product_1,
                 position_limit_product_1 + position_product_1)//lot_size_product_1
 
             # the number of lots I can trade, this is the smaller of the two
@@ -469,13 +448,13 @@ class Trader:
             # how many lots of product 2 can I buy from the order book, without breaching position limit
             max_number_buy_lots = min(
                 trade_amount,
-                best_ask_volume_product_1,
+                # best_ask_volume_product_1,
                 position_limit_product_1 - position_product_1)//lot_size_product_1
 
             # how many lots of product 1 can I sell from the order book, without breaching position limit
             max_number_sell_lots = min(
                 trade_amount,
-                best_bid_volume_product_2,
+                # best_bid_volume_product_2,
                 position_limit_product_2 + position_product_2)//lot_size_product_2
 
             # the number of lots I can trade, this is the smaller of the two
@@ -493,15 +472,19 @@ class Trader:
         #     else:  # need to buy
         #         buy_volume_product_2 = min(clear_limit, -position_product_2)
 
-        # buy_price_product_2 = best_bid_price_product_2 + margin
-        # sell_price_product_1 = best_ask_price_product_1 - margin
-        # buy_price_product_1 = best_bid_price_product_1 + margin
-        # sell_price_product_2 = best_ask_price_product_2 - margin
+        buy_price_product_2 = best_bid_price_product_2 + \
+            (margin * 2 if cbpa_diff > cbpa_upper2 else margin)
+        sell_price_product_1 = best_ask_price_product_1 - \
+            (margin * 1 if cbpa_diff > cbpa_upper2 else margin)
+        buy_price_product_1 = best_bid_price_product_1 + \
+            (margin * 1 if pbca_diff > pbca_upper2 else margin)
+        sell_price_product_2 = best_ask_price_product_2 - \
+            (margin * 2 if pbca_diff > pbca_upper2 else margin)
 
-        buy_price_product_2 = best_ask_price_product_2
-        sell_price_product_1 = best_bid_price_product_1
-        buy_price_product_1 = best_ask_price_product_1
-        sell_price_product_2 = best_bid_price_product_2
+        # buy_price_product_2 = best_ask_price_product_2 + margin
+        # sell_price_product_1 = best_bid_price_product_1 - margin
+        # buy_price_product_1 = best_ask_price_product_1 + margin
+        # sell_price_product_2 = best_bid_price_product_2 - margin
 
         # Send orders
         # if we can sell product 1 and buy product 2
@@ -518,6 +501,46 @@ class Trader:
             Order(product_1, buy_price_product_1, buy_volume_product_1))
 
         return (product_1_orders, product_2_orders)
+
+    def dumb_calc(self, product, window, mid_price, trader,
+                  best_bid_price: int, best_ask_price: int,
+                  best_bid_volume: int, best_ask_volume: int,
+                  position: int, position_limit: int) -> List[Order]:
+        orders = []
+        avg = window.avg()
+        bound = 3
+        trade_amount = 100
+        buy_amount = 0
+        sell_amount = 0
+        min_profit = 3
+
+        # if above average by n, sell
+        if best_bid_price >= trader.last_bought_price + min_profit and position > 0:
+            self.logger.log(
+                f"profit chance of {best_bid_price} - {trader.last_bought_price}")
+            sell_amount = position
+        elif mid_price > avg + bound and position < 100:
+            sell_amount = min(position+position_limit,
+                              best_bid_volume, trade_amount)
+            if sell_amount > 0 and position == 0:
+                trader.last_sell_price = best_bid_price
+        # if below average by n, buy
+        if best_ask_price <= trader.last_sell_price - min_profit and position < 0:
+            self.logger.log(
+                f"profit chance of {trader.last_sell_price} - {best_ask_price}")
+            buy_amount = -position
+        elif mid_price < avg - bound and position < -100:
+            buy_amount = min(position_limit-position,
+                             best_ask_volume, trade_amount)
+            if buy_amount > 0 and position == 0:
+                trader.last_bought_price = best_ask_price
+
+        if sell_amount > 0:
+            orders.append(Order(product, best_bid_price, -sell_amount))
+        if buy_amount > 0:
+            orders.append(Order(product, best_ask_price, buy_amount))
+
+        return orders
 
     def arbitrage_calc(self, product_1: Product, product_2: Product,
                        best_bid_price_product_1: int, best_ask_price_product_1: int,
