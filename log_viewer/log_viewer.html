@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Log Viewer</title>
+    <style>
+        /* Add some styling to the page */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Open Sans", sans-serif;
+            background-color: #f4f1de;
+        }
+
+        #container {
+            margin: 0 auto;
+            max-width: 100%;
+            padding: 20px;
+            background-color: #f4f1de;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f1de;
+            border: 1px solid black;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h3>Log Viewer</h3>
+
+        <form>
+            <label for="logFile">Log File:</label>
+            <input type="file" id="logFile" name="logFile">
+
+            <label for="tags">Tags:</label>
+            <select id="tags" name="tags" multiple></select>
+            <label for="tags">Products:</label>
+            <select id="products" name="products" multiple></select>
+
+            <button type="button" onclick="viewLog()">View Log</button>
+        </form>
+
+        <div id="output"></div>
+    </div>
+
+    <script>
+
+        // Define the tags and corresponding colors
+        var tagColors = {
+            "[TIMESTAMP]": "green",
+            "[POSITION]": "darkgoldenrod",
+            "[MID_PRICE]": "purple",
+            "[CASH]": "darkcyan",
+            "[PROFIT]": "blue",
+            "[ORDERS]": "brown",
+            "[DEBUG]": "darkred",
+        };
+
+        var productColors = {
+            "BANANAS": "BLACK",
+            "PEARLS": "BLACK",
+            "COCONUTS": "BLACK",
+            "PINA_COLADAS": "BLACK",
+            "DIVING_GEAR": "BLACK",
+            "DOLPHIN_SIGHTINGS": "BLACK",
+            "BERRIES": "BLACK",
+        };
+
+        // Create the select options with the corresponding colors
+        var select = document.getElementById("tags");
+        select.size = Object.keys(tagColors).length
+        select.style.overflow = "hidden";
+
+        select.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+            var scroll = this.scrollTop;
+            e.target.selected = !e.target.selected;
+            this.scrollTop = scroll;
+            return false;
+        });
+
+        for (var tag in tagColors) {
+            var option = document.createElement("option");
+            option.value = tag;
+            option.text = tag;
+            option.style.color = tagColors[tag];
+            select.add(option);
+        }
+        select.options[0].selected = true
+
+        var selectProduct = document.getElementById("products");
+        selectProduct.size = Object.keys(productColors).length
+        selectProduct.style.overflow = "hidden";
+
+        selectProduct.addEventListener("mousedown", function (e) {
+            e.preventDefault();
+            var scroll = this.scrollTop;
+            e.target.selected = !e.target.selected;
+            this.scrollTop = scroll;
+            return false;
+        });
+
+        for (var tag in productColors) {
+            var option = document.createElement("option");
+            option.value = tag;
+            option.text = tag;
+            option.style.color = productColors[tag];
+            selectProduct.add(option);
+        }
+        function viewLog() {
+
+            // Get the selected tags
+            var tags = document.getElementById("tags").selectedOptions;
+            var selectedTags = [];
+            for (var i = 0; i < tags.length; i++) {
+                selectedTags.push(tags[i].value);
+            }
+            var productSelect = document.getElementById("products");
+            var unselectedProducts = []; // products to hide
+            for (var i = 0; i < productSelect.options.length; i++) {
+                var option = productSelect.options[i];
+                if (!option.selected) {
+                    unselectedProducts.push(option.value);
+                }
+            }
+
+            // Get the log file
+            var logFile = document.getElementById("logFile").files[0];
+            if (!logFile) {
+                alert("Please select a log file.");
+                return;
+            }
+
+            // Read the log file
+            var reader = new FileReader();
+            reader.onload = function (event) {
+                // Extract the lines with the selected tags
+                var lines = event.target.result.split("\n");
+                var filteredLines = "";
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i];
+                    for (var j = 0; j < selectedTags.length; j++) {
+                        var tag = selectedTags[j];
+                        if (line.includes(tag) && !unselectedProducts.some(x => line.includes(x))) {
+                            // Split the line into the tag and the rest of the text
+                            var restText = line.split(tag)[1]
+                            // Add the line to the filtered lines with the tag color
+                            if (tag == "[TIMESTAMP]")
+                                filteredLines += "\n"
+                            filteredLines += "<span style='color: " + tagColors[tag] + "'>" + tag + "</span>" + restText + "\n";
+                            break;
+                        }
+                    }
+                }
+
+                // Display the filtered lines
+                var output = document.getElementById("output");
+                output.innerHTML = filteredLines.replace(/\n/, "");
+            }
+            reader.readAsText(logFile);
+        }
+
+    </script>
+</body>
+
+</html>

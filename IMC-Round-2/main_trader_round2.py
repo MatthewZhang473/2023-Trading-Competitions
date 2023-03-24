@@ -27,7 +27,8 @@ class Trader:
         # comment out a category to disable it in the logs
         self.logger = Logger([
             "format",
-            # "bananas",
+            "timestamp",
+            "bananas",
             "position",
             "profit",
             "final_profit",
@@ -55,18 +56,20 @@ class Trader:
     def calculate_position(self, listing: Dict[Symbol, Listing], position: Dict[Product, Position]) -> Dict[Product, Position]:
         """add missing product with 0 to the position dictionary"""
         for product in listing.keys():
-            if product not in position:
+            if product not in position.keys():
                 position[product] = 0
-        for product in position:
+        for product in listing.keys():
             self.logger.log(
-                f"{Product}'s position = {position[product]}", "position")
+                f"{product}'s position = {position[product]}", "position")
+        return position
 
     def calculate_last_round_profit(self, position: Dict[Product, Position], mid_prices: Dict[Symbol, Position]):
         """what the profit would be if it is last round"""
         profit = self.cash
         for product in position:
-            mid_price = mid_prices[product]
-            profit += position[product] * mid_price
+            if product in mid_prices:
+                mid_price = mid_prices[product]
+                profit += position[product] * mid_price
         return profit
 
     def calculate_mid_prices(self, order_depths):
@@ -95,6 +98,8 @@ class Trader:
         Only method required. It takes all buy and sell orders for all symbols as an input,
         and outputs a list of orders to be sent
         """
+        print("__")
+        self.logger.log(state.timestamp, "timestamp")
 
         # mid price calculation
         mid_prices, best_bids, best_asks = self.calculate_mid_prices(
@@ -112,7 +117,7 @@ class Trader:
         if state.timestamp == self.LAST_ROUND:
             self.logger.log(f"final profit = {profit}", "final_profit")
 
-        self.logger.log(state.toJSON(), "debug")
+        # self.logger.log(state.toJSON(), "debug")
 
         ### TRADING ALGORITHM ###
 
@@ -126,7 +131,7 @@ class Trader:
                                          self.position_limits[BANANA])
         result[BANANA] = banana_orders
         self.logger.log(
-            f"Making banana orders by sliding window:\n{banana_orders}", "orders")
+            f"BANANAS window mm: {banana_orders}", "orders")
         self.window.push(mid_prices[BANANA])
 
         ### PEARLS TRADING ###
@@ -135,7 +140,7 @@ class Trader:
             PEARL, 20, best_bids[PEARL], best_asks[PEARL], state.position)
         result[PEARL] = pearl_orders
         self.logger.log(
-            f"Making pearl orders by mean reversal:\n{pearl_orders}", "orders")
+            f"PEARLS mean reversal: {pearl_orders}", "orders")
 
         ## COCONUT AND PINA COLADAS TRADING ###
         COCONUTS = "COCONUTS"
@@ -153,33 +158,37 @@ class Trader:
         PINAS_best_ask_price = best_asks[PINA_COLADAS]
         PINAS_best_ask_volume = abs(
             state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
-        arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\
-            self.window_arbitrage_calc(state.timestamp,
-                                       self.cb_pa_window, self.pb_ca_window,
-                                       product_1=COCONUTS, product_2=PINA_COLADAS,
-                                       mid_price_product_1=mid_prices[COCONUTS],
-                                       mid_price_product_2=mid_prices[PINA_COLADAS],
-                                       best_bid_price_product_1=COCONUTS_best_bid_price,
-                                       best_ask_price_product_1=COCONUTS_best_ask_price,
-                                       best_bid_volume_product_1=COCONUTS_best_bid_volume,
-                                       best_ask_volume_product_1=COCONUTS_best_ask_volume,
-                                       best_bid_price_product_2=PINAS_best_bid_price,
-                                       best_ask_price_product_2=PINAS_best_ask_price,
-                                       best_bid_volume_product_2=PINAS_best_bid_volume,
-                                       best_ask_volume_product_2=PINAS_best_ask_volume,
-                                       position_product_1=positions[COCONUTS],
-                                       position_product_2=positions[PINA_COLADAS],
-                                       product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
-                                       lot_size_product_1=COCONUTS_LOT_SIZE,
-                                       lot_size_product_2=PINA_COLADAS_LOT_SIZE,
-                                       position_limit_product_1=self.position_limits[COCONUTS],
-                                       position_limit_product_2=self.position_limits[PINA_COLADAS])
+        (arbitrage_COCONUTS_orders, arbitrage_PINAS_orders) = self.window_arbitrage_calc(
+            state.timestamp,
+            self.cb_pa_window, self.pb_ca_window,
+            product_1=COCONUTS, product_2=PINA_COLADAS,
+            mid_price_product_1=mid_prices[
+                COCONUTS],
+            mid_price_product_2=mid_prices[
+                PINA_COLADAS],
+            best_bid_price_product_1=COCONUTS_best_bid_price,
+            best_ask_price_product_1=COCONUTS_best_ask_price,
+            best_bid_volume_product_1=COCONUTS_best_bid_volume,
+            best_ask_volume_product_1=COCONUTS_best_ask_volume,
+            best_bid_price_product_2=PINAS_best_bid_price,
+            best_ask_price_product_2=PINAS_best_ask_price,
+            best_bid_volume_product_2=PINAS_best_bid_volume,
+            best_ask_volume_product_2=PINAS_best_ask_volume,
+            position_product_1=positions[COCONUTS],
+            position_product_2=positions[
+                PINA_COLADAS],
+            product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
+            lot_size_product_1=COCONUTS_LOT_SIZE,
+            lot_size_product_2=PINA_COLADAS_LOT_SIZE,
+            position_limit_product_1=self.position_limits[
+                COCONUTS],
+            position_limit_product_2=self.position_limits[PINA_COLADAS])
         result[COCONUTS] = arbitrage_COCONUTS_orders
         result[PINA_COLADAS] = arbitrage_PINAS_orders
         self.logger.log(
-            f"Making COCONUTS orders by window arbitrage:\n{arbitrage_COCONUTS_orders}", "orders")
+            f"COCONUTS window arbitrage: {arbitrage_COCONUTS_orders}", "orders")
         self.logger.log(
-            f"Making PINAS orders by window arbitrage:\n{arbitrage_PINAS_orders}", "orders")
+            f"PINA_COLADAS window arbitrage: {arbitrage_PINAS_orders}", "orders")
         cbpa_diff = COCONUTS_best_bid_price * COCONUTS_LOT_SIZE - \
             PINAS_best_ask_price * PINA_COLADAS_LOT_SIZE
         pbca_diff = PINAS_best_bid_price * PINA_COLADAS_LOT_SIZE - \
@@ -382,7 +391,7 @@ class Trader:
         lot_size_product -- 15 for COCONAS (price at 8k), 8 for PINA (price at 15k)
         """
         if timestamp < self.cb_pa_window.size * 100:
-            return []
+            return [], []
 
         n = 1
         m = 2
@@ -409,9 +418,9 @@ class Trader:
         pbca_upper2, pbca_lower = pb_ca_window.upper_lower_bounds(m)
 
         if cbpa_upper < pbca_upper:
-            cbpa_upper += 30
+            cbpa_upper += 25
         else:
-            pbca_upper += 30
+            pbca_upper += 25
 
         cbpa_diff = best_bid_price_product_1 * lot_size_product_1 - \
             best_ask_price_product_2 * lot_size_product_2
