@@ -2,6 +2,7 @@ from typing import Dict, List, Tuple
 from datamodel import OrderDepth, TradingState, Order, Symbol, Trade, Product, Position, Listing
 import json
 import numpy as np
+import pandas as pd
 
 
 class Trader:
@@ -28,11 +29,40 @@ class Trader:
         self.last_bought_price = 1000000
         self.LAST_ROUND = 99900
 
+        ###### Ruige & Matthew's Code for DIVING_GEAR #######
+        # Dolphin window definitions
+        dolphin_diff_term = 1
+        dolphin_num_past_terms = 10
+        self.dolphin_window_size = dolphin_num_past_terms + dolphin_diff_term + 1
+        self.dolphin_diff_term = dolphin_diff_term
+        self.dolphin_window = Window(self.dolphin_window_size)
+
+        # Diving gear window definitions
+        gear_diff_term = 1
+        gear_num_past_terms = 800
+        self.gear_window_size = gear_num_past_terms + gear_diff_term + 1
+        self.gear_diff_term = gear_diff_term
+        self.gear_window = Window(self.gear_window_size)
+
+        # tracers
+        # entrance tracer uses mean values of past 10 DOLPHIN_SIGHTINGS differences
+        entrance_tracer_size = 30
+        self.entrance_tracer_window = Window(entrance_tracer_size)
+
+        # exit tracer
+        exit_tracer_window_size = 50
+        self.exit_tracer_window = Window(exit_tracer_window_size)
+
+        # gear trade signal
+        self.gear_buy_flag = False
+        self.gear_sell_flag = False
+
         self.position_limits = {
             "BANANAS": 20,
             "PEARLS": 20,
             "COCONUTS": 600,
-            "PINA_COLADAS": 300
+            "PINA_COLADAS": 300,
+            'DIVING_GEAR': 50
         }
 
         # comment out a category to disable it in the logs
@@ -213,6 +243,24 @@ class Trader:
         self.mid_window_smaller.push(mid_diff)
         self.cb_pa_window.push(cbpa_diff)
         self.pb_ca_window.push(pbca_diff)
+
+        ### DIVING_GEAR trade ###
+        DIVING_GEAR = 'DIVING_GEAR'
+        indicator = 'DOLPHIN_SIGHTINGS'
+        indicator_mid_price = state.observations[indicator]
+
+        DIVING_GEAR_best_bid_price = best_bids[DIVING_GEAR]
+        DIVING_GEAR_best_bid_volume = state.order_depths[DIVING_GEAR].buy_orders[DIVING_GEAR_best_bid_price]
+        DIVING_GEAR_best_ask_price = best_asks[DIVING_GEAR]
+        DIVING_GEAR_best_ask_volume = abs(state.order_depths[DIVING_GEAR].sell_orders[DIVING_GEAR_best_ask_price])
+        DIVING_GEAR_position = positions[DIVING_GEAR]
+        DIVING_GEAR_position_limit = self.position_limits[DIVING_GEAR]
+
+        diving_gear_orders = self.indicator_trade(state.timestamp, DIVING_GEAR, indicator_mid_price, DIVING_GEAR_best_bid_price, 
+                                                    DIVING_GEAR_best_bid_volume, DIVING_GEAR_best_ask_price, DIVING_GEAR_best_ask_volume, 
+                                                    DIVING_GEAR_position, DIVING_GEAR_position_limit, self.dolphin_diff_term, self.gear_diff_term)
+        result[DIVING_GEAR] = diving_gear_orders
+        self.logger.log(f'{DIVING_GEAR} window indicator trade: {diving_gear_orders}', 'orders')
 
         ### RETURN RESULT ###
         self.logger.divider_big()
@@ -755,6 +803,94 @@ class Trader:
 
         return (product_1_orders, product_2_orders)
 
+    def indicator_trade(self, timestamp, product, indicator_mid_price, 
+                        best_bid_price, best_bid_volume, best_ask_price, 
+                        best_ask_volume, product_position, product_position_limit, dolphin_diff_term, gear_diff_term):
+        # push the current price into the indicator window and product window
+        product_mid_price = (best_bid_price + best_ask_price)/2
+        self.gear_window.push(product_mid_price)
+        self.dolphin_window.push(indicator_mid_price)
+
+        # define time spans for calulating entrace_tracer and short/long term average
+        long_term = 800
+        short_term = 300
+        time_span_for_calculating_entrance_tracer = 10
+
+        # create a DOLPHIN_SIGHTINGS difference series, containing the differences between i th and i+diff th elements
+        dolphin_differences_series = pd.Series(self.dolphin_window.contents).diff(periods = dolphin_diff_term)
+        # calculate entrance tracer
+        entrance_tracer = dolphin_differences_series.iloc[-time_span_for_calculating_entrance_tracer:].mean()\
+              if len(dolphin_differences_series) == time_span_for_calculating_entrance_tracer + dolphin_diff_term + 1 else np.nan
+
+        # long term and short term sigma and mean for the DIVING_GEAR series
+        gear_differences_series = pd.Series(self.gear_window.contents).diff(periods = gear_diff_term)
+        long_gear_differences_series = gear_differences_series.iloc[-long_term:]
+        short_gear_differences_series = gear_differences_series.iloc[-short_term:]
+
+        gear_long_term_average_diff = long_gear_differences_series.mean()\
+            if len(long_gear_differences_series) == long_term else np.nan
+        gear_short_term_average_diff = short_gear_differences_series.mean()\
+            if len(short_gear_differences_series) == short_term else np.nan
+        exit_tracer = gear_long_term_average_diff - gear_short_term_average_diff
+
+        absolute_threshold = 0.5
+        num_std_entrance = 4
+        num_std_exit = 4
+
+        product_orders = []
+
+        self.logger.log(f"entrance tracer window: {self.entrance_tracer_window.contents}", "debug")
+        self.logger.log(f'exit tracer window: {self.exit_tracer_window.contents}', "debug")
+        # when big peak & big troughts comes: 
+        if timestamp > time_span_for_calculating_entrance_tracer*100: # after enough number of entrance_tracer in recorded
+            # 1. condition to buy
+            if (entrance_tracer > num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer > absolute_threshold)\
+                or (self.gear_buy_flag==True and product_position < product_position_limit): # if there is a new trade signal or a flag
+                
+                self.gear_buy_flag = True
+                self.gear_sell_flag = False
+                buy_volume = min(best_ask_volume, product_position_limit - product_position)
+                if buy_volume > 0:
+                    product_orders.append(Order(product, best_ask_price, buy_volume))
+                    self.logger.log(f'buying because indicator indicates upward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
+            
+            # 2. condition to sell
+            elif (entrance_tracer < -num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer < -absolute_threshold)\
+                or (self.gear_sell_flag==True and product_position > -product_position_limit): # if there is a new trade signal or a flag
+                
+                self.gear_sell_flag = True
+                self.gear_buy_flag = False
+                sell_volume = min(best_bid_volume, product_position_limit + product_position)
+                if sell_volume > 0:
+                    product_orders.append(Order(product, best_bid_price, -sell_volume))
+                    self.logger.log(f'selling because indicator indicates downward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
+        # push in the current entrance tracer
+        self.entrance_tracer_window.push(entrance_tracer)
+        
+        if timestamp > long_term*100: # after enough number of gear prices is recorded
+            # when big surge ends
+            # 1. when a peak ends and starts to drop
+
+
+            if exit_tracer > num_std_exit * self.exit_tracer_window.std():
+                self.gear_buy_flag = False
+                clear_volume = product_position
+                if clear_volume != 0:
+                    # note that clear volume must be the negative value of current position so that we reset to position 0 for short-term trade
+                    product_orders.append(Order(product, best_bid_price, -clear_volume))
+                    self.logger.log(f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
+        
+            # 2. when a big trough ends and starts to increase
+            if exit_tracer < -num_std_exit * self.exit_tracer_window.std():
+                self.gear_sell_flag = False
+                clear_volume = product_position
+                if clear_volume != 0:
+                    product_orders.append(Order(product, best_ask_price, -clear_volume))
+                    self.logger.log(f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
+        # push in the current exit tracer
+        self.exit_tracer_window.push(exit_tracer)
+
+        return product_orders
 
 class Logger:
     """
