@@ -1,0 +1,514 @@
+Sandbox logs:
+104435 Lambda errors have reached maximum value for submission 2db0ef10-b95a-40c4-8cf4-c39effe52867
+
+
+Submission logs:
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "60688982-23d1-4d02-a1ee-060ac1c2923f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d731b061-df3a-48e6-82e7-89da6fd8e8b6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "832ce01e-b30a-4295-9d61-34a30d49974a", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "ec9759c0-0f0f-4139-af87-9d09fd463b5d", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "5b723bf5-e49f-412a-8cd9-2f43712ddea7", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "3e841677-d26e-4296-9bd0-d56ba6e7046c", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "6edb3ae6-4284-4515-9e9f-0908b81c2ba2", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "not enough values to unpack (expected 2, got 0)", "errorType": "ValueError", "requestId": "e5a310e5-fda1-46e4-a8bc-78b118957d87", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 148, in run\n    arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\\\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "not enough values to unpack (expected 2, got 0)", "errorType": "ValueError", "requestId": "97119557-5802-428c-85ff-1e15ac16126e", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 148, in run\n    arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\\\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "70fa33df-89fc-44a8-9706-4db13f1e34d6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "b9b2f1b3-fa6d-4ae0-b3b6-5e9477e920ca", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "98efc9c6-69c6-4ebc-b438-b7e794102e9a", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "not enough values to unpack (expected 2, got 0)", "errorType": "ValueError", "requestId": "625e0212-ac07-4e4b-8996-e5b9fedf56c7", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 148, in run\n    arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\\\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d42ee219-79c0-43ac-a499-e28ec7273606", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "1bfa9541-6411-45d2-ab45-0a491f126cf2", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "3e2c82c1-05f4-45ab-b817-015e7c1ee38f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "ac183663-ef47-4f7e-b03c-ac6a87f93796", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "not enough values to unpack (expected 2, got 0)", "errorType": "ValueError", "requestId": "f918d92f-9937-40b6-8f07-4d4694cf6dfe", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 148, in run\n    arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\\\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d5016299-5908-463b-b7bb-adc61f953913", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:09Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "2e9f4c5f-aea2-451f-9561-7b06aec46d6b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d5c84d73-28cd-49d0-b761-7ff3c54647c9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "97e6f828-9f1e-41b9-84df-fdab60c0eced", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "df5f2420-c554-40bd-8ab5-b3ca5f260759", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "6efa3723-87b4-4a68-aa71-2c6ee1e6b30c", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "5494ff88-5271-4896-9c41-4a32d3ac7d64", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "0051663d-0ce9-404c-83a6-b6930d682aeb", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d8692d83-f1b2-45bc-bcd3-d3c3dec54557", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "4bb2bd9c-7de9-4e14-81a1-e2be19e82322", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "fc25dfcf-9686-4842-85c1-c65f0e734a81", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "19eea564-d856-4e14-a142-6a6ad8fc9338", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "a61f2b8b-5cf4-414e-a4b0-7ca054657388", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "00afa4bc-db3b-4414-84dc-08e1e4f1075f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "e40e3b09-de63-4559-bec5-a0b9ee4db4aa", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "48a9caa4-1bad-4208-8325-ede99592eec3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "66bb6a25-280d-434c-8453-4654fd8ce91d", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d0d83b4a-b189-4448-8c36-59c1a5f5fa23", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "824ea082-cd45-4162-a60e-e85ccbcc7b39", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "188d4537-f2f8-4a7b-a497-c774733005fc", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d60d907f-1837-4762-ac60-1ae4e2f0d848", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "f489751b-0c97-442f-a62a-8ef9f6cdd270", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "48a70de5-3d93-4dea-a808-599f792581f5", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "f0d2c4da-61c7-4e7e-9a94-1c5762e1c86b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:10Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "f1366784-01dc-4f34-b277-9603e205f0f9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "722fe816-2ddb-4c4a-9ac4-e3ae369b05f9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "79448774-ea04-4d9f-8d27-4f82003bdb93", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "2f960414-5309-4cef-b68e-2e330fdf984e", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "fc865cdf-0378-4a81-b3fa-1de56b0d6302", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "f4e6de2b-eba1-46fd-822a-a58a491f6d70", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "cb149b30-95b2-49e0-a242-a405782cff6b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "b2ec1b6f-3f85-4fdb-a720-d6d224c36912", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "591c88dc-d91c-46fa-b132-6e25628e7668", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "95e100c4-3946-4149-93db-6e6df3e94030", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d7540e64-3fdd-47db-9fa0-0eca2d1b55d3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "1c51ea63-470a-4666-8db7-d48d7d0ce730", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "c836822c-2fce-4c9e-abd7-372619ff5030", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "4a20cd16-fcd8-470f-a9ff-e1b59f487a09", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "5c380c49-f28a-4ba0-8cc5-f89d9a91a5c5", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "65c6c16d-7191-45f1-8ab6-108e7fa1ff03", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "6fbc3297-35c4-4d33-9758-ce6d7c9a1009", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "741d4bab-909b-484f-a707-3d7bc1ec04f3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "19c3c117-c412-4163-b425-33fa134613f2", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "e884afb5-d461-4c4c-a7d9-ce26e9f73406", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "ed011beb-2ed3-4547-bedf-9e1d5cce28e4", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:11Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "fbc82a77-d270-486e-bfec-e87222e3b259", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "f52b5da8-33a8-40e4-ae89-bf6b22af2077", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "0bde4050-417c-4752-95ab-fa2c397feae8", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "66f0de4f-4bfa-415a-a1de-7a0d007e2ee2", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "4c655971-8a82-445a-aa32-e88b14e23c09", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d104574f-e737-4f49-8850-2875a938aba8", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "dd51f0b9-4498-4f2d-8c8a-8c4c7c698f17", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "b64b175d-7b98-4fb1-9ac5-3f867b402bfb", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "af53a621-6337-4a95-b5ba-1cc1e3a0ba72", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "27a4de92-2225-4d11-8a89-561633add98c", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "ceaa0650-8759-4173-a299-3ec378d73e67", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d6fbadda-3af4-4b6f-a40f-9acf15cfe8c7", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "e6d8a42c-3784-4a5a-be12-4f7728ba603c", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "1b502da8-2cd0-4787-b2d4-b53d25c9ad7e", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:12Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "1f83b448-0850-4294-be25-9310bdc50907", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "e426b181-bef0-4c42-8816-2d7ec1fb7466", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "edef9ba1-b394-48c8-8305-cfd7575d0835", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "3cea98c4-226a-40c2-b794-29d0e2f25d86", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "4f57baf7-ad48-41f4-9937-c8e6860fbef8", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "1bfe7c96-cc97-4c2f-aba8-5bc3eb5b714b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "c644393f-26ab-4a84-8546-ef64d405c465", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "1b093abc-33bc-42dc-b7b4-23e58a8a9190", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "94b87440-03e3-4669-9336-66b2164f5307", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "ee3819dc-d8e4-4e81-bb78-678fae87b4ca", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "eb585956-2d0c-470a-bd6b-0b56794cfba6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "787d64d3-47b8-4a91-8c2e-1968dc950a35", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "50699169-b03c-4242-97ff-f3f81d9994f0", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "35772357-ac7c-4e87-9689-a303687ea1ee", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "8033bcc7-3f48-4bc1-9858-4554a8453f9f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "d3040bb8-1299-4937-8e2a-4a5b17979b82", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "6a42b6ba-26af-4512-bc57-ac3e23dfbcf9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "44259fa1-e667-4e0a-b249-bae140adbab6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:13Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "0c1de6f8-af04-443d-a997-01d6118da98f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:14Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "72941395-8334-46cd-8363-e2e5a75d0149", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:14Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "7e24f5c4-3dc1-4d93-8bdd-50c94ee2c85a", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:14Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "31211cc2-335f-4d1f-a8e6-afef2811b9c3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:14Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "ef836940-cad2-4298-8e0f-eced9e3030dd", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+2023-03-23T19:38:14Z {"errorMessage": "'dict' object has no attribute 'append'", "errorType": "AttributeError", "requestId": "3885e8ad-4fb0-4f36-8f51-8f4c05fdc769", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 189, in run\n    result.append(coconuts_orders)\n"]}
+
+
+Activities log:
+day;timestamp;product;bid_price_1;bid_volume_1;bid_price_2;bid_volume_2;bid_price_3;bid_volume_3;ask_price_1;ask_volume_1;ask_price_2;ask_volume_2;ask_price_3;ask_volume_3;mid_price;profit_and_loss
+1;0;PINA_COLADAS;15013;36;15012;52;;;15016;88;;;;;15014.5;0.0
+1;0;BANANAS;4871;3;4870;22;;;4877;22;;;;;4874.0;0.0
+1;0;COCONUTS;8003;214;;;;;8006;214;;;;;8004.5;0.0
+1;0;PEARLS;9998;3;9996;1;9995;21;10004;1;10005;21;;;10001.0;0.0
+1;100;BANANAS;4871;3;4870;48;;;4877;48;;;;;4874.0;0.0
+1;100;COCONUTS;8003;258;8002;106;;;8005;150;8006;214;;;8004.0;0.0
+1;100;PINA_COLADAS;15012;52;15011;40;15010;58;15013;4;15014;58;15016;88;15012.5;0.0
+1;100;PEARLS;9998;2;9996;1;9995;47;10004;1;10005;47;;;10001.0;0.0
+1;200;BANANAS;4875;1;4871;3;4870;80;4876;32;4877;48;;;4875.5;0.0
+1;200;PEARLS;9998;1;9996;3;9995;77;10004;3;10005;77;;;10001.0;0.0
+1;200;COCONUTS;8003;449;8002;106;;;8005;205;8006;350;;;8004.0;0.0
+1;200;PINA_COLADAS;15015;12;15012;52;15011;40;15016;88;15018;74;;;15015.5;0.0
+1;300;BANANAS;4871;3;4870;80;4868;28;4875;28;4876;32;4877;48;4873.0;0.0
+1;300;PINA_COLADAS;15015;12;15014;90;15012;52;15016;88;15017;90;15018;74;15015.5;0.0
+1;300;PEARLS;9996;4;9995;104;;;10004;4;10005;104;;;10000.0;0.0
+1;300;COCONUTS;8004;61;8003;556;8002;106;8005;205;8006;518;;;8004.5;0.0
+1;400;PINA_COLADAS;15014;90;15012;146;15011;40;15015;82;15016;88;15017;90;15014.5;0.0
+1;400;BANANAS;4870;78;4869;25;4868;28;4875;53;4876;32;4877;48;4872.5;0.0
+1;400;PEARLS;9996;4;9995;129;;;10004;4;10005;129;;;10000.0;0.0
+1;400;COCONUTS;8004;61;8003;556;8002;287;8005;386;8006;518;;;8004.5;0.0
+1;500;BANANAS;4870;78;4869;47;4868;28;4875;53;4876;54;4877;48;4872.5;0.0
+1;500;PINA_COLADAS;15012;129;15011;40;15010;58;15015;82;15016;88;15017;90;15013.5;0.0
+1;500;PEARLS;9996;4;9995;151;;;10004;4;10005;151;;;10000.0;0.0
+1;500;COCONUTS;8003;499;8002;287;8001;196;8004;135;8005;386;8006;518;8003.5;0.0
+1;600;BANANAS;4870;78;4869;47;4868;53;4875;78;4876;54;4877;48;4872.5;0.0
+1;600;PEARLS;9996;4;9995;176;;;10004;4;10005;176;;;10000.0;0.0
+1;600;COCONUTS;8003;300;8002;287;8001;196;8004;135;8005;386;8006;518;8003.5;0.0
+1;600;PINA_COLADAS;15012;39;15011;40;15010;58;15015;82;15016;88;15017;90;15013.5;0.0
+1;700;BANANAS;4870;78;4869;47;4868;76;4875;101;4876;54;4877;48;4872.5;0.0
+1;700;PINA_COLADAS;15010;31;15008;107;15007;106;15015;82;15016;88;15017;90;15012.5;0.0
+1;700;PEARLS;9996;4;9995;199;;;9998;9;10004;4;10005;199;9997.0;0.0
+1;700;COCONUTS;8003;139;8002;287;8001;196;8004;135;8005;386;8006;518;8003.5;0.0
+1;800;PINA_COLADAS;15010;31;15009;31;15008;160;15011;31;15012;53;15015;82;15010.5;0.0
+1;800;PEARLS;9996;5;9995;226;;;9998;9;10004;5;10005;226;9997.0;0.0
+1;800;COCONUTS;8002;185;8001;196;8000;244;8004;135;8005;386;8006;518;8003.0;0.0
+1;800;BANANAS;4873;3;4870;78;4869;48;4875;129;4876;54;4877;48;4874.0;0.0
+1;900;BANANAS;4873;3;4871;1;4870;78;4875;150;4876;54;4877;48;4874.0;0.0
+1;900;PINA_COLADAS;15008;137;15007;106;15006;90;15011;31;15012;53;15015;82;15009.5;0.0
+1;900;PEARLS;9996;5;9995;247;;;9998;9;10004;5;10005;247;9997.0;0.0
+1;900;COCONUTS;8002;10;8001;196;8000;244;8004;135;8005;386;8006;518;8003.0;0.0
+1;1000;PEARLS;9996;7;9995;275;;;9998;7;10004;7;10005;275;9997.0;0.0
+1;1000;COCONUTS;8001;196;8000;244;7999;553;8002;191;8004;135;8005;386;8001.5;0.0
+1;1000;BANANAS;4873;3;4871;1;4870;78;4875;180;4876;54;4877;48;4874.0;0.0
+1;1000;PINA_COLADAS;15008;99;15007;144;15006;141;15009;38;15010;51;15011;31;15008.5;0.0
+1;1100;BANANAS;4873;3;4871;1;4870;78;4875;210;4876;54;4877;48;4874.0;0.0
+1;1100;PEARLS;9996;9;9995;303;;;9998;7;10004;9;10005;303;9997.0;0.0
+1;1100;COCONUTS;8001;196;8000;244;7999;715;8002;353;8004;135;8005;386;8001.5;0.0
+1;1100;PINA_COLADAS;15007;132;15006;141;15005;85;15009;38;15010;51;15011;31;15008.0;0.0
+1;1200;PINA_COLADAS;15007;40;15006;141;15005;85;15009;38;15010;51;15011;31;15008.0;0.0
+1;1200;PEARLS;9996;10;9995;331;;;9998;7;10004;10;10005;331;9997.0;0.0
+1;1200;COCONUTS;8001;196;8000;430;7999;715;8002;353;8003;186;8004;135;8001.5;0.0
+1;1200;BANANAS;4873;2;4871;1;4870;78;4874;1;4875;238;4876;54;4873.5;0.0
+1;1300;BANANAS;4871;1;4870;78;4869;48;4872;5;4874;24;4875;238;4871.5;0.0
+1;1300;COCONUTS;8001;10;8000;430;7999;715;8002;353;8003;186;8004;135;8001.5;0.0
+1;1300;PEARLS;9996;10;9995;354;;;9998;8;10002;7;10004;10;9997.0;0.0
+1;1300;PINA_COLADAS;15006;72;15005;85;15004;38;15009;38;15010;51;15011;31;15007.5;0.0
+1;1400;COCONUTS;8000;258;7999;715;7998;316;8002;353;8003;186;8004;135;8001.0;0.0
+1;1400;PEARLS;9996;12;9995;378;;;9998;8;10002;11;10004;12;9997.0;0.0
+1;1400;BANANAS;4871;1;4870;78;4869;50;4872;5;4873;4;4874;24;4871.5;0.0
+1;1400;PINA_COLADAS;15005;66;15004;38;15003;165;15009;38;15010;51;15011;31;15007.0;0.0
+1;1500;BANANAS;4870;78;4869;81;4868;237;4872;5;4873;11;4874;24;4871.0;0.0
+1;1500;COCONUTS;8000;74;7999;715;7998;316;8002;353;8003;186;8004;135;8001.0;0.0
+1;1500;PEARLS;9996;14;9995;407;;;9998;8;10002;18;10004;14;9997.0;0.0
+1;1500;PINA_COLADAS;15004;6;15003;165;14998;109;15009;38;15010;51;15011;31;15006.5;0.0
+1;1600;PINA_COLADAS;15003;89;15000;66;14999;53;15009;38;15010;51;15011;31;15006.0;0.0
+1;1600;COCONUTS;7999;715;7998;316;7997;537;8000;97;8002;353;8003;186;7999.5;0.0
+1;1600;PEARLS;9996;15;9995;430;;;9998;8;10002;18;10004;15;9997.0;0.0
+1;1600;BANANAS;4870;78;4869;82;4868;260;4872;5;4873;11;4874;24;4871.0;0.0
+1;1700;BANANAS;4870;78;4869;82;4868;284;4872;5;4873;11;4874;24;4871.0;0.0
+1;1700;COCONUTS;7999;761;7998;479;7997;537;8000;139;8001;121;8002;353;7999.5;0.0
+1;1700;PEARLS;9996;15;9995;454;;;9998;8;10002;18;10004;15;9997.0;0.0
+1;1700;PINA_COLADAS;15000;66;14999;93;14998;179;15001;21;15009;38;15010;51;15000.5;0.0
+1;1800;COCONUTS;7999;761;7998;479;7997;700;8000;302;8001;121;8002;353;7999.5;0.0
+1;1800;PEARLS;9996;17;9995;482;;;9998;8;10002;18;10004;17;9997.0;0.0
+1;1800;BANANAS;4870;78;4869;82;4868;314;4872;5;4873;11;4874;54;4871.0;0.0
+1;1800;PINA_COLADAS;14999;93;14998;179;14997;225;15000;29;15001;21;15009;38;14999.5;0.0
+1;1900;BANANAS;4870;78;4869;90;4868;340;4872;5;4873;11;4874;80;4871.0;0.0
+1;1900;COCONUTS;7999;543;7998;479;7997;741;8000;302;8001;121;8002;353;7999.5;0.0
+1;1900;PEARLS;9996;19;9995;506;;;9998;0;10002;18;10004;19;9997.0;0.0
+1;1900;PINA_COLADAS;14999;93;14998;216;14997;287;15000;66;15001;83;15009;38;14999.5;0.0
+1;2000;PINA_COLADAS;14999;122;14998;306;14997;287;15000;66;15001;173;15009;38;14999.5;0.0
+1;2000;COCONUTS;7999;501;7998;479;7997;918;8000;437;8001;121;8002;353;7999.5;0.0
+1;2000;PEARLS;9996;19;9995;528;;;9998;0;10002;18;10004;19;9997.0;0.0
+1;2000;BANANAS;4870;78;4869;90;4868;362;4872;5;4873;11;4874;80;4871.0;0.0
+1;2100;BANANAS;4871;6;4870;78;4869;90;4872;5;4873;11;4874;80;4871.5;0.0
+1;2100;COCONUTS;7999;501;7998;530;7997;1020;8000;590;8001;121;8002;353;7999.5;0.0
+1;2100;PEARLS;9996;19;9995;553;;;9998;0;10002;18;10004;19;9997.0;0.0
+1;2100;PINA_COLADAS;14999;211;14998;306;14997;287;15000;66;15001;173;15002;89;14999.5;0.0
+1;2200;COCONUTS;7999;547;7998;637;7997;1020;8000;590;8001;274;8002;353;7999.5;0.0
+1;2200;PEARLS;9996;21;9995;582;;;9998;0;10002;18;10004;21;9997.0;0.0
+1;2200;BANANAS;4871;6;4870;78;4869;90;4872;5;4873;11;4874;80;4871.5;0.0
+1;2200;PINA_COLADAS;14999;294;14998;306;14997;287;15000;66;15001;173;15002;172;14999.5;0.0
+1;2300;PEARLS;9996;22;9995;602;;;9998;0;10002;18;10004;22;9997.0;0.0
+1;2300;BANANAS;4871;4;4870;78;4869;90;4872;5;4873;11;4874;81;4871.5;0.0
+1;2300;COCONUTS;7999;547;7998;801;7997;1020;8000;590;8001;438;8002;353;7999.5;0.0
+1;2300;PINA_COLADAS;15000;9;14999;294;14998;306;15001;148;15002;172;15003;25;15000.5;0.0
+1;2400;PINA_COLADAS;15000;9;14999;294;14998;306;15001;52;15002;172;15003;25;15000.5;0.0
+1;2400;COCONUTS;7999;725;7998;801;7997;1020;8000;590;8001;483;8002;486;7999.5;0.0
+1;2400;PEARLS;9996;23;9995;627;;;10002;17;10004;23;10005;627;9999.0;0.0
+1;2400;BANANAS;4871;4;4870;78;4869;90;4872;4;4873;11;4874;82;4871.5;0.0
+1;2500;PEARLS;9996;23;9995;654;;;10002;17;10004;23;10005;654;9999.0;0.0
+1;2500;BANANAS;4871;4;4870;78;4869;90;4872;4;4873;11;4874;109;4871.5;0.0
+1;2500;PINA_COLADAS;15000;38;14999;352;14998;306;15001;52;15002;172;15003;112;15000.5;0.0
+1;2500;COCONUTS;7999;725;7998;876;7997;1144;8000;789;8001;483;8002;486;7999.5;0.0
+1;2600;COCONUTS;7999;766;7998;1006;7997;1144;8000;789;8001;654;8002;486;7999.5;0.0
+1;2600;PEARLS;9996;24;9995;674;;;10002;17;10004;24;10005;674;9999.0;0.0
+1;2600;BANANAS;4871;4;4870;78;4869;90;4872;4;4873;11;4874;130;4871.5;0.0
+1;2600;PINA_COLADAS;15001;45;15000;38;14999;352;15002;172;15003;112;15004;172;15001.5;0.0
+1;2700;PEARLS;9996;26;9995;703;;;10002;17;10004;26;10005;703;9999.0;0.0
+1;2700;BANANAS;4871;4;4870;78;4869;90;4872;3;4873;11;4874;161;4871.5;0.0
+1;2700;PINA_COLADAS;15001;45;15000;144;14999;352;15002;172;15003;218;15004;172;15001.5;0.0
+1;2700;COCONUTS;7999;766;7998;1185;7997;1144;8000;789;8001;833;8002;486;7999.5;0.0
+1;2800;PINA_COLADAS;15001;45;15000;144;14999;352;15002;78;15003;218;15004;172;15001.5;0.0
+1;2800;COCONUTS;7999;766;7998;1185;7997;1144;8000;574;8001;833;8002;486;7999.5;0.0
+1;2800;PEARLS;9996;26;9995;725;;;10002;17;10004;26;10005;725;9999.0;0.0
+1;2800;BANANAS;4871;4;4870;78;4869;90;4872;3;4873;11;4874;161;4871.5;0.0
+1;2900;PEARLS;9996;27;9995;746;;;10002;23;10004;27;10005;746;9999.0;0.0
+1;2900;BANANAS;4871;4;4870;78;4869;91;4872;3;4873;17;4874;161;4871.5;0.0
+1;2900;PINA_COLADAS;15001;45;15000;144;14999;352;15003;193;15004;172;15005;96;15002.0;0.0
+1;2900;COCONUTS;7999;766;7998;1185;7997;1144;8000;384;8001;833;8002;486;7999.5;0.0
+1;3000;COCONUTS;7999;766;7998;1185;7997;1144;8000;169;8001;833;8002;486;7999.5;0.0
+1;3000;BANANAS;4871;4;4870;78;4869;119;4872;3;4873;17;4874;161;4871.5;0.0
+1;3000;PEARLS;9996;28;9995;773;;;10002;23;10004;28;10005;773;9999.0;0.0
+1;3000;PINA_COLADAS;15001;45;15000;144;14999;352;15003;89;15004;172;15005;96;15002.0;0.0
+1;3100;BANANAS;4871;4;4870;78;4869;144;4872;3;4873;17;4874;161;4871.5;0.0
+1;3100;PEARLS;9996;28;9995;798;;;10002;23;10004;28;10005;798;9999.0;0.0
+1;3100;PINA_COLADAS;15001;45;15000;144;14999;352;15004;166;15005;96;15006;21;15002.5;0.0
+1;3100;COCONUTS;8000;18;7999;766;7998;1185;8001;833;8002;486;8003;993;8000.5;0.0
+1;3200;PINA_COLADAS;15001;45;15000;144;14999;352;15004;37;15005;96;15006;21;15002.5;0.0
+1;3200;COCONUTS;8000;164;7999;766;7998;1185;8001;773;8002;486;8003;1199;8000.5;0.0
+1;3200;BANANAS;4871;4;4870;78;4869;173;4872;3;4873;17;4874;161;4871.5;0.0
+1;3200;PEARLS;9996;29;9995;826;;;10002;23;10004;29;10005;826;9999.0;0.0
+1;3300;BANANAS;4871;4;4870;78;4869;178;4872;3;4873;17;4874;161;4871.5;0.0
+1;3300;PEARLS;9998;3;9996;31;9995;852;10002;23;10004;31;10005;852;10000.0;0.0
+1;3300;COCONUTS;8000;381;7999;766;7998;1185;8001;773;8002;486;8003;1416;8000.5;0.0
+1;3300;PINA_COLADAS;15001;45;15000;144;14999;352;15005;35;15006;21;15007;73;15003.0;0.0
+1;3400;COCONUTS;8000;581;7999;766;7998;1185;8001;773;8002;486;8003;1616;8000.5;0.0
+1;3400;PEARLS;10000;3;9998;2;9996;32;10002;23;10004;32;10005;877;10001.0;0.0
+1;3400;BANANAS;4871;4;4870;78;4869;204;4872;3;4873;17;4874;161;4871.5;0.0
+1;3400;PINA_COLADAS;15006;18;15001;45;15000;144;15007;51;15008;30;15009;111;15006.5;0.0
+1;3500;PEARLS;10000;3;9998;2;9996;34;10002;23;10004;34;10005;898;10001.0;0.0
+1;3500;BANANAS;4871;4;4870;78;4869;227;4873;16;4874;161;4875;538;4872.0;0.0
+1;3500;COCONUTS;8000;581;7999;909;7998;1185;8001;773;8002;629;8003;1616;8000.5;0.0
+1;3500;PINA_COLADAS;15007;48;15006;18;15001;45;15008;30;15009;111;15010;383;15007.5;0.0
+1;3600;PINA_COLADAS;15007;110;15006;18;15001;45;15009;111;15010;413;15011;360;15008.0;0.0
+1;3600;PEARLS;10000;6;9998;2;9996;34;10002;28;10004;34;10005;928;10001.0;0.0
+1;3600;BANANAS;4871;4;4870;78;4869;257;4873;16;4874;166;4875;538;4872.0;0.0
+1;3600;COCONUTS;8000;808;7999;909;7998;1185;8001;730;8002;706;8003;1766;8000.5;0.0
+1;3700;PEARLS;10000;6;9998;8;9996;35;10002;28;10004;35;10005;952;10001.0;0.0
+1;3700;BANANAS;4871;4;4870;84;4869;282;4873;16;4874;166;4875;538;4872.0;0.0
+1;3700;COCONUTS;8000;808;7999;1116;7998;1185;8001;730;8002;913;8003;1766;8000.5;0.0
+1;3700;PINA_COLADAS;15008;97;15007;110;15006;18;15009;111;15010;413;15011;457;15008.5;0.0
+1;3800;PEARLS;10000;6;9998;8;9996;36;10002;28;10004;36;10005;981;10001.0;0.0
+1;3800;BANANAS;4871;4;4870;85;4869;311;4873;16;4874;166;4875;538;4872.0;0.0
+1;3800;COCONUTS;8000;808;7999;1116;7998;1346;8001;891;8002;913;8003;1766;8000.5;0.0
+1;3800;PINA_COLADAS;15007;94;15006;18;15005;80;15009;111;15010;413;15011;457;15008.0;0.0
+1;3900;PEARLS;10000;6;9998;8;9996;38;10002;24;10004;38;10005;1007;10001.0;0.0
+1;3900;BANANAS;4871;4;4870;113;4869;311;4873;16;4874;166;4875;538;4872.0;0.0
+1;3900;COCONUTS;8000;808;7999;1116;7998;1543;8001;1088;8002;913;8003;1766;8000.5;0.0
+1;3900;PINA_COLADAS;15007;94;15006;18;15005;102;15008;76;15009;111;15010;413;15007.5;0.0
+1;4000;PINA_COLADAS;15007;6;15006;18;15005;102;15008;76;15009;111;15010;413;15007.5;0.0
+1;4000;PEARLS;10000;6;9998;8;9996;40;10002;24;10004;40;10005;1037;10001.0;0.0
+1;4000;BANANAS;4871;4;4870;145;4869;311;4873;16;4874;166;4875;538;4872.0;0.0
+1;4000;COCONUTS;8000;643;7999;1116;7998;1616;8001;1088;8002;913;8003;1766;8000.5;0.0
+1;4100;PEARLS;10000;6;9998;8;9996;41;10002;28;10004;41;10005;1062;10001.0;0.0
+1;4100;BANANAS;4871;4;4870;171;4869;311;4873;16;4874;166;4875;542;4872.0;0.0
+1;4100;COCONUTS;8000;565;7999;1116;7998;1797;8001;1191;8002;913;8003;1766;8000.5;0.0
+1;4100;PINA_COLADAS;15006;18;15005;122;15004;199;15007;14;15008;133;15009;111;15006.5;0.0
+1;4200;PEARLS;10000;1;9998;8;9996;43;10002;28;10004;43;10005;1088;10001.0;0.0
+1;4200;BANANAS;4871;4;4870;199;4869;311;4873;16;4874;166;4875;542;4872.0;0.0
+1;4200;COCONUTS;8000;385;7999;1116;7998;1797;8001;1191;8002;913;8003;1766;8000.5;0.0
+1;4200;PINA_COLADAS;15006;18;15005;122;15004;223;15007;101;15008;133;15009;111;15006.5;0.0
+1;4300;PEARLS;9998;8;9996;44;9995;1112;10000;4;10002;28;10004;44;9999.0;0.0
+1;4300;BANANAS;4871;4;4870;199;4869;336;4873;16;4874;166;4875;542;4872.0;0.0
+1;4300;COCONUTS;8000;210;7999;1116;7998;1843;8001;1191;8002;913;8003;1766;8000.5;0.0
+1;4300;PINA_COLADAS;15006;18;15005;122;15004;223;15007;9;15008;133;15009;111;15006.5;0.0
+1;4400;PEARLS;9998;8;9996;44;9995;1134;10000;4;10002;28;10004;44;9999.0;0.0
+1;4400;BANANAS;4871;4;4870;221;4869;336;4873;16;4874;166;4875;542;4872.0;0.0
+1;4400;COCONUTS;8000;130;7999;1116;7998;2037;8001;1305;8002;913;8003;1766;8000.5;0.0
+1;4400;PINA_COLADAS;15007;74;15006;18;15005;122;15008;133;15009;111;15010;588;15007.5;0.0
+1;4500;BANANAS;4871;30;4870;221;4869;336;4873;16;4874;166;4875;542;4872.0;0.0
+1;4500;COCONUTS;7999;1100;7998;2037;7997;1764;8001;1305;8002;913;8003;1766;8000.0;0.0
+1;4500;PEARLS;9998;8;9996;44;9995;1160;10000;4;10002;28;10004;44;9999.0;0.0
+1;4500;PINA_COLADAS;15007;74;15006;18;15005;210;15008;221;15009;111;15010;588;15007.5;0.0
+1;4600;BANANAS;4871;31;4870;242;4869;336;4873;15;4874;166;4875;542;4872.0;0.0
+1;4600;PINA_COLADAS;15007;35;15006;18;15005;249;15008;283;15009;111;15010;588;15007.5;0.0
+1;4600;PEARLS;9998;8;9996;45;9995;1181;10000;4;10002;28;10004;45;9999.0;0.0
+1;4600;COCONUTS;7999;916;7998;2037;7997;1764;8001;1305;8002;913;8003;1766;8000.0;0.0
+1;4700;PINA_COLADAS;15007;68;15006;86;15005;249;15008;283;15009;144;15010;656;15007.5;0.0
+1;4700;BANANAS;4871;58;4870;242;4869;336;4873;15;4874;166;4875;542;4872.0;0.0
+1;4700;PEARLS;9998;8;9996;45;9995;1208;10000;4;10002;28;10004;45;9999.0;0.0
+1;4700;COCONUTS;7999;713;7998;2037;7997;1764;8001;1305;8002;913;8003;1766;8000.0;0.0
+1;4800;BANANAS;4871;87;4870;242;4869;336;4873;15;4874;166;4875;542;4872.0;0.0
+1;4800;PINA_COLADAS;15006;51;15005;249;15004;320;15007;3;15008;283;15009;144;15006.5;0.0
+1;4800;PEARLS;9998;8;9996;46;9995;1236;10000;4;10002;28;10004;46;9999.0;0.0
+1;4800;COCONUTS;7999;524;7998;2037;7997;1764;8001;1305;8002;913;8003;1766;8000.0;0.0
+1;4900;BANANAS;4872;7;4871;116;4870;242;4873;15;4874;166;4875;542;4872.5;0.0
+1;4900;PEARLS;9998;15;9996;48;9995;1263;10000;4;10002;28;10004;48;9999.0;0.0
+1;4900;COCONUTS;7999;344;7998;2037;7997;1764;8001;1305;8002;913;8003;1766;8000.0;0.0
+1;4900;PINA_COLADAS;15006;28;15005;249;15004;343;15007;56;15008;283;15009;144;15006.5;0.0
+1;5000;BANANAS;4872;9;4871;145;4870;242;4873;15;4874;169;4875;542;4872.5;0.0
+1;5000;PINA_COLADAS;15005;182;15004;343;15003;187;15007;56;15008;283;15009;144;15006.0;0.0
+1;5000;PEARLS;9998;15;9996;50;9995;1292;10000;4;10002;28;10004;50;9999.0;0.0
+1;5000;COCONUTS;7999;156;7998;2037;7997;1764;8001;1305;8002;913;8003;1766;8000.0;0.0
+1;5100;PINA_COLADAS;15005;150;15004;343;15003;219;15006;60;15007;56;15008;283;15005.5;0.0
+1;5100;BANANAS;4872;9;4871;170;4870;242;4873;15;4874;169;4875;542;4872.5;0.0
+1;5100;PEARLS;9998;15;9996;51;9995;1316;10000;4;10002;28;10004;51;9999.0;0.0
+1;5100;COCONUTS;7998;2000;7997;1764;7996;605;8001;1305;8002;913;8003;1766;7999.5;0.0
+1;5200;BANANAS;4872;16;4871;199;4870;242;4873;15;4874;169;4875;542;4872.5;0.0
+1;5200;PINA_COLADAS;15005;53;15004;343;15003;219;15006;60;15007;56;15008;283;15005.5;0.0
+1;5200;PEARLS;9998;21;9996;52;9995;1345;10000;4;10002;28;10004;52;9999.0;0.0
+1;5200;COCONUTS;7998;1846;7997;1764;7996;605;8001;1305;8002;913;8003;1766;7999.5;0.0
+1;5300;PEARLS;9998;21;9996;53;9995;1366;10000;4;10002;28;10004;53;9999.0;0.0
+1;5300;COCONUTS;7998;1595;7997;1764;7996;605;8001;1305;8002;913;8003;1766;7999.5;0.0
+1;5300;PINA_COLADAS;15004;300;15003;219;15002;155;15006;60;15007;56;15008;283;15005.0;0.0
+1;5300;BANANAS;4872;38;4871;199;4870;242;4873;14;4874;169;4875;542;4872.5;0.0
+1;5400;PINA_COLADAS;15004;300;15003;255;15002;211;15005;36;15006;116;15007;56;15004.5;0.0
+1;5400;PEARLS;9998;30;9996;55;9995;1386;10000;4;10002;28;10004;55;9999.0;0.0
+1;5400;COCONUTS;7998;1441;7997;1764;7996;605;8001;1305;8002;913;8003;1766;7999.5;0.0
+1;5400;BANANAS;4872;60;4871;199;4870;242;4873;5;4874;169;4875;542;4872.5;0.0
+1;5500;PINA_COLADAS;15004;300;15003;334;15002;211;15005;36;15006;195;15007;56;15004.5;0.0
+1;5500;BANANAS;4872;89;4871;199;4870;242;4874;168;4875;542;4876;325;4873.0;0.0
+1;5500;PEARLS;9998;30;9996;56;9995;1414;10000;4;10002;28;10004;56;9999.0;0.0
+1;5500;COCONUTS;7998;1253;7997;1764;7996;605;8001;1305;8002;913;8003;1766;7999.5;0.0
+1;5600;BANANAS;4872;110;4871;199;4870;242;4874;168;4875;542;4876;325;4873.0;0.0
+1;5600;PEARLS;9998;30;9996;56;9995;1435;10000;4;10002;34;10004;56;9999.0;0.0
+1;5600;COCONUTS;7998;1253;7997;1764;7996;775;7999;170;8001;1305;8002;913;7998.5;0.0
+1;5600;PINA_COLADAS;15004;300;15003;420;15002;211;15005;36;15006;281;15007;56;15004.5;0.0
+1;5700;COCONUTS;7998;1081;7997;1764;7996;839;7999;170;8001;1305;8002;913;7998.5;0.0
+1;5700;PEARLS;9998;30;9996;57;9995;1464;10000;4;10002;34;10004;57;9999.0;0.0
+1;5700;PINA_COLADAS;15004;220;15003;420;15002;211;15005;36;15006;281;15007;56;15004.5;0.0
+1;5700;BANANAS;4873;1;4872;139;4871;199;4874;168;4875;542;4876;325;4873.5;0.0
+1;5800;COCONUTS;7998;931;7997;1764;7996;839;7999;170;8001;1305;8002;913;7998.5;0.0
+1;5800;PEARLS;9998;30;9996;59;9995;1492;10000;4;10002;39;10004;59;9999.0;0.0
+1;5800;PINA_COLADAS;15004;123;15003;420;15002;211;15005;36;15006;281;15007;56;15004.5;0.0
+1;5800;BANANAS;4873;1;4872;169;4871;199;4874;169;4875;542;4876;325;4873.5;0.0
+1;5900;PINA_COLADAS;15004;46;15003;420;15002;211;15005;36;15006;281;15007;56;15004.5;0.0
+1;5900;BANANAS;4873;1;4872;200;4871;199;4874;169;4875;542;4876;325;4873.5;0.0
+1;5900;COCONUTS;7998;743;7997;1764;7996;839;7999;170;8001;1305;8002;913;7998.5;0.0
+1;5900;PEARLS;9998;30;9996;61;9995;1521;10000;4;10002;39;10004;61;9999.0;0.0
+1;6000;BANANAS;4873;8;4872;232;4871;199;4874;169;4875;542;4876;325;4873.5;0.0
+1;6000;COCONUTS;7998;582;7997;1764;7996;839;7999;170;8001;1305;8002;913;7998.5;0.0
+1;6000;PEARLS;9998;37;9996;63;9995;1551;10000;4;10002;39;10004;63;9999.0;0.0
+1;6000;PINA_COLADAS;15003;420;15002;211;15001;269;15004;57;15005;36;15006;281;15003.5;0.0
+1;6100;COCONUTS;7998;411;7997;1764;7996;839;7999;170;8001;1305;8002;913;7998.5;0.0
+1;6100;PEARLS;9998;37;9996;64;9995;1579;10002;32;10004;64;10005;1579;10000.0;0.0
+1;6100;PINA_COLADAS;15003;420;15002;211;15001;360;15004;148;15005;36;15006;281;15003.5;0.0
+1;6100;BANANAS;4873;9;4872;260;4871;199;4874;169;4875;542;4876;325;4873.5;0.0
+1;6200;COCONUTS;7998;411;7997;1986;7996;839;7999;170;8000;222;8001;1305;7998.5;0.0
+1;6200;PEARLS;9998;37;9996;65;9995;1599;10002;32;10004;65;10005;1599;10000.0;0.0
+1;6200;PINA_COLADAS;15003;516;15002;211;15001;360;15004;148;15005;36;15006;377;15003.5;0.0
+1;6200;BANANAS;4873;30;4872;260;4871;199;4874;169;4875;542;4876;325;4873.5;0.0
+1;6300;PINA_COLADAS;15003;516;15002;211;15001;360;15004;60;15005;36;15006;377;15003.5;0.0
+1;6300;BANANAS;4873;52;4872;260;4871;199;4874;174;4875;542;4876;325;4873.5;0.0
+1;6300;COCONUTS;7998;411;7997;1986;7996;1024;7999;355;8000;222;8001;1305;7998.5;0.0
+1;6300;PEARLS;9998;37;9996;65;9995;1621;10002;32;10004;65;10005;1621;10000.0;0.0
+1;6400;BANANAS;4873;77;4872;260;4871;199;4874;176;4875;542;4876;325;4873.5;0.0
+1;6400;COCONUTS;7998;411;7997;2176;7996;1024;7999;355;8000;412;8001;1305;7998.5;0.0
+1;6400;PEARLS;9998;36;9996;67;9995;1644;10002;32;10004;67;10005;1644;10000.0;0.0
+1;6400;PINA_COLADAS;15003;516;15002;211;15001;360;15005;8;15006;377;15007;56;15004.0;0.0
+1;6500;COCONUTS;7998;411;7997;2176;7996;1195;7999;526;8000;412;8001;1305;7998.5;0.0
+1;6500;PEARLS;9998;36;9996;69;9995;1668;10002;32;10004;69;10005;1668;10000.0;0.0
+1;6500;PINA_COLADAS;15004;102;15003;516;15002;211;15005;8;15006;377;15007;158;15004.5;0.0
+1;6500;BANANAS;4873;79;4872;284;4871;199;4874;176;4875;544;4876;325;4873.5;0.0
+1;6600;COCONUTS;7998;202;7997;2176;7996;1195;7999;526;8000;412;8001;1305;7998.5;0.0
+1;6600;PEARLS;9998;42;9996;69;9995;1693;10002;32;10004;69;10005;1693;10000.0;0.0
+1;6600;PINA_COLADAS;15004;9;15003;516;15002;211;15005;8;15006;377;15007;158;15004.5;0.0
+1;6600;BANANAS;4873;104;4872;284;4871;199;4874;170;4875;544;4876;325;4873.5;0.0
+1;6700;PINA_COLADAS;15003;496;15002;211;15001;380;15004;50;15005;8;15006;377;15003.5;0.0
+1;6700;PEARLS;9998;37;9996;70;9995;1722;10002;32;10004;70;10005;1722;10000.0;0.0
+1;6700;BANANAS;4873;134;4872;284;4871;199;4874;170;4875;544;4876;329;4873.5;0.0
+1;6700;COCONUTS;7998;16;7997;2176;7996;1195;7999;526;8000;412;8001;1305;7998.5;0.0
+1;6800;PEARLS;9998;37;9996;71;9995;1752;10002;33;10004;71;10005;1752;10000.0;0.0
+1;6800;BANANAS;4873;165;4872;284;4871;199;4874;170;4875;544;4876;329;4873.5;0.0
+1;6800;PINA_COLADAS;15003;456;15002;211;15001;380;15004;101;15005;8;15006;377;15003.5;0.0
+1;6800;COCONUTS;7997;2125;7996;1195;7995;1112;7998;126;7999;526;8000;412;7997.5;0.0
+1;6900;COCONUTS;7997;1977;7996;1195;7995;1112;7998;126;7999;526;8000;412;7997.5;0.0
+1;6900;PINA_COLADAS;15003;367;15002;211;15001;380;15004;101;15005;8;15006;377;15003.5;0.0
+1;6900;PEARLS;9998;37;9996;73;9995;1774;10002;35;10004;73;10005;1774;10000.0;0.0
+1;6900;BANANAS;4873;167;4872;306;4871;199;4874;170;4875;544;4876;329;4873.5;0.0
+1;7000;PINA_COLADAS;15003;407;15002;269;15001;380;15004;101;15005;48;15006;435;15003.5;0.0
+1;7000;COCONUTS;7997;1977;7996;1195;7995;1308;7998;322;7999;526;8000;412;7997.5;0.0
+1;7000;PEARLS;9998;37;9996;74;9995;1796;10002;35;10004;74;10005;1796;10000.0;0.0
+1;7000;BANANAS;4873;190;4872;306;4871;199;4874;170;4875;544;4876;329;4873.5;0.0
+1;7100;PINA_COLADAS;15003;407;15002;269;15001;380;15004;3;15005;48;15006;435;15003.5;0.0
+1;7100;PEARLS;9998;37;9996;76;9995;1821;10002;35;10004;76;10005;1821;10000.0;0.0
+1;7100;BANANAS;4873;190;4872;333;4871;199;4874;170;4875;548;4876;329;4873.5;0.0
+1;7100;COCONUTS;7997;1937;7996;1260;7995;1432;7998;511;7999;526;8000;412;7997.5;0.0
+1;7200;PEARLS;9998;37;9996;76;9995;1841;10002;35;10004;76;10005;1841;10000.0;0.0
+1;7200;BANANAS;4873;190;4872;353;4871;199;4874;170;4875;548;4876;329;4873.5;0.0
+1;7200;PINA_COLADAS;15003;373;15002;269;15001;414;15004;78;15005;48;15006;435;15003.5;0.0
+1;7200;COCONUTS;7997;1937;7996;1260;7995;1630;7998;709;7999;526;8000;412;7997.5;0.0
+1;7300;COCONUTS;7997;1755;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;7300;PINA_COLADAS;15003;373;15002;269;15001;443;15004;172;15005;48;15006;435;15003.5;0.0
+1;7300;PEARLS;9998;37;9996;77;9995;1862;10002;35;10004;77;10005;1862;10000.0;0.0
+1;7300;BANANAS;4873;190;4872;375;4871;199;4874;170;4875;548;4876;329;4873.5;0.0
+1;7400;PINA_COLADAS;15003;334;15002;269;15001;482;15004;239;15005;48;15006;435;15003.5;0.0
+1;7400;COCONUTS;7997;1570;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;7400;BANANAS;4873;189;4872;375;4871;227;4874;170;4875;548;4876;329;4873.5;0.0
+1;7400;PEARLS;9998;37;9996;79;9995;1888;10002;35;10004;79;10005;1888;10000.0;0.0
+1;7500;PINA_COLADAS;15003;234;15002;269;15001;482;15004;239;15005;48;15006;435;15003.5;0.0
+1;7500;BANANAS;4873;189;4872;375;4871;248;4874;170;4875;548;4876;329;4873.5;0.0
+1;7500;PEARLS;9998;37;9996;79;9995;1909;10002;35;10004;79;10005;1909;10000.0;0.0
+1;7500;COCONUTS;7997;1401;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;7600;BANANAS;4873;191;4872;406;4871;248;4874;170;4875;548;4876;329;4873.5;0.0
+1;7600;PEARLS;9998;39;9996;80;9995;1939;10002;35;10004;80;10005;1939;10000.0;0.0
+1;7600;PINA_COLADAS;15003;137;15002;269;15001;482;15004;239;15005;48;15006;435;15003.5;0.0
+1;7600;COCONUTS;7997;1117;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;7700;COCONUTS;7997;939;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;7700;PINA_COLADAS;15003;30;15002;269;15001;482;15004;239;15005;48;15006;435;15003.5;0.0
+1;7700;BANANAS;4873;191;4872;406;4871;273;4874;170;4875;548;4876;332;4873.5;0.0
+1;7700;PEARLS;9998;38;9996;80;9995;1964;10002;38;10004;80;10005;1964;10000.0;0.0
+1;7800;COCONUTS;7997;763;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;7800;PINA_COLADAS;15002;244;15001;482;15000;657;15003;31;15004;239;15005;48;15002.5;0.0
+1;7800;PEARLS;9998;38;9996;80;9995;1986;10002;39;10004;80;10005;1986;10000.0;0.0
+1;7800;BANANAS;4873;192;4872;406;4871;273;4874;169;4875;551;4876;332;4873.5;0.0
+1;7900;PINA_COLADAS;15002;155;15001;482;15000;657;15003;31;15004;239;15005;48;15002.5;0.0
+1;7900;PEARLS;9998;38;9996;81;9995;2009;10002;39;10004;81;10005;2009;10000.0;0.0
+1;7900;BANANAS;4873;192;4872;406;4871;273;4874;169;4875;551;4876;333;4873.5;0.0
+1;7900;COCONUTS;7997;597;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;8000;PEARLS;9998;38;9996;81;9995;2031;10002;47;10004;81;10005;2031;10000.0;0.0
+1;8000;BANANAS;4873;192;4872;406;4871;273;4874;177;4875;551;4876;355;4873.5;0.0
+1;8000;COCONUTS;7997;422;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;8000;PINA_COLADAS;15002;58;15001;482;15000;657;15003;31;15004;239;15005;48;15002.5;0.0
+1;8100;PINA_COLADAS;15001;452;15000;657;14999;716;15003;31;15004;239;15005;48;15002.0;0.0
+1;8100;PEARLS;9998;38;9996;82;9995;2061;10002;47;10004;82;10005;2061;10000.0;0.0
+1;8100;BANANAS;4873;192;4872;406;4871;273;4874;177;4875;551;4876;386;4873.5;0.0
+1;8100;COCONUTS;7997;190;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;8200;PINA_COLADAS;15001;352;15000;657;14999;716;15003;31;15004;239;15005;48;15002.0;0.0
+1;8200;PEARLS;9998;38;9996;82;9995;2085;10002;47;10004;82;10005;2085;10000.0;0.0
+1;8200;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;575;4876;386;4873.5;0.0
+1;8200;COCONUTS;7997;41;7996;1260;7995;1701;7998;709;7999;526;8000;412;7997.5;0.0
+1;8300;PINA_COLADAS;15001;272;15000;657;14999;716;15003;31;15004;239;15005;48;15002.0;0.0
+1;8300;PEARLS;9998;38;9996;83;9995;2108;10002;47;10004;83;10005;2108;10000.0;0.0
+1;8300;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;599;4876;386;4873.5;0.0
+1;8300;COCONUTS;7996;1108;7995;1701;7994;2363;7998;709;7999;526;8000;412;7997.0;0.0
+1;8400;PEARLS;9998;38;9996;84;9995;2131;10002;47;10004;84;10005;2131;10000.0;0.0
+1;8400;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;623;4876;386;4873.5;0.0
+1;8400;COCONUTS;7996;907;7995;1701;7994;2363;7998;709;7999;526;8000;412;7997.0;0.0
+1;8400;PINA_COLADAS;15001;175;15000;657;14999;716;15003;31;15004;239;15005;48;15002.0;0.0
+1;8500;PINA_COLADAS;15001;68;15000;657;14999;716;15003;31;15004;239;15005;48;15002.0;0.0
+1;8500;PEARLS;9998;38;9996;84;9995;2152;10002;47;10004;84;10005;2152;10000.0;0.0
+1;8500;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;623;4876;407;4873.5;0.0
+1;8500;COCONUTS;7996;698;7995;1701;7994;2363;7998;709;7999;526;8000;412;7997.0;0.0
+1;8600;PINA_COLADAS;15000;635;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;8600;PEARLS;9998;38;9996;85;9995;2176;10002;47;10004;85;10005;2176;10000.0;0.0
+1;8600;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;648;4876;407;4873.5;0.0
+1;8600;COCONUTS;7996;529;7995;1701;7994;2363;7998;709;7999;526;8000;412;7997.0;0.0
+1;8700;PINA_COLADAS;15000;536;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;8700;PEARLS;9998;38;9996;85;9995;2206;10002;47;10004;85;10005;2206;10000.0;0.0
+1;8700;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;678;4876;407;4873.5;0.0
+1;8700;COCONUTS;7996;348;7995;1701;7994;2363;7998;709;7999;526;8000;412;7997.0;0.0
+1;8800;PEARLS;9998;39;9996;87;9995;2228;10002;47;10004;87;10005;2228;10000.0;0.0
+1;8800;BANANAS;4873;197;4872;406;4871;273;4874;177;4875;702;4876;407;4873.5;0.0
+1;8800;COCONUTS;7996;191;7995;1701;7994;2363;7998;709;7999;526;8000;412;7997.0;0.0
+1;8800;PINA_COLADAS;15000;436;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;8900;BANANAS;4873;197;4872;406;4871;273;4874;179;4875;729;4876;407;4873.5;0.0
+1;8900;COCONUTS;7995;1679;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;8900;PINA_COLADAS;15000;331;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;8900;PEARLS;9998;39;9996;89;9995;2255;10002;47;10004;89;10005;2255;10000.0;0.0
+1;9000;PINA_COLADAS;15000;213;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;9000;BANANAS;4873;197;4872;406;4871;273;4874;179;4875;749;4876;407;4873.5;0.0
+1;9000;PEARLS;9998;39;9996;89;9995;2275;10002;47;10004;89;10005;2275;10000.0;0.0
+1;9000;COCONUTS;7995;1521;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9100;BANANAS;4873;197;4872;406;4871;273;4874;205;4875;749;4876;407;4873.5;0.0
+1;9100;PINA_COLADAS;15000;116;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;9100;PEARLS;9998;42;9996;90;9995;2300;10002;47;10004;90;10005;2300;10000.0;0.0
+1;9100;COCONUTS;7995;1300;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9200;BANANAS;4873;197;4872;406;4871;273;4874;226;4875;749;4876;407;4873.5;0.0
+1;9200;PEARLS;9998;44;9996;90;9995;2321;10002;47;10004;90;10005;2321;10000.0;0.0
+1;9200;COCONUTS;7995;1099;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9200;PINA_COLADAS;15000;15;14999;716;14998;504;15003;31;15004;239;15005;48;15001.5;0.0
+1;9300;BANANAS;4873;172;4872;407;4871;273;4874;226;4875;749;4876;407;4873.5;0.0
+1;9300;PINA_COLADAS;14999;650;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9300;PEARLS;9998;44;9996;92;9995;2344;10002;47;10004;92;10005;2344;10000.0;0.0
+1;9300;COCONUTS;7995;912;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9400;PINA_COLADAS;14999;555;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9400;BANANAS;4873;141;4872;407;4871;273;4874;226;4875;749;4876;407;4873.5;0.0
+1;9400;PEARLS;9998;44;9996;92;9995;2374;10002;47;10004;92;10005;2374;10000.0;0.0
+1;9400;COCONUTS;7995;720;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9500;BANANAS;4873;113;4872;407;4871;273;4874;226;4875;749;4876;407;4873.5;0.0
+1;9500;PINA_COLADAS;14999;463;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9500;PEARLS;9998;44;9996;93;9995;2401;10002;47;10004;93;10005;2401;10000.0;0.0
+1;9500;COCONUTS;7995;521;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9600;BANANAS;4873;81;4872;407;4871;274;4874;226;4875;749;4876;407;4873.5;0.0
+1;9600;PEARLS;9998;50;9996;95;9995;2431;10002;47;10004;95;10005;2431;10000.0;0.0
+1;9600;COCONUTS;7995;348;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9600;PINA_COLADAS;14999;371;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9700;BANANAS;4873;54;4872;407;4871;274;4874;226;4875;749;4876;407;4873.5;0.0
+1;9700;PINA_COLADAS;14999;294;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9700;PEARLS;9998;50;9996;96;9995;2457;10002;47;10004;96;10005;2457;10000.0;0.0
+1;9700;COCONUTS;7995;143;7994;2363;7993;1099;7998;709;7999;526;8000;412;7996.5;0.0
+1;9800;PINA_COLADAS;14999;211;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9800;PEARLS;9998;49;9996;97;9995;2486;10002;55;10004;97;10005;2486;10000.0;0.0
+1;9800;COCONUTS;7994;2340;7993;1099;7992;625;7998;709;7999;526;8000;412;7996.0;0.0
+1;9800;BANANAS;4873;16;4872;407;4871;274;4874;226;4875;749;4876;407;4873.5;0.0
+1;9900;BANANAS;4872;405;4871;275;4870;288;4873;13;4874;226;4875;749;4872.5;0.0
+1;9900;PINA_COLADAS;14999;134;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0
+1;9900;PEARLS;9998;51;9996;99;9995;2515;10000;6;10002;55;10004;99;9999.0;0.0
+1;9900;COCONUTS;7994;2145;7993;1099;7992;625;7998;709;7999;526;8000;412;7996.0;0.0
+1;10000;PEARLS;9998;51;9996;99;9995;2538;10000;6;10002;56;10004;99;9999.0;0.0
+1;10000;COCONUTS;7994;1949;7993;1099;7992;625;7998;709;7999;526;8000;412;7996.0;0.0
+1;10000;BANANAS;4872;404;4871;275;4870;288;4873;36;4874;226;4875;749;4872.5;0.0
+1;10000;PINA_COLADAS;14999;47;14998;504;14997;501;15003;31;15004;239;15005;48;15001.0;0.0

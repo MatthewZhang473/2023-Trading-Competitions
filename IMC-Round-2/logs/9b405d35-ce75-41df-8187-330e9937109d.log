@@ -1,0 +1,817 @@
+Sandbox logs:
+128913 Lambda errors have reached maximum value for submission 9b405d35-ce75-41df-8187-330e9937109d
+
+
+Submission logs:
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "7e9d293e-a0d4-472b-8f4f-2dfee2987110", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "ac625585-27a0-459c-955a-a96dbcc76983", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "6e6d09ba-f686-49d4-bafc-4e84bc9f51b5", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "2abcefab-a9c8-46b8-b16f-2a78d1aa254d", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "94c059a5-9d0b-43db-ac5f-cf92177f4c78", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "7ca0f657-5b11-4118-a742-f584bcb261b0", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "69ac90b1-1f64-4ab6-a977-877ca85f1fd0", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "312bed2b-0fd1-4e3a-bdb4-ba0d00c24c44", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e3ff3e13-b613-4eac-922d-dd2f9884df6f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "254aebec-58d7-42db-a340-5fdf48024e20", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "651374b2-01ae-4602-9520-95466fdbf0b1", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "a8e354b6-0db2-4585-bbca-a793c3262959", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "44712511-d45f-4f5b-ba16-e8dbbd4de0b8", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "8e83bee3-4727-497e-b9c5-0c730677d82f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "818a83fc-ef27-4c33-9c3f-ec644282b5df", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "d90db701-4af1-40c0-819c-3e31cd84acee", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "cced6b7b-4d6e-4595-bc04-f1077a0c6c81", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "f7fc9e5d-d566-407e-aab0-5a79daa275e9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "ba3cb848-9c0f-4872-9d72-95e36dfc84a7", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "06c57c1e-06e6-4391-ad3f-06a6d567ba4a", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "72dfcaa6-0e67-47ec-b1bf-5ec76f1b3b09", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:05Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "c5642372-6325-4ba3-86dc-af39e045639e", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "2e4c59f8-1884-45d6-b211-9ee20341e902", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e29bafb2-3242-4f09-af2d-d3d4b1e172a9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "f35664a4-fe84-4260-a2d2-9c02d337aaa0", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "c8001061-3095-4594-8dbd-9c6d16172706", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e30fb056-d798-4c04-878c-2a4a1c2fa3ea", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "4383c1ea-af31-4beb-b9f1-c6c2fc7e8a46", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e8457306-3e0d-4dcc-bf3c-42ad52af5cba", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "9a649f7c-d96c-41b6-8026-300ded14db47", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e9712eb9-2b45-41d4-86da-68ba2b943cb7", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "c95497d3-c747-4900-8183-4a4ab6aa5475", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "acc62415-60c7-48cf-b270-4152556d1a54", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "5bf9ee5f-746f-4c03-ae0a-a7f7dd36a4fb", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "924c16d2-7913-4b92-aaa5-9ddd5a2bdbaa", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "0cc7746b-5375-4c00-8aab-a2d9739e54f4", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "b6684dc5-291f-4552-952e-67a0c906ea21", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "05d1daca-8d5f-4bb7-a4c5-6f78abec861b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "632cb1f2-2a4f-460a-b028-53e774bfec97", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e7bef69a-0fcb-4431-9ea9-e07dbc296d94", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:06Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "b57922b3-3491-4988-8143-043a6c16f91f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "48ad715e-25b0-4a8d-b336-c53b754930b1", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "fd2aaacd-50dd-4777-a96d-71431508767a", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "37b19b98-2c44-4fcd-952b-499b9ba77f6b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "4c6496f3-23cc-417b-9d17-4f8413e00c21", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "caa1038a-a453-4add-870e-b2ea5d8c2583", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "538641ef-d2b6-4014-bf72-905c9cbf8a71", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "087b2f6a-20db-4ae2-8bad-3e4bd43ad1c3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "97e9e418-f933-46cc-92e1-e90ed31c414f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "8c9dc43a-ec61-4117-b6d3-fe0dc7fec12f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "dc2446c9-3b6c-4e7d-95b2-2ee3ffd45565", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "1ddd85a1-10e3-4d72-9a69-75c7367f6380", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "3ef75702-2cd9-416b-99ba-7a2bc1c911b3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "ef3e6809-dd0a-4339-9c15-3f8f3c686d13", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "5ff6867f-3229-4642-8434-919864dfad1b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "9c1d94fc-3b0b-4a1f-a45b-0fffa3a86a00", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "16c0dd7f-92ff-4820-ab4f-64847a5cc526", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "fd320745-3262-4d02-a49b-d437c61e0a13", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "97e69984-78c3-4713-8442-a3edca9a9f3d", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "2652b872-f625-4e0a-b081-6b79c55ac2bb", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "2ab75447-c952-4138-ae31-2a3cb6bcab5b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "d2186636-1073-4315-841d-75c8496d4783", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:07Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "a10908df-5c73-46b8-a399-d03b1336831b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "82b34f0c-b6ab-4977-ac57-a729a6a33f0d", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e9dff39e-a672-4265-8124-635fca1d5ba1", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "962f999d-1054-4ca4-925a-6cd12d28e8a3", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "23a5c7e2-3432-45e5-a610-736b89bd13c4", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "be3f90c9-4404-436b-b22c-f0d7d9a219f6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "d6e6ca11-ec3b-4331-a045-a2fbdbb329d4", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "12c1454e-875a-4193-9e93-dac7b7b79700", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "c75b2636-e709-4fae-bec9-00866a2da0e6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "97c1a88e-6148-45bd-9a60-bd3ffff742f0", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "936e06af-8894-4eb2-9c30-5ad095c56538", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "0c5ddd40-948d-4bfb-bd41-2e9ccce9c8e2", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "5ef952aa-483f-43a5-8ab7-e35a14e6f9fe", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:08Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "93ca03e7-f42d-4e42-8710-a39ba6a8ae60", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e794eb6f-2f06-494a-89c1-64681f0c412c", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "6ed5a3a3-88fe-4310-af62-fb0bdff5da55", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "838b3bad-6dcc-4f49-9d77-d8f4aa5b8192", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "de835649-881b-4606-a06a-7e0946335e07", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "5075d1f5-15d8-41d4-a744-6ce39852fe50", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "eb85f4cc-e27b-41ae-b072-ad91e07b492d", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "b7acc132-52e1-451a-9ebb-8ba9b094eefb", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "9babaa8e-ec8f-4570-aa10-b96b62fbfd26", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "c26b6ad5-19a5-42ae-8d60-fc8189fe294f", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "59191a8f-205b-45e7-952a-32ffc35a10db", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "af4874c1-adcb-4011-85e7-06e30702dfe6", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "734e54d6-a2f3-4d3f-b73f-3e46cdf172b9", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "83e3b502-94a3-479f-b47e-235bad5ac9fe", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "8290c3e6-7409-4ec6-a8d5-2c342dd47ffe", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:09Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "8141d00a-f07b-41f8-8366-bd87cd370dcf", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "016f32b5-eb77-4b20-85e6-0a3744ad0253", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "937183b2-ab7e-4686-a769-7122b1fe1f3b", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "d65a990d-ce0d-4007-8013-75b4db256a24", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "7d28df1e-6c41-4c57-9a19-877ea3c91d29", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "34fe88f5-0954-4879-82bb-140d0d6bf33c", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "e66b6da9-9fc0-46bd-8914-d2e937cb29d7", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "59e6d008-aa3e-48c4-9a9a-702dd0143cbb", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "ed04ec9e-250f-4fcd-be9a-9a27f862e3c8", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "54278625-1869-4846-b4ff-54ea534bc50a", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+2023-03-24T15:44:10Z {"errorMessage": "'DOLPHIN_SIGHTINGS'", "errorType": "KeyError", "requestId": "8dad923e-de0d-4bb6-bcd0-1764d2c01396", "stackTrace": ["  File \"/var/task/app.py\", line 31, in lambda_handler\n    orders = trader.run(trading_state)\n", "  File \"/var/task/trader.py\", line 110, in run\n    profit = self.calculate_last_round_profit(state.position, mid_prices)\n", "  File \"/var/task/trader.py\", line 68, in calculate_last_round_profit\n    mid_price = mid_prices[product]\n"]}
+
+
+Activities log:
+day;timestamp;product;bid_price_1;bid_volume_1;bid_price_2;bid_volume_2;bid_price_3;bid_volume_3;ask_price_1;ask_volume_1;ask_price_2;ask_volume_2;ask_price_3;ask_volume_3;mid_price;profit_and_loss
+2;0;PEARLS;9996;2;9995;25;;;10004;2;10005;25;;;10000.0;0.0
+2;0;BANANAS;4821;27;;;;;4827;27;;;;;4824.0;0.0
+2;0;DIVING_GEAR;99191;21;;;;;99194;21;;;;;99192.5;0.0
+2;0;COCONUTS;7923;209;;;;;7924;57;7925;61;7926;148;7923.5;0.0
+2;0;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;0;PINA_COLADAS;14850;72;;;;;14853;72;;;;;14851.5;0.0
+2;0;BERRIES;3847;66;;;;;3854;14;3855;52;;;3850.5;0.0
+2;100;BERRIES;3847;76;3846;48;;;3854;24;3855;100;;;3850.5;0.0
+2;100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;100;PEARLS;9996;4;9995;53;;;9998;1;10004;4;10005;53;9997.0;0.0
+2;100;BANANAS;4821;57;;;;;4827;57;;;;;4824.0;0.0
+2;100;COCONUTS;7924;114;7923;209;;;7925;61;7926;148;7927;171;7924.5;0.0
+2;100;DIVING_GEAR;99191;21;;;;;99194;3;99200;8;99201;10;99192.5;0.0
+2;100;PINA_COLADAS;14853;20;14850;72;;;14856;92;;;;;14854.5;0.0
+2;200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;200;PINA_COLADAS;14853;103;14850;72;;;14856;175;;;;;14854.5;0.0
+2;200;BERRIES;3848;14;3847;131;3846;48;3854;38;3855;155;;;3851.0;0.0
+2;200;PEARLS;9996;4;9995;73;;;9998;1;10004;4;10005;73;9997.0;0.0
+2;200;BANANAS;4821;77;;;;;4827;57;4828;20;;;4824.0;0.0
+2;200;COCONUTS;7924;306;7923;209;;;7925;61;7926;205;7927;306;7924.5;0.0
+2;200;DIVING_GEAR;99194;18;99191;21;;;99197;21;99200;8;99201;10;99195.5;0.0
+2;300;PEARLS;9996;5;9995;93;;;9998;1;10004;5;10005;93;9997.0;0.0
+2;300;BANANAS;4822;21;4821;77;;;4827;57;4828;21;4829;20;4824.5;0.0
+2;300;COCONUTS;7925;120;7924;306;7923;209;7926;205;7927;306;7928;181;7925.5;0.0
+2;300;DIVING_GEAR;99194;18;99193;8;99192;19;99195;8;99196;19;99197;21;99194.5;0.0
+2;300;PINA_COLADAS;14853;103;14850;72;;;14856;74;14861;101;;;14854.5;0.0
+2;300;BERRIES;3848;33;3847;175;3846;48;3854;38;3855;174;3856;44;3851.0;0.0
+2;300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;400;PEARLS;9996;5;9995;123;;;9998;1;10004;5;10005;123;9997.0;0.0
+2;400;BANANAS;4822;21;4821;107;;;4827;57;4828;51;4829;20;4824.5;0.0
+2;400;COCONUTS;7925;120;7924;478;7923;209;7926;205;7927;478;7928;181;7925.5;0.0
+2;400;DIVING_GEAR;99194;27;99193;27;99192;19;99195;8;99196;28;99197;40;99194.5;0.0
+2;400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;400;PINA_COLADAS;14855;103;14853;103;14850;72;14856;74;14858;40;14859;63;14855.5;0.0
+2;400;BERRIES;3849;19;3848;80;3847;175;3854;38;3855;193;3856;91;3851.5;0.0
+2;500;BERRIES;3849;19;3848;96;3847;224;3854;54;3855;242;3856;91;3851.5;0.0
+2;500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;500;PEARLS;10000;5;9996;5;9995;145;10004;5;10005;145;;;10002.0;0.0
+2;500;BANANAS;4822;21;4821;129;;;4827;57;4828;73;4829;20;4824.5;0.0
+2;500;COCONUTS;7925;120;7924;684;7923;209;7926;205;7927;684;7928;181;7925.5;0.0
+2;500;DIVING_GEAR;99194;53;99193;27;99192;19;99195;8;99196;28;99197;66;99194.5;0.0
+2;500;PINA_COLADAS;14855;103;14854;95;14853;103;14856;74;14857;95;14858;40;14855.5;0.0
+2;600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;600;PINA_COLADAS;14855;12;14854;95;14853;103;14856;74;14857;95;14858;40;14855.5;0.0
+2;600;BERRIES;3849;19;3848;96;3847;224;3853;20;3854;97;3855;242;3851.0;0.0
+2;600;PEARLS;10000;5;9996;5;9995;174;10004;5;10005;174;;;10002.0;0.0
+2;600;BANANAS;4822;21;4821;158;;;4827;57;4828;102;4829;20;4824.5;0.0
+2;600;COCONUTS;7925;120;7924;743;7923;342;7926;397;7927;684;7928;181;7925.5;0.0
+2;600;DIVING_GEAR;99194;53;99193;56;99192;19;99195;8;99196;57;99197;66;99194.5;0.0
+2;700;BANANAS;4822;22;4821;187;;;4827;57;4828;132;4829;20;4824.5;0.0
+2;700;PEARLS;10000;9;9996;6;9995;203;10004;6;10005;203;;;10002.0;0.0
+2;700;COCONUTS;7925;120;7924;937;7923;342;7926;463;7927;812;7928;181;7925.5;0.0
+2;700;DIVING_GEAR;99194;53;99193;56;99192;19;99196;42;99197;66;99200;31;99195.0;0.0
+2;700;PINA_COLADAS;14854;8;14853;103;14852;65;14856;74;14857;95;14858;40;14855.0;0.0
+2;700;BERRIES;3849;19;3848;96;3847;224;3852;18;3853;70;3854;97;3850.5;0.0
+2;700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;800;PEARLS;10000;8;9996;7;9995;230;10004;7;10005;230;;;10002.0;0.0
+2;800;COCONUTS;7925;120;7924;1113;7923;342;7926;510;7927;941;7928;181;7925.5;0.0
+2;800;DIVING_GEAR;99194;53;99193;56;99192;19;99196;27;99197;66;99200;31;99195.0;0.0
+2;800;BANANAS;4826;1;4822;22;4821;215;4827;57;4828;160;4829;20;4826.5;0.0
+2;800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;800;PINA_COLADAS;14853;2;14852;65;14851;161;14856;74;14857;95;14858;40;14854.5;0.0
+2;800;BERRIES;3849;19;3848;96;3847;224;3852;18;3853;80;3854;145;3850.5;0.0
+2;900;BERRIES;3849;24;3848;96;3847;224;3852;18;3853;97;3854;205;3850.5;0.0
+2;900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;900;BANANAS;4826;6;4822;23;4821;239;4827;57;4828;185;4829;20;4826.5;0.0
+2;900;DIVING_GEAR;99194;53;99193;56;99192;19;99196;5;99197;66;99200;31;99195.0;0.0
+2;900;PEARLS;10002;1;10000;8;9996;8;10004;8;10005;254;;;10003.0;0.0
+2;900;COCONUTS;7925;120;7924;1292;7923;342;7926;510;7927;1120;7928;181;7925.5;0.0
+2;900;PINA_COLADAS;14852;65;14851;161;14850;160;14853;86;14856;74;14857;95;14852.5;0.0
+2;1000;PINA_COLADAS;14852;93;14851;226;14850;160;14853;86;14854;28;14855;65;14852.5;0.0
+2;1000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1000;BERRIES;3849;24;3848;96;3847;224;3852;18;3853;109;3854;251;3850.5;0.0
+2;1000;DIVING_GEAR;99194;53;99193;56;99192;19;99197;49;99200;31;99201;10;99195.5;0.0
+2;1000;PEARLS;10002;1;10000;8;9996;8;10004;8;10005;276;;;10003.0;0.0
+2;1000;COCONUTS;7925;314;7924;1292;7923;342;7926;510;7927;1188;7928;307;7925.5;0.0
+2;1000;BANANAS;4826;6;4822;45;4821;239;4827;57;4828;185;4829;42;4826.5;0.0
+2;1100;BANANAS;4826;6;4823;1;4822;71;4827;63;4828;185;4829;69;4826.5;0.0
+2;1100;DIVING_GEAR;99195;24;99194;53;99193;56;99197;49;99198;24;99200;31;99196.0;0.0
+2;1100;PEARLS;10002;5;10000;8;9996;9;10004;9;10005;302;;;10003.0;0.0
+2;1100;COCONUTS;7925;523;7924;1292;7923;342;7926;510;7927;1253;7928;451;7925.5;0.0
+2;1100;PINA_COLADAS;14852;200;14851;226;14850;160;14853;86;14854;28;14855;172;14852.5;0.0
+2;1100;BERRIES;3849;24;3848;96;3847;224;3852;18;3853;127;3854;303;3850.5;0.0
+2;1100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1200;DIVING_GEAR;99196;26;99195;24;99194;53;99197;49;99198;24;99199;26;99196.5;0.0
+2;1200;PEARLS;10002;5;10000;8;9996;11;10004;11;10005;324;;;10003.0;0.0
+2;1200;COCONUTS;7925;597;7924;1483;7923;342;7926;510;7927;1444;7928;451;7925.5;0.0
+2;1200;BANANAS;4826;6;4823;1;4822;95;4827;63;4828;187;4829;91;4826.5;0.0
+2;1200;PINA_COLADAS;14852;200;14851;226;14850;246;14853;172;14854;28;14855;172;14852.5;0.0
+2;1200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1200;BERRIES;3849;9;3848;96;3847;224;3852;18;3853;144;3854;354;3850.5;0.0
+2;1300;BERRIES;3849;9;3848;96;3847;242;3852;18;3853;162;3854;410;3850.5;0.0
+2;1300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1300;BANANAS;4826;5;4823;1;4822;126;4827;63;4828;187;4829;122;4826.5;0.0
+2;1300;DIVING_GEAR;99196;3;99195;24;99194;53;99197;49;99198;24;99199;26;99196.5;0.0
+2;1300;PEARLS;10002;4;10000;8;9996;12;10004;12;10005;354;;;10003.0;0.0
+2;1300;COCONUTS;7925;597;7924;1637;7923;467;7926;712;7927;1444;7928;451;7925.5;0.0
+2;1300;PINA_COLADAS;14852;94;14851;226;14850;246;14853;172;14854;28;14855;172;14852.5;0.0
+2;1400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1400;PINA_COLADAS;14852;10;14851;226;14850;246;14853;172;14854;28;14855;172;14852.5;0.0
+2;1400;DIVING_GEAR;99195;5;99194;53;99193;56;99197;49;99198;24;99199;26;99196.0;0.0
+2;1400;PEARLS;10002;4;10000;8;9996;12;10004;12;10005;378;;;10003.0;0.0
+2;1400;COCONUTS;7925;402;7924;1637;7923;467;7926;712;7927;1444;7928;451;7925.5;0.0
+2;1400;BERRIES;3849;9;3848;96;3847;258;3852;18;3853;162;3854;426;3850.5;0.0
+2;1400;BANANAS;4826;5;4823;1;4822;150;4827;63;4828;187;4829;146;4826.5;0.0
+2;1500;BANANAS;4826;4;4823;1;4822;171;4827;63;4828;188;4829;166;4826.5;0.0
+2;1500;DIVING_GEAR;99194;35;99193;56;99192;19;99197;49;99198;24;99199;26;99195.5;0.0
+2;1500;PEARLS;10002;4;10000;8;9996;13;10004;13;10005;398;;;10003.0;0.0
+2;1500;COCONUTS;7925;402;7924;1637;7923;675;7926;920;7927;1444;7928;451;7925.5;0.0
+2;1500;BERRIES;3849;9;3848;96;3847;258;3852;18;3853;178;3854;476;3850.5;0.0
+2;1500;PINA_COLADAS;14852;10;14851;226;14850;336;14853;262;14854;28;14855;172;14852.5;0.0
+2;1500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1600;DIVING_GEAR;99194;13;99193;56;99192;19;99197;49;99198;24;99199;26;99195.5;0.0
+2;1600;PEARLS;10002;4;10000;8;9996;13;10004;13;10005;426;;;10003.0;0.0
+2;1600;COCONUTS;7925;227;7924;1637;7923;675;7926;920;7927;1444;7928;451;7925.5;0.0
+2;1600;BERRIES;3849;9;3848;96;3847;258;3852;18;3853;194;3854;521;3850.5;0.0
+2;1600;BANANAS;4826;4;4823;1;4822;171;4827;63;4828;216;4829;166;4826.5;0.0
+2;1600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1600;PINA_COLADAS;14851;135;14850;336;14848;327;14853;262;14854;28;14855;172;14852.0;0.0
+2;1700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1700;BANANAS;4826;4;4823;1;4822;171;4827;63;4828;241;4829;166;4826.5;0.0
+2;1700;DIVING_GEAR;99193;40;99192;19;99191;21;99197;49;99198;24;99199;26;99195.0;0.0
+2;1700;PEARLS;10002;4;10000;8;9996;13;10004;13;10005;451;;;10003.0;0.0
+2;1700;COCONUTS;7925;16;7924;1637;7923;675;7926;920;7927;1444;7928;451;7925.5;0.0
+2;1700;BERRIES;3850;4;3849;9;3848;96;3852;18;3853;213;3854;579;3851.0;0.0
+2;1700;PINA_COLADAS;14851;41;14850;336;14848;327;14853;262;14854;28;14855;172;14852.0;0.0
+2;1800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;1800;PINA_COLADAS;14850;297;14848;327;14847;247;14853;262;14854;28;14855;172;14851.5;0.0
+2;1800;DIVING_GEAR;99193;18;99192;19;99191;21;99197;49;99198;24;99199;26;99195.0;0.0
+2;1800;PEARLS;10002;4;10000;8;9996;14;10004;14;10005;478;;;10003.0;0.0
+2;1800;COCONUTS;7924;1517;7923;675;7922;778;7925;104;7926;920;7927;1444;7924.5;0.0
+2;1800;BERRIES;3850;4;3849;9;3848;96;3852;18;3853;227;3854;621;3851.0;0.0
+2;1800;BANANAS;4826;4;4823;1;4822;172;4827;63;4828;269;4829;166;4826.5;0.0
+2;1900;BANANAS;4826;1;4823;1;4822;173;4827;63;4828;297;4829;166;4826.5;0.0
+2;1900;DIVING_GEAR;99192;16;99191;21;99187;7;99197;49;99198;24;99199;26;99194.5;0.0
+2;1900;PEARLS;10002;1;10000;8;9996;15;10004;15;10005;505;;;10003.0;0.0
+2;1900;COCONUTS;7924;1517;7923;853;7922;778;7925;282;7926;920;7927;1444;7924.5;0.0
+2;1900;BERRIES;3850;4;3849;9;3848;96;3852;18;3853;241;3854;664;3851.0;0.0
+2;1900;PINA_COLADAS;14850;297;14848;418;14847;247;14851;27;14852;64;14853;262;14850.5;0.0
+2;1900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;2000;DIVING_GEAR;99191;11;99187;7;99186;37;99197;49;99198;24;99199;26;99194.0;0.0
+2;2000;PEARLS;10002;1;10000;8;9996;16;10004;16;10005;534;;;10003.0;0.0
+2;2000;COCONUTS;7924;1457;7923;853;7922;959;7925;403;7926;920;7927;1444;7924.5;0.0
+2;2000;BERRIES;3850;4;3849;9;3848;96;3852;18;3853;259;3854;719;3851.0;0.0
+2;2000;BANANAS;4826;1;4823;1;4822;173;4827;63;4828;327;4829;166;4826.5;0.0
+2;2000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;2000;PINA_COLADAS;14850;202;14848;418;14847;278;14851;27;14852;64;14853;262;14850.5;0.0
+2;2100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;2100;BANANAS;4826;1;4825;5;4823;1;4827;63;4828;356;4829;166;4826.5;0.0
+2;2100;DIVING_GEAR;99186;27;99183;14;99182;43;99197;49;99198;24;99199;26;99191.5;0.0
+2;2100;PEARLS;10002;1;10000;8;9996;16;10004;16;10005;563;;;10003.0;0.0
+2;2100;COCONUTS;7924;1274;7923;853;7922;999;7925;403;7926;920;7927;1444;7924.5;0.0
+2;2100;BERRIES;3850;4;3849;9;3848;96;3852;18;3853;259;3854;738;3851.0;0.0
+2;2100;PINA_COLADAS;14850;108;14848;418;14847;278;14851;27;14852;64;14853;262;14850.5;0.0
+2;2200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;2200;PINA_COLADAS;14850;9;14848;418;14847;278;14851;27;14852;64;14853;262;14850.5;0.0
+2;2200;DIVING_GEAR;99186;5;99183;14;99182;43;99197;49;99198;24;99199;26;99191.5;0.0
+2;2200;COCONUTS;7924;1098;7923;853;7922;999;7925;403;7926;920;7927;1444;7924.5;0.0
+2;2200;BERRIES;3850;4;3849;9;3848;96;3852;18;3853;259;3854;751;3851.0;0.0
+2;2200;PEARLS;10002;2;10000;8;9996;17;10004;17;10005;591;;;10003.0;0.0
+2;2200;BANANAS;4826;1;4825;5;4823;1;4827;63;4828;385;4829;166;4826.5;0.0
+2;2300;PEARLS;10002;1;10000;8;9996;19;10004;19;10005;611;;;10003.0;0.0
+2;2300;BANANAS;4825;5;4823;1;4822;204;4827;63;4828;407;4829;166;4826.0;0.0
+2;2300;COCONUTS;7924;1030;7923;853;7922;1169;7925;505;7926;920;7927;1444;7924.5;0.0
+2;2300;DIVING_GEAR;99182;39;99181;18;99179;35;99197;49;99198;24;99199;26;99189.5;0.0
+2;2300;BERRIES;3850;9;3849;9;3848;96;3852;18;3853;259;3854;769;3851.0;0.0
+2;2300;PINA_COLADAS;14848;327;14847;278;14846;95;14851;27;14852;64;14853;262;14849.5;0.0
+2;2300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;2400;COCONUTS;7924;1030;7923;853;7922;1356;7925;692;7926;920;7927;1444;7924.5;0.0
+2;2400;DIVING_GEAR;99182;14;99181;18;99179;35;99197;49;99198;24;99199;26;99189.5;0.0
+2;2400;BERRIES;3848;96;3847;341;3846;690;3849;5;3852;18;3853;274;3848.5;0.0
+2;2400;PEARLS;10002;1;10000;8;9996;20;10004;20;10005;635;;;10003.0;0.0
+2;2400;BANANAS;4825;5;4823;1;4822;205;4827;63;4828;432;4829;166;4826.0;0.0
+2;2400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;2400;PINA_COLADAS;14848;251;14847;278;14846;95;14851;27;14852;64;14853;262;14849.5;0.0
+2;2500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;2500;PEARLS;10002;1;10000;8;9996;21;10004;21;10005;663;;;10003.0;0.0
+2;2500;BANANAS;4825;5;4823;1;4822;206;4827;63;4828;461;4829;166;4826.0;0.0
+2;2500;COCONUTS;7924;1030;7923;853;7922;1500;7925;836;7926;920;7927;1444;7924.5;0.0
+2;2500;BERRIES;3848;96;3847;341;3846;704;3849;5;3852;18;3853;288;3848.5;0.0
+2;2500;DIVING_GEAR;99182;14;99181;37;99179;35;99184;19;99197;49;99198;24;99183.0;0.0
+2;2500;PINA_COLADAS;14848;164;14847;278;14846;95;14851;27;14852;64;14853;262;14849.5;0.0
+2;2600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;2600;PINA_COLADAS;14848;164;14847;386;14846;95;14850;38;14851;97;14852;64;14849.0;0.0
+2;2600;COCONUTS;7924;1030;7923;853;7922;1655;7925;991;7926;920;7927;1444;7924.5;0.0
+2;2600;BERRIES;3848;96;3847;341;3846;715;3849;5;3852;18;3853;299;3848.5;0.0
+2;2600;DIVING_GEAR;99181;35;99179;40;99178;43;99184;19;99197;49;99198;24;99182.5;0.0
+2;2600;PEARLS;10002;1;10000;8;9996;23;10004;23;10005;685;;;10003.0;0.0
+2;2600;BANANAS;4825;4;4823;1;4822;206;4827;63;4828;485;4829;166;4826.0;0.0
+2;2700;PEARLS;10002;1;10000;8;9996;25;10004;25;10005;711;;;10003.0;0.0
+2;2700;BANANAS;4825;4;4823;1;4822;206;4827;63;4828;513;4829;166;4826.0;0.0
+2;2700;COCONUTS;7924;808;7923;853;7922;1655;7925;991;7926;920;7927;1444;7924.5;0.0
+2;2700;BERRIES;3848;96;3847;341;3846;734;3849;5;3852;18;3853;373;3848.5;0.0
+2;2700;DIVING_GEAR;99190;8;99181;35;99179;40;99192;8;99193;19;99197;49;99191.0;0.0
+2;2700;PINA_COLADAS;14848;164;14847;410;14846;151;14850;118;14851;97;14852;64;14849.0;0.0
+2;2700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;2800;COCONUTS;7924;598;7923;853;7922;1655;7925;991;7926;920;7927;1444;7924.5;0.0
+2;2800;BERRIES;3848;96;3847;341;3846;734;3849;5;3852;38;3853;420;3848.5;0.0
+2;2800;DIVING_GEAR;99190;3;99188;5;99187;20;99191;20;99192;8;99193;19;99190.5;0.0
+2;2800;PEARLS;10002;1;10000;8;9996;27;10004;27;10005;741;;;10003.0;0.0
+2;2800;BANANAS;4825;4;4823;1;4822;206;4827;63;4828;545;4829;166;4826.0;0.0
+2;2800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;2800;PINA_COLADAS;14848;78;14847;410;14846;151;14850;118;14851;97;14852;64;14849.0;0.0
+2;2900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;2900;BANANAS;4825;4;4823;1;4822;208;4827;63;4828;576;4829;166;4826.0;0.0
+2;2900;PEARLS;10002;1;10000;8;9996;29;10004;29;10005;770;;;10003.0;0.0
+2;2900;COCONUTS;7924;426;7923;853;7922;1655;7925;991;7926;920;7927;1444;7924.5;0.0
+2;2900;BERRIES;3848;96;3847;341;3846;734;3849;5;3851;12;3852;95;3848.5;0.0
+2;2900;DIVING_GEAR;99187;20;99186;10;99185;12;99188;5;99189;9;99191;20;99187.5;0.0
+2;2900;PINA_COLADAS;14847;383;14846;151;14845;94;14850;118;14851;97;14852;64;14848.5;0.0
+2;3000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;3000;PINA_COLADAS;14847;284;14846;151;14845;94;14850;118;14851;97;14852;64;14848.5;0.0
+2;3000;COCONUTS;7924;262;7923;853;7922;1655;7925;991;7926;920;7927;1444;7924.5;0.0
+2;3000;BERRIES;3848;96;3847;341;3846;734;3849;5;3851;12;3852;106;3848.5;0.0
+2;3000;DIVING_GEAR;99187;2;99186;10;99185;12;99188;5;99189;9;99191;20;99187.5;0.0
+2;3000;BANANAS;4826;13;4825;3;4823;1;4827;63;4828;607;4829;166;4826.5;0.0
+2;3000;PEARLS;10002;0;10000;8;9996;31;10004;31;10005;799;;;10003.0;0.0
+2;3100;BANANAS;4826;3;4825;3;4823;1;4827;63;4828;635;4829;166;4826.5;0.0
+2;3100;DIVING_GEAR;99182;7;99181;46;99179;40;99188;5;99189;9;99191;20;99185.0;0.0
+2;3100;PEARLS;10000;8;9996;33;9995;825;10002;10;10004;33;10005;825;10001.0;0.0
+2;3100;COCONUTS;7924;52;7923;853;7922;1655;7925;991;7926;920;7927;1444;7924.5;0.0
+2;3100;BERRIES;3848;96;3847;341;3846;753;3849;5;3851;12;3852;106;3848.5;0.0
+2;3100;PINA_COLADAS;14847;180;14846;151;14845;94;14850;118;14851;97;14852;64;14848.5;0.0
+2;3100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;3200;COCONUTS;7923;750;7922;1655;7921;541;7925;991;7926;920;7927;1444;7924.0;0.0
+2;3200;BERRIES;3848;96;3847;341;3846;813;3849;5;3851;12;3852;106;3848.5;0.0
+2;3200;BANANAS;4826;3;4825;3;4823;1;4827;63;4828;658;4829;166;4826.5;0.0
+2;3200;DIVING_GEAR;99181;46;99179;65;99178;43;99182;18;99188;5;99189;9;99181.5;0.0
+2;3200;PEARLS;10000;8;9996;33;9995;848;10002;10;10004;33;10005;848;10001.0;0.0
+2;3200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;3200;PINA_COLADAS;14847;95;14846;151;14845;94;14850;118;14851;97;14852;64;14848.5;0.0
+2;3300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;3300;BANANAS;4826;4;4825;3;4823;1;4827;63;4828;685;4829;166;4826.5;0.0
+2;3300;DIVING_GEAR;99181;46;99179;65;99178;43;99182;1;99188;5;99189;15;99181.5;0.0
+2;3300;PEARLS;10000;8;9996;33;9995;875;10002;10;10004;33;10005;875;10001.0;0.0
+2;3300;COCONUTS;7923;567;7922;1655;7921;541;7925;991;7926;920;7927;1444;7924.0;0.0
+2;3300;BERRIES;3848;96;3847;352;3846;869;3849;5;3851;12;3852;106;3848.5;0.0
+2;3300;PINA_COLADAS;14846;145;14845;94;14844;199;14850;118;14851;97;14852;64;14848.0;0.0
+2;3400;PINA_COLADAS;14846;60;14845;94;14844;199;14850;118;14851;97;14852;64;14848.0;0.0
+2;3400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;3400;BERRIES;3848;96;3847;371;3846;921;3849;5;3851;12;3852;106;3848.5;0.0
+2;3400;BANANAS;4826;4;4825;3;4823;1;4827;63;4828;712;4829;166;4826.5;0.0
+2;3400;DIVING_GEAR;99187;24;99181;46;99179;65;99188;5;99189;15;99190;36;99187.5;0.0
+2;3400;PEARLS;10000;8;9996;35;9995;900;10002;10;10004;35;10005;900;10001.0;0.0
+2;3400;COCONUTS;7923;405;7922;1655;7921;541;7925;991;7926;920;7927;1444;7924.0;0.0
+2;3500;BANANAS;4826;4;4825;3;4823;1;4827;92;4828;712;4829;166;4826.5;0.0
+2;3500;DIVING_GEAR;99187;8;99182;5;99181;57;99188;5;99189;15;99190;36;99187.5;0.0
+2;3500;PEARLS;10000;8;9996;35;9995;929;10002;10;10004;35;10005;929;10001.0;0.0
+2;3500;COCONUTS;7923;212;7922;1655;7921;541;7925;991;7926;920;7927;1444;7924.0;0.0
+2;3500;BERRIES;3848;96;3847;371;3846;932;3849;5;3851;12;3852;106;3848.5;0.0
+2;3500;PINA_COLADAS;14845;43;14844;199;14843;225;14850;118;14851;97;14852;64;14847.5;0.0
+2;3500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;3600;BERRIES;3848;96;3847;381;3846;975;3849;5;3851;12;3852;106;3848.5;0.0
+2;3600;BANANAS;4826;4;4825;3;4823;1;4827;117;4828;712;4829;166;4826.5;0.0
+2;3600;DIVING_GEAR;99183;18;99182;5;99181;57;99186;10;99188;5;99189;15;99184.5;0.0
+2;3600;PEARLS;10000;8;9996;35;9995;954;10002;10;10004;35;10005;954;10001.0;0.0
+2;3600;COCONUTS;7923;44;7922;1655;7921;541;7925;991;7926;920;7927;1444;7924.0;0.0
+2;3600;PINA_COLADAS;14844;154;14843;225;14842;60;14850;118;14851;97;14852;64;14847.0;0.0
+2;3600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;3700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;3700;BANANAS;4825;3;4823;1;4822;233;4826;17;4827;117;4828;712;4825.5;0.0
+2;3700;DIVING_GEAR;99183;0;99182;5;99181;57;99186;10;99188;5;99189;15;99184.5;0.0
+2;3700;PEARLS;10000;5;9998;9;9996;35;10002;10;10004;35;10005;974;10001.0;0.0
+2;3700;COCONUTS;7922;1524;7921;541;7920;783;7925;991;7926;920;7927;1444;7923.5;0.0
+2;3700;PINA_COLADAS;14844;76;14843;225;14842;60;14850;118;14851;97;14852;64;14847.0;0.0
+2;3700;BERRIES;3848;96;3847;381;3846;987;3849;5;3851;12;3852;118;3848.5;0.0
+2;3800;PINA_COLADAS;14843;212;14842;60;14840;287;14850;118;14851;97;14852;64;14846.5;0.0
+2;3800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;3800;BERRIES;3848;96;3847;396;3846;1040;3851;6;3852;118;3853;604;3849.5;0.0
+2;3800;BANANAS;4825;3;4823;1;4822;233;4826;41;4827;117;4828;712;4825.5;0.0
+2;3800;DIVING_GEAR;99181;42;99179;65;99178;61;99186;10;99188;5;99189;15;99183.5;0.0
+2;3800;PEARLS;10000;5;9998;9;9996;35;10002;10;10004;35;10005;998;10001.0;0.0
+2;3800;COCONUTS;7922;1524;7921;541;7920;972;7923;189;7925;991;7926;920;7922.5;0.0
+2;3900;BANANAS;4825;2;4824;1;4823;1;4826;66;4827;117;4828;712;4825.5;0.0
+2;3900;DIVING_GEAR;99181;21;99179;65;99178;61;99186;10;99188;5;99189;15;99183.5;0.0
+2;3900;PEARLS;10000;2;9998;9;9996;36;10002;10;10004;36;10005;1023;10001.0;0.0
+2;3900;COCONUTS;7922;1524;7921;738;7920;972;7923;189;7924;197;7925;991;7922.5;0.0
+2;3900;PINA_COLADAS;14843;127;14842;60;14840;287;14850;118;14851;97;14852;64;14846.5;0.0
+2;3900;BERRIES;3848;96;3847;407;3846;1087;3851;6;3852;118;3853;604;3849.5;0.0
+2;3900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;4000;BERRIES;3848;96;3847;417;3846;1140;3851;6;3852;118;3853;604;3849.5;0.0
+2;4000;BANANAS;4825;1;4824;1;4823;1;4826;88;4827;117;4828;712;4825.5;0.0
+2;4000;DIVING_GEAR;99181;6;99179;65;99178;61;99186;10;99188;5;99189;15;99183.5;0.0
+2;4000;PEARLS;10000;2;9998;9;9996;37;10002;10;10004;37;10005;1045;10001.0;0.0
+2;4000;COCONUTS;7922;1356;7921;738;7920;972;7923;189;7924;197;7925;991;7922.5;0.0
+2;4000;PINA_COLADAS;14843;35;14842;60;14840;287;14850;118;14851;97;14852;64;14846.5;0.0
+2;4000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4100;BANANAS;4825;1;4824;1;4823;1;4826;114;4827;117;4828;712;4825.5;0.0
+2;4100;DIVING_GEAR;99179;51;99178;61;99177;5;99186;10;99188;5;99189;15;99182.5;0.0
+2;4100;PEARLS;9998;13;9996;39;9995;1069;10000;1;10002;9;10004;39;9999.0;0.0
+2;4100;COCONUTS;7922;1111;7921;738;7920;972;7923;189;7924;197;7925;991;7922.5;0.0
+2;4100;PINA_COLADAS;14842;14;14840;287;14839;238;14850;118;14851;97;14852;64;14846.0;0.0
+2;4100;BERRIES;3848;96;3847;427;3846;1183;3851;6;3852;118;3853;604;3849.5;0.0
+2;4200;PINA_COLADAS;14840;221;14839;238;14838;152;14850;118;14851;97;14852;64;14845.0;0.0
+2;4200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4200;BERRIES;3851;6;3848;107;3847;472;3852;118;3853;604;3854;1262;3851.5;0.0
+2;4200;BANANAS;4825;1;4824;1;4823;1;4826;143;4827;117;4828;712;4825.5;0.0
+2;4200;DIVING_GEAR;99179;34;99178;61;99177;5;99186;10;99188;5;99189;15;99182.5;0.0
+2;4200;PEARLS;9998;13;9996;41;9995;1096;10000;1;10002;9;10004;41;9999.0;0.0
+2;4200;COCONUTS;7922;923;7921;738;7920;972;7923;189;7924;197;7925;991;7922.5;0.0
+2;4300;BANANAS;4825;1;4824;1;4823;1;4826;165;4827;117;4828;712;4825.5;0.0
+2;4300;DIVING_GEAR;99179;15;99178;61;99177;5;99186;10;99188;5;99189;15;99182.5;0.0
+2;4300;PEARLS;9998;13;9996;42;9995;1117;10000;1;10002;9;10004;42;9999.0;0.0
+2;4300;COCONUTS;7922;735;7921;738;7920;972;7923;189;7924;197;7925;991;7922.5;0.0
+2;4300;PINA_COLADAS;14840;254;14839;304;14838;152;14843;99;14850;118;14851;97;14841.5;0.0
+2;4300;BERRIES;3851;6;3848;107;3847;485;3852;118;3853;604;3854;1275;3851.5;0.0
+2;4300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4400;BERRIES;3851;6;3848;107;3847;503;3852;118;3853;622;3854;1328;3851.5;0.0
+2;4400;PEARLS;9998;13;9996;44;9995;1141;10000;1;10002;9;10004;44;9999.0;0.0
+2;4400;BANANAS;4824;1;4823;1;4822;233;4825;1;4826;189;4827;117;4824.5;0.0
+2;4400;DIVING_GEAR;99178;53;99177;5;99176;47;99186;10;99188;5;99189;15;99182.0;0.0
+2;4400;COCONUTS;7922;735;7921;738;7920;1162;7923;379;7924;197;7925;991;7922.5;0.0
+2;4400;PINA_COLADAS;14840;254;14839;304;14838;237;14841;85;14843;99;14850;118;14840.5;0.0
+2;4400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4500;PINA_COLADAS;14842;13;14840;254;14839;304;14843;99;14844;38;14845;60;14842.5;0.0
+2;4500;PEARLS;9998;13;9996;45;9995;1166;10000;1;10002;9;10004;45;9999.0;0.0
+2;4500;BANANAS;4823;1;4822;233;4821;730;4825;1;4826;215;4827;117;4824.0;0.0
+2;4500;COCONUTS;7922;735;7921;945;7920;1162;7923;379;7924;404;7925;991;7922.5;0.0
+2;4500;DIVING_GEAR;99178;33;99177;5;99176;47;99186;10;99188;5;99189;15;99182.0;0.0
+2;4500;BERRIES;3851;6;3848;107;3847;513;3852;118;3853;622;3854;1338;3851.5;0.0
+2;4600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;4600;BERRIES;3851;6;3848;107;3847;513;3852;118;3853;634;3854;1393;3851.5;0.0
+2;4600;PEARLS;9998;22;9996;47;9995;1187;10000;1;10002;9;10004;47;9999.0;0.0
+2;4600;BANANAS;4823;1;4822;233;4821;730;4825;1;4826;238;4827;117;4824.0;0.0
+2;4600;COCONUTS;7922;948;7921;945;7920;1162;7923;379;7924;404;7925;1204;7922.5;0.0
+2;4600;DIVING_GEAR;99178;15;99177;5;99176;47;99186;10;99188;5;99189;15;99182.0;0.0
+2;4600;PINA_COLADAS;14842;13;14841;93;14840;254;14843;99;14844;67;14845;124;14842.5;0.0
+2;4700;PEARLS;9998;22;9996;49;9995;1214;10000;1;10002;9;10004;49;9999.0;0.0
+2;4700;BANANAS;4823;1;4822;233;4821;730;4825;30;4826;238;4827;117;4824.0;0.0
+2;4700;COCONUTS;7922;948;7921;945;7920;1162;7923;184;7924;404;7925;1204;7922.5;0.0
+2;4700;DIVING_GEAR;99176;39;99174;5;99173;18;99186;10;99188;5;99189;15;99181.0;0.0
+2;4700;BERRIES;3851;6;3848;107;3847;513;3852;118;3853;653;3854;1453;3851.5;0.0
+2;4700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;4700;PINA_COLADAS;14842;13;14841;93;14840;254;14844;52;14845;124;14846;40;14843.0;0.0
+2;4800;BERRIES;3851;4;3848;107;3847;513;3852;135;3853;705;3854;1453;3851.5;0.0
+2;4800;PEARLS;9998;22;9996;50;9995;1240;10000;1;10002;13;10004;50;9999.0;0.0
+2;4800;BANANAS;4822;233;4821;730;4820;73;4823;3;4824;1;4825;56;4822.5;0.0
+2;4800;COCONUTS;7922;1106;7921;945;7920;1162;7923;239;7924;404;7925;1362;7922.5;0.0
+2;4800;DIVING_GEAR;99176;14;99174;5;99173;18;99186;10;99188;5;99189;15;99181.0;0.0
+2;4800;PINA_COLADAS;14842;13;14841;177;14840;254;14844;136;14845;124;14846;40;14843.0;0.0
+2;4800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;4900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;4900;PINA_COLADAS;14842;94;14841;177;14840;254;14844;136;14845;205;14846;40;14843.0;0.0
+2;4900;PEARLS;9998;22;9996;52;9995;1265;10000;1;10002;13;10004;52;9999.0;0.0
+2;4900;BANANAS;4822;233;4821;730;4820;73;4823;3;4824;3;4825;81;4822.5;0.0
+2;4900;COCONUTS;7922;1106;7921;945;7920;1162;7923;23;7924;404;7925;1362;7922.5;0.0
+2;4900;DIVING_GEAR;99173;18;99172;22;99171;21;99174;2;99186;10;99188;5;99173.5;0.0
+2;4900;BERRIES;3851;4;3848;107;3847;513;3852;135;3853;718;3854;1513;3851.5;0.0
+2;5000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;5000;BERRIES;3851;4;3848;107;3847;527;3852;135;3853;732;3854;1571;3851.5;0.0
+2;5000;PEARLS;9998;22;9996;52;9995;1291;10000;1;10002;13;10004;52;9999.0;0.0
+2;5000;BANANAS;4822;231;4821;730;4820;73;4823;2;4824;29;4825;81;4822.5;0.0
+2;5000;COCONUTS;7923;163;7922;1106;7921;945;7924;404;7925;1362;7926;1517;7923.5;0.0
+2;5000;DIVING_GEAR;99182;22;99173;18;99172;22;99185;24;99186;10;99188;5;99183.5;0.0
+2;5000;PINA_COLADAS;14842;94;14841;203;14840;307;14843;26;14844;189;14845;205;14842.5;0.0
+2;5100;PEARLS;9998;22;9996;52;9995;1315;10000;1;10002;13;10004;52;9999.0;0.0
+2;5100;BANANAS;4822;231;4821;730;4820;73;4823;2;4824;53;4825;81;4822.5;0.0
+2;5100;COCONUTS;7923;163;7922;1283;7921;945;7924;467;7925;1476;7926;1517;7923.5;0.0
+2;5100;DIVING_GEAR;99182;2;99178;20;99173;18;99185;24;99186;10;99188;5;99183.5;0.0
+2;5100;BERRIES;3851;4;3848;107;3847;527;3852;135;3853;746;3854;1613;3851.5;0.0
+2;5100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;5100;PINA_COLADAS;14842;69;14841;203;14840;332;14843;90;14844;189;14845;205;14842.5;0.0
+2;5200;BERRIES;3851;4;3848;107;3847;541;3852;135;3853;746;3854;1627;3851.5;0.0
+2;5200;PEARLS;9998;22;9996;52;9995;1345;10000;1;10002;23;10004;52;9999.0;0.0
+2;5200;COCONUTS;7923;163;7922;1491;7921;945;7924;467;7925;1684;7926;1517;7923.5;0.0
+2;5200;DIVING_GEAR;99182;2;99180;23;99178;20;99183;23;99185;24;99186;10;99182.5;0.0
+2;5200;PINA_COLADAS;14841;159;14840;332;14839;368;14843;90;14844;189;14845;205;14842.0;0.0
+2;5200;BANANAS;4822;221;4821;730;4820;73;4823;2;4824;83;4825;81;4822.5;0.0
+2;5200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;5300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;5300;PINA_COLADAS;14841;159;14840;406;14839;368;14843;164;14844;189;14845;205;14842.0;0.0
+2;5300;BANANAS;4822;221;4821;730;4820;73;4823;2;4824;113;4825;81;4822.5;0.0
+2;5300;DIVING_GEAR;99182;2;99181;26;99180;23;99183;23;99184;26;99185;24;99182.5;0.0
+2;5300;PEARLS;9998;20;9996;53;9995;1374;10000;1;10002;23;10004;53;9999.0;0.0
+2;5300;COCONUTS;7923;203;7922;1601;7921;945;7924;467;7925;1874;7926;1517;7923.5;0.0
+2;5300;BERRIES;3851;4;3850;3;3848;107;3852;135;3853;765;3854;1686;3851.5;0.0
+2;5400;BANANAS;4822;221;4821;730;4820;73;4823;2;4824;138;4825;81;4822.5;0.0
+2;5400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;5400;BERRIES;3851;4;3850;3;3848;107;3852;135;3853;765;3854;1701;3851.5;0.0
+2;5400;DIVING_GEAR;99182;17;99181;26;99180;23;99183;13;99184;26;99185;34;99182.5;0.0
+2;5400;PEARLS;9998;20;9996;53;9995;1399;10000;1;10002;23;10004;53;9999.0;0.0
+2;5400;COCONUTS;7923;203;7922;1750;7921;945;7924;467;7925;2023;7926;1517;7923.5;0.0
+2;5400;PINA_COLADAS;14841;159;14840;501;14839;368;14843;259;14844;189;14845;205;14842.0;0.0
+2;5500;DIVING_GEAR;99182;17;99181;26;99180;23;99184;15;99185;34;99186;25;99183.0;0.0
+2;5500;PEARLS;9998;20;9996;54;9995;1428;10000;1;10002;23;10004;54;9999.0;0.0
+2;5500;COCONUTS;7923;203;7922;1936;7921;945;7924;467;7925;2209;7926;1517;7923.5;0.0
+2;5500;BERRIES;3851;4;3850;3;3848;107;3852;135;3853;765;3854;1718;3851.5;0.0
+2;5500;PINA_COLADAS;14841;139;14840;535;14839;388;14842;60;14843;259;14844;189;14841.5;0.0
+2;5500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;5500;BANANAS;4822;221;4821;733;4820;73;4823;3;4824;167;4825;81;4822.5;0.0
+2;5600;BERRIES;3851;4;3850;3;3848;107;3852;135;3853;780;3854;1774;3851.5;0.0
+2;5600;DIVING_GEAR;99182;17;99181;26;99180;23;99185;28;99186;25;99188;5;99183.5;0.0
+2;5600;PEARLS;9998;20;9996;54;9995;1456;10000;1;10002;23;10004;54;9999.0;0.0
+2;5600;COCONUTS;7923;396;7922;1936;7921;945;7924;467;7925;2209;7926;1710;7923.5;0.0
+2;5600;PINA_COLADAS;14841;237;14840;535;14839;388;14842;60;14843;259;14844;287;14841.5;0.0
+2;5600;BANANAS;4822;221;4821;733;4820;76;4823;3;4824;195;4825;81;4822.5;0.0
+2;5600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;5700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;5700;PINA_COLADAS;14841;139;14840;535;14839;388;14842;60;14843;259;14844;287;14841.5;0.0
+2;5700;BANANAS;4822;221;4821;733;4820;76;4823;29;4824;195;4825;81;4822.5;0.0
+2;5700;DIVING_GEAR;99182;17;99181;26;99180;23;99185;6;99186;25;99188;5;99183.5;0.0
+2;5700;PEARLS;9998;20;9996;55;9995;1481;10002;23;10004;55;10005;1481;10000.0;0.0
+2;5700;COCONUTS;7923;396;7922;1936;7921;1153;7924;675;7925;2209;7926;1710;7923.5;0.0
+2;5700;BERRIES;3851;4;3850;3;3848;107;3852;150;3853;839;3854;1774;3851.5;0.0
+2;5800;BANANAS;4822;221;4821;733;4820;76;4823;50;4824;195;4825;81;4822.5;0.0
+2;5800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3075.0;0.0
+2;5800;DIVING_GEAR;99182;17;99181;26;99180;23;99186;4;99188;5;99189;22;99184.0;0.0
+2;5800;PEARLS;9998;20;9996;55;9995;1502;10002;23;10004;55;10005;1502;10000.0;0.0
+2;5800;COCONUTS;7923;396;7922;1936;7921;1318;7924;840;7925;2209;7926;1710;7923.5;0.0
+2;5800;BERRIES;3851;4;3850;3;3848;110;3852;169;3853;880;3854;1774;3851.5;0.0
+2;5800;PINA_COLADAS;14841;62;14840;535;14839;388;14842;60;14843;259;14844;287;14841.5;0.0
+2;5900;DIVING_GEAR;99182;17;99181;26;99180;23;99189;8;99190;101;99191;20;99185.5;0.0
+2;5900;PEARLS;9998;20;9996;55;9995;1532;10002;23;10004;55;10005;1532;10000.0;0.0
+2;5900;COCONUTS;7923;396;7922;1936;7921;1520;7924;1042;7925;2209;7926;1710;7923.5;0.0
+2;5900;BERRIES;3851;4;3850;3;3848;110;3852;184;3853;934;3854;1774;3851.5;0.0
+2;5900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;5900;PINA_COLADAS;14841;62;14840;535;14839;480;14842;152;14843;259;14844;287;14841.5;0.0
+2;5900;BANANAS;4822;221;4821;733;4820;76;4823;80;4824;195;4825;81;4822.5;0.0
+2;6000;DIVING_GEAR;99184;5;99183;14;99182;17;99186;5;99187;14;99189;8;99185.0;0.0
+2;6000;PEARLS;9998;20;9996;57;9995;1558;10002;23;10004;57;10005;1558;10000.0;0.0
+2;6000;COCONUTS;7923;396;7922;2120;7921;1520;7924;1042;7925;2393;7926;1710;7923.5;0.0
+2;6000;BERRIES;3851;3;3850;3;3848;110;3852;184;3853;948;3854;1823;3851.5;0.0
+2;6000;PINA_COLADAS;14841;62;14840;535;14839;480;14842;58;14843;259;14844;287;14841.5;0.0
+2;6000;BANANAS;4822;221;4821;733;4820;76;4823;108;4824;195;4825;81;4822.5;0.0
+2;6000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;6100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;6100;PINA_COLADAS;14841;39;14840;535;14839;503;14842;121;14843;259;14844;287;14841.5;0.0
+2;6100;BANANAS;4822;221;4821;733;4820;76;4823;135;4824;195;4825;81;4822.5;0.0
+2;6100;DIVING_GEAR;99184;5;99183;14;99182;17;99187;1;99189;8;99190;101;99185.5;0.0
+2;6100;PEARLS;9998;20;9996;58;9995;1584;10002;23;10004;58;10005;1584;10000.0;0.0
+2;6100;COCONUTS;7923;321;7922;2120;7921;1701;7924;1223;7925;2393;7926;1710;7923.5;0.0
+2;6100;BERRIES;3848;110;3847;592;3846;1739;3849;17;3852;184;3853;961;3848.5;0.0
+2;6200;BANANAS;4822;221;4821;733;4820;76;4823;156;4824;195;4825;81;4822.5;0.0
+2;6200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;6200;DIVING_GEAR;99184;5;99183;14;99182;17;99190;92;99191;20;99192;8;99187.0;0.0
+2;6200;PEARLS;9998;20;9996;59;9995;1604;10002;23;10004;59;10005;1604;10000.0;0.0
+2;6200;COCONUTS;7923;321;7922;2120;7921;1872;7924;1394;7925;2393;7926;1710;7923.5;0.0
+2;6200;BERRIES;3848;110;3847;604;3846;1796;3849;17;3852;184;3853;961;3848.5;0.0
+2;6200;PINA_COLADAS;14840;466;14839;503;14838;576;14842;121;14843;259;14844;287;14841.0;0.0
+2;6300;DIVING_GEAR;99184;5;99183;14;99182;17;99190;72;99191;20;99192;8;99187.0;0.0
+2;6300;PEARLS;9998;20;9996;61;9995;1634;10002;23;10004;61;10005;1634;10000.0;0.0
+2;6300;COCONUTS;7923;155;7922;2120;7921;1872;7924;1394;7925;2393;7926;1710;7923.5;0.0
+2;6300;BERRIES;3848;110;3847;616;3846;1843;3849;22;3852;184;3853;961;3848.5;0.0
+2;6300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;6300;PINA_COLADAS;14840;363;14839;503;14838;576;14842;121;14843;259;14844;287;14841.0;0.0
+2;6300;BANANAS;4822;221;4821;733;4820;76;4823;188;4824;195;4825;81;4822.5;0.0
+2;6400;DIVING_GEAR;99184;5;99183;14;99182;17;99190;47;99191;20;99192;8;99187.0;0.0
+2;6400;PEARLS;9998;20;9996;62;9995;1657;10002;23;10004;62;10005;1657;10000.0;0.0
+2;6400;COCONUTS;7922;2089;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;6400;BERRIES;3848;110;3847;634;3846;1896;3849;22;3852;184;3853;961;3848.5;0.0
+2;6400;PINA_COLADAS;14840;278;14839;503;14838;576;14842;121;14843;259;14844;287;14841.0;0.0
+2;6400;BANANAS;4822;220;4821;733;4820;76;4823;189;4824;218;4825;81;4822.5;0.0
+2;6400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3076.0;0.0
+2;6500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;6500;PINA_COLADAS;14840;190;14839;503;14838;576;14842;121;14843;259;14844;287;14841.0;0.0
+2;6500;BANANAS;4822;216;4821;733;4820;76;4823;215;4824;218;4825;81;4822.5;0.0
+2;6500;DIVING_GEAR;99184;5;99183;14;99182;17;99190;19;99191;20;99192;8;99187.0;0.0
+2;6500;PEARLS;9998;21;9996;62;9995;1683;10002;22;10004;62;10005;1683;10000.0;0.0
+2;6500;COCONUTS;7922;1892;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;6500;BERRIES;3848;110;3847;652;3846;1953;3849;22;3852;184;3853;961;3848.5;0.0
+2;6600;BANANAS;4822;215;4821;733;4820;76;4823;241;4824;218;4825;81;4822.5;0.0
+2;6600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;6600;DIVING_GEAR;99184;5;99183;14;99182;17;99191;15;99192;8;99193;60;99187.5;0.0
+2;6600;PEARLS;9998;21;9996;63;9995;1709;10002;22;10004;63;10005;1709;10000.0;0.0
+2;6600;COCONUTS;7922;1678;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;6600;BERRIES;3848;110;3847;652;3846;1967;3849;22;3852;184;3853;975;3848.5;0.0
+2;6600;PINA_COLADAS;14840;80;14839;503;14838;576;14842;121;14843;259;14844;287;14841.0;0.0
+2;6700;DIVING_GEAR;99186;9;99185;15;99184;5;99188;9;99189;15;99191;15;99187.0;0.0
+2;6700;COCONUTS;7922;1491;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;6700;BERRIES;3848;110;3847;667;3846;2025;3849;22;3852;184;3853;990;3848.5;0.0
+2;6700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;6700;PINA_COLADAS;14839;482;14838;576;14837;363;14842;121;14843;259;14844;287;14840.5;0.0
+2;6700;PEARLS;10000;2;9998;21;9996;63;10002;22;10004;63;10005;1731;10001.0;0.0
+2;6700;BANANAS;4822;210;4821;733;4820;76;4823;263;4824;218;4825;81;4822.5;0.0
+2;6800;COCONUTS;7922;1318;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;6800;DIVING_GEAR;99185;6;99184;5;99183;14;99188;9;99189;15;99191;15;99186.5;0.0
+2;6800;BERRIES;3848;110;3847;667;3846;2036;3849;22;3852;184;3853;1001;3848.5;0.0
+2;6800;PINA_COLADAS;14839;385;14838;576;14837;363;14842;121;14843;259;14844;287;14840.5;0.0
+2;6800;PEARLS;10000;2;9998;26;9996;65;10002;22;10004;65;10005;1758;10001.0;0.0
+2;6800;BANANAS;4822;210;4821;733;4820;76;4823;292;4824;218;4825;81;4822.5;0.0
+2;6800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;6900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;6900;PINA_COLADAS;14839;300;14838;576;14837;363;14842;121;14843;259;14844;287;14840.5;0.0
+2;6900;PEARLS;9998;23;9996;67;9995;1788;10002;22;10004;67;10005;1788;10000.0;0.0
+2;6900;BANANAS;4822;208;4821;733;4820;76;4823;322;4824;218;4825;81;4822.5;0.0
+2;6900;COCONUTS;7922;1153;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;6900;BERRIES;3848;110;3847;667;3846;2047;3849;22;3852;184;3853;1012;3848.5;0.0
+2;6900;DIVING_GEAR;99185;24;99184;5;99183;14;99188;27;99189;15;99191;15;99186.5;0.0
+2;7000;PEARLS;9998;33;9996;69;9995;1814;10002;22;10004;69;10005;1814;10000.0;0.0
+2;7000;BANANAS;4822;180;4821;733;4820;76;4823;322;4824;218;4825;81;4822.5;0.0
+2;7000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7000;COCONUTS;7922;985;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;7000;BERRIES;3848;110;3847;667;3846;2064;3849;22;3852;201;3853;1066;3848.5;0.0
+2;7000;DIVING_GEAR;99185;24;99184;12;99183;31;99186;7;99187;17;99188;27;99185.5;0.0
+2;7000;PINA_COLADAS;14839;204;14838;576;14837;363;14842;121;14843;259;14844;287;14840.5;0.0
+2;7100;COCONUTS;7922;829;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;7100;BERRIES;3848;110;3847;667;3846;2064;3849;15;3852;211;3853;1109;3848.5;0.0
+2;7100;DIVING_GEAR;99185;8;99184;12;99183;31;99186;7;99187;17;99188;27;99185.5;0.0
+2;7100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7100;PINA_COLADAS;14839;128;14838;576;14837;363;14842;121;14843;259;14844;287;14840.5;0.0
+2;7100;PEARLS;9998;34;9996;71;9995;1840;10002;22;10004;71;10005;1840;10000.0;0.0
+2;7100;BANANAS;4822;177;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7200;COCONUTS;7922;641;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;7200;BERRIES;3848;110;3847;667;3846;2075;3849;15;3852;211;3853;1173;3848.5;0.0
+2;7200;DIVING_GEAR;99184;0;99183;31;99182;17;99186;7;99187;17;99188;27;99185.0;0.0
+2;7200;PINA_COLADAS;14839;33;14838;576;14837;363;14842;121;14843;259;14844;287;14840.5;0.0
+2;7200;PEARLS;9998;34;9996;72;9995;1860;10002;22;10004;72;10005;1860;10000.0;0.0
+2;7200;BANANAS;4822;156;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7300;PINA_COLADAS;14838;529;14837;363;14836;297;14842;121;14843;259;14844;287;14840.0;0.0
+2;7300;PEARLS;9998;34;9996;72;9995;1883;10002;22;10004;72;10005;1883;10000.0;0.0
+2;7300;BANANAS;4822;133;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7300;COCONUTS;7922;439;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;7300;BERRIES;3848;110;3847;667;3846;2092;3849;15;3852;211;3853;1190;3848.5;0.0
+2;7300;DIVING_GEAR;99183;5;99182;17;99181;26;99186;7;99187;17;99188;27;99184.5;0.0
+2;7400;BANANAS;4822;110;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7400;PEARLS;9998;34;9996;73;9995;1905;10002;22;10004;73;10005;1905;10000.0;0.0
+2;7400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7400;COCONUTS;7922;178;7921;1872;7920;1328;7924;1394;7925;2393;7926;1710;7923.0;0.0
+2;7400;BERRIES;3848;110;3847;683;3846;2146;3849;15;3852;211;3853;1206;3848.5;0.0
+2;7400;DIVING_GEAR;99181;23;99180;23;99179;18;99186;7;99187;17;99188;27;99183.5;0.0
+2;7400;PINA_COLADAS;14838;454;14837;363;14836;297;14842;121;14843;259;14844;287;14840.0;0.0
+2;7500;COCONUTS;7921;1866;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;7500;BERRIES;3848;110;3847;683;3846;2157;3849;15;3852;211;3853;1217;3848.5;0.0
+2;7500;DIVING_GEAR;99181;2;99180;23;99179;18;99186;7;99187;17;99188;27;99183.5;0.0
+2;7500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7500;PINA_COLADAS;14838;347;14837;363;14836;297;14842;121;14843;259;14844;287;14840.0;0.0
+2;7500;BANANAS;4822;78;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7500;PEARLS;9998;34;9996;75;9995;1935;10000;5;10002;22;10004;75;9999.0;0.0
+2;7600;COCONUTS;7921;1644;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;7600;BERRIES;3848;110;3847;683;3846;2175;3849;15;3852;211;3853;1235;3848.5;0.0
+2;7600;PINA_COLADAS;14838;251;14837;363;14836;297;14842;121;14843;259;14844;287;14840.0;0.0
+2;7600;BANANAS;4822;54;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7600;DIVING_GEAR;99179;16;99178;20;99176;6;99186;7;99187;17;99188;27;99182.5;0.0
+2;7600;PEARLS;9998;34;9996;77;9995;1957;10000;5;10002;22;10004;77;9999.0;0.0
+2;7600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7700;PINA_COLADAS;14838;171;14837;363;14836;297;14842;121;14843;259;14844;287;14840.0;0.0
+2;7700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7700;BANANAS;4822;24;4821;733;4820;76;4823;350;4824;218;4825;81;4822.5;0.0
+2;7700;DIVING_GEAR;99178;8;99176;6;99175;10;99186;7;99187;17;99188;27;99182.0;0.0
+2;7700;PEARLS;9998;34;9996;79;9995;1977;10000;5;10002;30;10004;79;9999.0;0.0
+2;7700;COCONUTS;7921;1475;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;7700;BERRIES;3848;110;3847;683;3846;2175;3849;15;3851;20;3852;270;3848.5;0.0
+2;7800;BANANAS;4821;722;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;7800;DIVING_GEAR;99175;6;99173;18;99172;22;99186;7;99187;17;99188;27;99180.5;0.0
+2;7800;PEARLS;9998;34;9996;81;9995;2000;10000;5;10002;40;10004;81;9999.0;0.0
+2;7800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7800;COCONUTS;7921;1294;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;7800;BERRIES;3848;110;3847;683;3846;2187;3849;11;3851;20;3852;270;3848.5;0.0
+2;7800;PINA_COLADAS;14838;75;14837;363;14836;297;14842;121;14843;259;14844;287;14840.0;0.0
+2;7900;BERRIES;3848;110;3847;683;3846;2207;3849;11;3851;20;3852;290;3848.5;0.0
+2;7900;PINA_COLADAS;14837;343;14836;297;14835;56;14842;121;14843;259;14844;287;14839.5;0.0
+2;7900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;7900;BANANAS;4821;691;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;7900;DIVING_GEAR;99172;17;99171;21;99170;25;99186;7;99187;17;99188;27;99179.0;0.0
+2;7900;PEARLS;9998;34;9996;82;9995;2030;10000;8;10002;40;10004;82;9999.0;0.0
+2;7900;COCONUTS;7921;1079;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;8000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8000;PINA_COLADAS;14837;251;14836;297;14835;56;14842;121;14843;259;14844;287;14839.5;0.0
+2;8000;BERRIES;3848;110;3847;683;3846;2207;3849;11;3851;20;3852;302;3848.5;0.0
+2;8000;BANANAS;4821;661;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8000;DIVING_GEAR;99171;20;99170;25;99169;9;99186;7;99187;17;99188;27;99178.5;0.0
+2;8000;PEARLS;9998;33;9996;84;9995;2057;10000;5;10002;40;10004;84;9999.0;0.0
+2;8000;COCONUTS;7921;886;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;8100;PINA_COLADAS;14837;171;14836;297;14835;56;14842;121;14843;259;14844;287;14839.5;0.0
+2;8100;BANANAS;4821;638;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8100;DIVING_GEAR;99171;1;99170;25;99169;9;99186;7;99187;17;99188;27;99178.5;0.0
+2;8100;PEARLS;9998;36;9996;86;9995;2077;10000;5;10002;40;10004;86;9999.0;0.0
+2;8100;COCONUTS;7921;690;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;8100;BERRIES;3848;110;3847;683;3846;2207;3849;11;3851;20;3852;314;3848.5;0.0
+2;8100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8200;BANANAS;4821;610;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8200;DIVING_GEAR;99169;6;99168;19;99167;25;99186;7;99187;17;99188;27;99177.5;0.0
+2;8200;PEARLS;9998;36;9996;87;9995;2104;10000;0;10002;40;10004;87;9999.0;0.0
+2;8200;COCONUTS;7921;487;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;8200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8200;PINA_COLADAS;14837;63;14836;297;14835;56;14842;121;14843;259;14844;287;14839.5;0.0
+2;8200;BERRIES;3848;110;3847;683;3846;2226;3849;11;3851;20;3852;314;3848.5;0.0
+2;8300;BERRIES;3848;110;3847;683;3846;2242;3849;11;3851;20;3852;314;3848.5;0.0
+2;8300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8300;PINA_COLADAS;14836;244;14835;56;14834;81;14842;121;14843;259;14844;287;14839.0;0.0
+2;8300;BANANAS;4821;585;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8300;DIVING_GEAR;99167;24;99164;2;99163;10;99186;7;99187;17;99188;27;99176.5;0.0
+2;8300;PEARLS;9998;36;9996;87;9995;2129;10000;0;10002;40;10004;87;9999.0;0.0
+2;8300;COCONUTS;7921;324;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;8400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8400;PINA_COLADAS;14836;164;14835;56;14834;81;14842;121;14843;259;14844;287;14839.0;0.0
+2;8400;BERRIES;3848;110;3847;683;3846;2258;3849;11;3851;20;3852;314;3848.5;0.0
+2;8400;BANANAS;4821;558;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8400;DIVING_GEAR;99164;1;99163;10;99162;36;99186;7;99187;17;99188;27;99175.0;0.0
+2;8400;PEARLS;9998;36;9996;88;9995;2155;10000;0;10002;40;10004;88;9999.0;0.0
+2;8400;COCONUTS;7921;114;7920;1328;7919;1735;7924;1394;7925;2393;7926;1710;7922.5;0.0
+2;8500;PINA_COLADAS;14836;71;14835;56;14834;81;14842;121;14843;259;14844;287;14839.0;0.0
+2;8500;BANANAS;4821;531;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8500;DIVING_GEAR;99162;21;99161;15;99160;14;99186;7;99187;17;99188;27;99174.0;0.0
+2;8500;PEARLS;9998;36;9996;90;9995;2180;10000;0;10002;40;10004;90;9999.0;0.0
+2;8500;COCONUTS;7920;1203;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;8500;BERRIES;3848;110;3847;683;3846;2274;3849;11;3851;20;3852;330;3848.5;0.0
+2;8500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8600;BANANAS;4821;500;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8600;DIVING_GEAR;99161;11;99160;14;99159;58;99186;7;99187;17;99188;27;99173.5;0.0
+2;8600;PEARLS;9998;39;9996;92;9995;2209;10000;0;10002;40;10004;92;9999.0;0.0
+2;8600;COCONUTS;7920;994;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;8600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;8600;PINA_COLADAS;14835;32;14834;81;14833;300;14842;121;14843;259;14844;287;14838.5;0.0
+2;8600;BERRIES;3848;110;3847;683;3846;2274;3849;11;3851;20;3852;348;3848.5;0.0
+2;8700;BERRIES;3848;110;3847;683;3846;2274;3849;11;3851;20;3852;367;3848.5;0.0
+2;8700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;8700;PINA_COLADAS;14834;13;14833;300;14832;148;14842;121;14843;259;14844;287;14838.0;0.0
+2;8700;BANANAS;4821;474;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8700;DIVING_GEAR;99160;0;99159;58;99156;9;99186;7;99187;17;99188;27;99173.0;0.0
+2;8700;PEARLS;9998;39;9996;94;9995;2233;10000;0;10002;40;10004;94;9999.0;0.0
+2;8700;COCONUTS;7920;787;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;8800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;8800;PINA_COLADAS;14833;231;14832;148;14831;97;14842;121;14843;259;14844;287;14837.5;0.0
+2;8800;BERRIES;3848;110;3847;683;3846;2274;3849;11;3851;30;3852;420;3848.5;0.0
+2;8800;BANANAS;4821;443;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8800;DIVING_GEAR;99159;39;99156;9;99155;26;99186;7;99187;17;99188;27;99172.5;0.0
+2;8800;PEARLS;9998;28;9996;96;9995;2262;10000;0;10002;40;10004;96;9999.0;0.0
+2;8800;COCONUTS;7920;631;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;8900;PEARLS;9998;28;9996;97;9995;2289;10000;0;10002;46;10004;97;9999.0;0.0
+2;8900;BANANAS;4821;409;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;8900;DIVING_GEAR;99159;19;99156;9;99155;26;99186;7;99187;17;99188;27;99172.5;0.0
+2;8900;COCONUTS;7920;452;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;8900;PINA_COLADAS;14833;128;14832;148;14831;97;14842;121;14843;259;14844;287;14837.5;0.0
+2;8900;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;30;3852;432;3848.5;0.0
+2;8900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9000;PEARLS;9998;37;9996;97;9995;2311;10000;0;10002;46;10004;97;9999.0;0.0
+2;9000;BANANAS;4821;387;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9000;COCONUTS;7920;263;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;9000;DIVING_GEAR;99156;1;99155;26;99154;29;99186;7;99187;17;99188;27;99171.0;0.0
+2;9000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9000;PINA_COLADAS;14833;36;14832;148;14831;97;14842;121;14843;259;14844;287;14837.5;0.0
+2;9000;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;50;3852;474;3848.5;0.0
+2;9100;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;66;3852;534;3848.5;0.0
+2;9100;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9100;PEARLS;9998;37;9996;98;9995;2340;10000;0;10002;46;10004;98;9999.0;0.0
+2;9100;BANANAS;4821;356;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9100;COCONUTS;7920;60;7919;1735;7918;256;7924;1394;7925;2393;7926;1710;7922.0;0.0
+2;9100;DIVING_GEAR;99155;4;99154;29;99153;10;99186;7;99187;17;99188;27;99170.5;0.0
+2;9100;PINA_COLADAS;14832;97;14831;97;14829;101;14842;121;14843;259;14844;287;14837.0;0.0
+2;9200;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9200;PINA_COLADAS;14831;96;14829;101;14828;146;14842;121;14843;259;14844;287;14836.5;0.0
+2;9200;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;84;3852;584;3848.5;0.0
+2;9200;PEARLS;9998;37;9996;100;9995;2362;10000;0;10002;48;10004;100;9999.0;0.0
+2;9200;BANANAS;4821;330;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9200;COCONUTS;7919;1571;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9200;DIVING_GEAR;99154;10;99153;10;99152;33;99186;7;99187;17;99188;27;99170.0;0.0
+2;9300;PEARLS;9998;37;9996;101;9995;2392;10000;0;10002;48;10004;101;9999.0;0.0
+2;9300;BANANAS;4821;299;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9300;COCONUTS;7919;1392;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9300;DIVING_GEAR;99153;10;99152;33;99151;26;99154;16;99186;7;99187;17;99153.5;0.0
+2;9300;PINA_COLADAS;14831;2;14829;101;14828;146;14842;121;14843;259;14844;287;14836.5;0.0
+2;9300;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;100;3852;627;3848.5;0.0
+2;9300;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9400;PEARLS;10000;2;9998;37;9996;103;10002;48;10004;103;10005;2418;10001.0;0.0
+2;9400;BANANAS;4821;271;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9400;COCONUTS;7919;1175;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9400;DIVING_GEAR;99152;18;99151;26;99150;9;99154;16;99186;7;99187;17;99153.0;0.0
+2;9400;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9400;PINA_COLADAS;14829;1;14828;146;14827;281;14842;121;14843;259;14844;287;14835.5;0.0
+2;9400;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;100;3852;704;3848.5;0.0
+2;9500;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;100;3852;722;3848.5;0.0
+2;9500;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9500;PEARLS;10000;2;9998;37;9996;105;10002;48;10004;105;10005;2441;10001.0;0.0
+2;9500;BANANAS;4821;246;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9500;COCONUTS;7919;1005;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9500;DIVING_GEAR;99151;16;99150;9;99149;49;99154;16;99186;7;99187;17;99152.5;0.0
+2;9500;PINA_COLADAS;14828;56;14827;281;14826;391;14842;121;14843;259;14844;287;14835.0;0.0
+2;9600;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;9600;PINA_COLADAS;14827;281;14826;391;14825;662;14828;45;14842;121;14843;259;14827.5;0.0
+2;9600;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;111;3852;770;3848.5;0.0
+2;9600;PEARLS;9998;37;9996;105;9995;2471;10000;1;10002;48;10004;105;9999.0;0.0
+2;9600;COCONUTS;7919;771;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9600;DIVING_GEAR;99150;7;99149;49;99148;89;99154;16;99186;7;99187;17;99152.0;0.0
+2;9600;BANANAS;4821;215;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9700;BANANAS;4821;192;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9700;PEARLS;9998;37;9996;107;9995;2491;10000;1;10002;48;10004;107;9999.0;0.0
+2;9700;COCONUTS;7919;614;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9700;DIVING_GEAR;99149;37;99148;89;99147;22;99154;16;99186;7;99187;17;99151.5;0.0
+2;9700;PINA_COLADAS;14827;281;14826;482;14825;662;14828;45;14829;91;14842;121;14827.5;0.0
+2;9700;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;111;3852;835;3848.5;0.0
+2;9700;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3078.0;0.0
+2;9800;DIVING_GEAR;99149;15;99148;89;99147;22;99154;16;99186;7;99187;17;99151.5;0.0
+2;9800;PEARLS;9998;37;9996;107;9995;2512;10000;1;10002;48;10004;107;9999.0;0.0
+2;9800;COCONUTS;7919;467;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9800;BANANAS;4821;171;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9800;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;9800;PINA_COLADAS;14827;281;14826;515;14825;716;14828;78;14829;145;14842;121;14827.5;0.0
+2;9800;BERRIES;3848;113;3847;683;3846;2274;3849;11;3851;111;3852;848;3848.5;0.0
+2;9900;BERRIES;3848;113;3847;683;3846;2286;3849;11;3851;111;3852;860;3848.5;0.0
+2;9900;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;9900;BANANAS;4821;149;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
+2;9900;DIVING_GEAR;99148;82;99147;22;99146;48;99154;16;99186;7;99187;17;99151.0;0.0
+2;9900;PEARLS;9998;37;9996;108;9995;2533;10000;1;10002;48;10004;108;9999.0;0.0
+2;9900;COCONUTS;7919;309;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;9900;PINA_COLADAS;14827;309;14826;595;14825;716;14828;78;14829;225;14842;121;14827.5;0.0
+2;10000;PINA_COLADAS;14827;309;14826;595;14825;716;14829;199;14831;34;14832;70;14828.0;0.0
+2;10000;DOLPHIN_SIGHTINGS;;;;;;;;;;;;;3077.0;0.0
+2;10000;BERRIES;3848;113;3847;683;3846;2286;3849;11;3851;111;3852;872;3848.5;0.0
+2;10000;DIVING_GEAR;99148;63;99147;22;99146;48;99154;16;99186;7;99187;17;99151.0;0.0
+2;10000;PEARLS;9998;37;9996;110;9995;2555;10000;1;10002;48;10004;110;9999.0;0.0
+2;10000;COCONUTS;7919;72;7918;256;7917;340;7924;1394;7925;2393;7926;1710;7921.5;0.0
+2;10000;BANANAS;4821;125;4820;76;4819;220;4823;350;4824;218;4825;81;4822.0;0.0
