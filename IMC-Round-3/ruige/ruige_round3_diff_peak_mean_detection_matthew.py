@@ -749,7 +749,7 @@ class Trader:
 
         absolute_threshold = 0.5
         num_std_entrance = 4
-        num_std_exit = 3.5
+        num_std_exit = 4
 
         product_orders = []
 
