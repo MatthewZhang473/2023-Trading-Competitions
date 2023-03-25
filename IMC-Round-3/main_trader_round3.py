@@ -10,6 +10,7 @@ class Trader:
         self.cash = 0
 
         self.window = Window(10)
+        self.mayberry_window = Window(1000)
 
         self.mid_window_smaller = Window(35)
         self.mid_window_larger = Window(45)
@@ -56,13 +57,18 @@ class Trader:
         # gear trade signal
         self.gear_buy_flag = False
         self.gear_sell_flag = False
+        # berries
+        self.start_done = False
+        self.peak_done = False
+        self.end_done = False
 
         self.position_limits = {
             "BANANAS": 20,
             "PEARLS": 20,
             "COCONUTS": 600,
             "PINA_COLADAS": 300,
-            'DIVING_GEAR': 50
+            'DIVING_GEAR': 50,
+            "BERRIES": 250
         }
 
         # comment out a category to disable it in the logs
@@ -261,6 +267,16 @@ class Trader:
                                                     DIVING_GEAR_position, DIVING_GEAR_position_limit, self.dolphin_diff_term, self.gear_diff_term)
         result[DIVING_GEAR] = diving_gear_orders
         self.logger.log(f'{DIVING_GEAR} window indicator trade: {diving_gear_orders}', 'orders')
+        
+        ### BERRIES ###
+        BERRIES = "BERRIES"
+        berries_orders = self.mayberry_calc(state.timestamp, BERRIES, self.mayberry_window,
+                                            mid_prices[BERRIES], self.position_limits[BERRIES],
+                                            positions[BERRIES])
+        result[BERRIES] = berries_orders
+        self.mayberry_window.push(mid_prices[BERRIES])
+        self.logger.log(
+            f"BERRIES: {berries_orders}", "orders")
 
         ### RETURN RESULT ###
         self.logger.divider_big()
@@ -891,6 +907,38 @@ class Trader:
         self.exit_tracer_window.push(exit_tracer)
 
         return product_orders
+    def mayberry_calc(self, timestamp, product: Product, window, mid_price, position_limit, position):
+        orders = []
+        PLATEAU_START = 2000 * 100
+        UPWARD_START = 4500 * 100
+        DOWNWARD_START = 7000 * 100
+
+        n = 2.3
+        upper, lower = window.upper_lower_bounds(n)
+
+        if timestamp >= PLATEAU_START and timestamp < UPWARD_START:
+            if mid_price < lower and not self.start_done:
+                # buy to limit
+                self.start_done = True
+                self.logger.log("BERRIES decide to buy to limit", "debug")
+                orders.append(Order(product, 5000, position_limit))
+
+        elif timestamp >= UPWARD_START and timestamp < DOWNWARD_START:
+            if mid_price < window.avg() and not self.peak_done:
+                # sell to limit
+                self.peak_done = True
+                self.logger.log("BERRIES decide to sell to limit", "debug")
+                orders.append(Order(product, 0, -(position + position_limit)))
+
+        elif timestamp >= DOWNWARD_START:
+            if mid_price < lower and not self.end_done:
+                # buy to clear
+                self.end_done = True
+                self.logger.log("BERRIES decide to buy to clear", "debug")
+                orders.append(Order(product, 5000, -position))
+
+        return orders
+
 
 class Logger:
     """
