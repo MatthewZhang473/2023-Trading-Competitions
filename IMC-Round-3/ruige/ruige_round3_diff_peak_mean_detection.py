@@ -44,20 +44,24 @@ class Trader:
 
         # Dolphin window definitions
         dolphin_diff_term = 1
-        dolphin_num_past_terms = 30
+        dolphin_num_past_terms = 10
         dolphin_window_size = dolphin_num_past_terms + dolphin_diff_term + 1
         self.dolphin_diff_term = dolphin_diff_term
         self.dolphin_num_past_terms = dolphin_num_past_terms
         self.dolphin_window = Window(dolphin_window_size)
-        self.dolphin_gradient_window = Window(dolphin_window_size)
 
         # Diving gear window definitions
         gear_diff_term = 1
-        gear_num_past_terms = 30
+        gear_num_past_terms = 10
         gear_window_size = gear_num_past_terms + gear_diff_term + 1
         self.gear_diff_term = gear_diff_term
         self.gear_num_past_terms = gear_num_past_terms
         self.gear_window = Window(gear_window_size)
+
+        # tracer
+        # entrance tracer uses mean values of past 10 DOLPHIN_SIGHTINGS differences
+        entrance_tracer_size = 10
+        self.entrance_tracer = Window(entrance_tracer_size)
 
     def calculate_cash(self, own_trades: Dict[Symbol, List[Trade]], now) -> None:
         for product in own_trades:
@@ -721,14 +725,9 @@ class Trader:
 
         # create a DOLPHIN_SIGHTINGS difference series, containing the differences between i th and i+diff th elements
         dolphin_differences_series = pd.Series(self.dolphin_window.contents).diff(periods = dolphin_diff_term)
-        long_dolphin_differences_series = dolphin_differences_series.iloc[-long_term:-1]
-        short_dolphin_differences_series = dolphin_differences_series.iloc[-short_term:-1]
 
         # sigma and mean for the DOLPHIN_SIGHTINGS long term differences series
-        long_dolphin_diff_sigma = long_dolphin_differences_series.std()
-        long_dolphin_diff_mean = long_dolphin_differences_series.mean()
-        # short_dolphin_diff_sigma = short_dolphin_differences_series.std()
-        short_dolphin_diff_mean = short_dolphin_differences_series.mean()
+        current_mean_dolphin_diff_mean = dolphin_differences_series.iloc[dolphin_diff_term:].mean()
 
         # long term and short term sigma and mean for the DIVING_GEAR series
         gear_differences_series = pd.Series(self.gear_window.contents).diff(periods = gear_diff_term)
@@ -738,20 +737,20 @@ class Trader:
         long_gear_diff_mean = long_gear_differences_series.mean()
         short_gear_diff_mean = short_gear_differences_series.mean()
 
-        # absolute_thres = 10
+        absolute_threshold = 0# 0.2
         num_std = 0.1
 
         product_orders = []
 
-        # when big peak & big troughts comes:
+        # when big peak & big troughts comes:   
         # 1. condition to buy
-        if short_dolphin_diff_mean - num_std * long_dolphin_diff_sigma > long_dolphin_diff_mean:
+        if current_mean_dolphin_diff_mean - num_std * self.entrance_tracer.std() > self.entrance_tracer.avg() and current_mean_dolphin_diff_mean > absolute_threshold:
             buy_volume = min(best_ask_volume, product_position_limit - product_position)
             if buy_volume != 0:
                 product_orders.append(Order(product, best_ask_price, buy_volume))
         
         # 2. condition to sell
-        elif short_dolphin_diff_mean + num_std * long_dolphin_diff_sigma < long_dolphin_diff_mean:
+        elif current_mean_dolphin_diff_mean + num_std * self.entrance_tracer.std() < self.entrance_tracer.avg() and current_mean_dolphin_diff_mean < -absolute_threshold:
             sell_volume = min(best_bid_volume, product_position_limit + product_position)
             if sell_volume != 0:
                 product_orders.append(Order(product, best_bid_price, -sell_volume))
@@ -759,19 +758,23 @@ class Trader:
 
         # when big surge ends
         # 1. when a peak ends and starts to drop
-        elif short_gear_diff_mean < long_gear_diff_mean:
+    # if product_position == product_position_limit:
+        if short_gear_diff_mean < long_gear_diff_mean:
             clear_volume = product_position
             if clear_volume != 0:
                 # note that clear volume must be the negative value of current position so that we reset to position 0 for short-term trade
                 product_orders.append(Order(product, best_bid_price, -clear_volume))
-        
-        # 2. when a big trough ends and starts to increase
-        elif short_gear_diff_mean > long_gear_diff_mean:
+    
+    # 2. when a big trough ends and starts to increase
+    # elif product_position == -product_position_limit:
+        if short_gear_diff_mean > long_gear_diff_mean:
             clear_volume = product_position
             if clear_volume != 0:
                 product_orders.append(Order(product, best_ask_price, -clear_volume))
 
-        
+        self.entrance_tracer.push(current_mean_dolphin_diff_mean)
+
+
         return product_orders
 
                 
