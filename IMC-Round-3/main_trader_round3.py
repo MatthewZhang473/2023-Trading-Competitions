@@ -774,9 +774,9 @@ class Trader:
 
     def mayberry_calc(self, timestamp, product: Product, window, mid_price, position_limit, position):
         orders = []
-        PLATEAU_START = 2000
-        UPWARD_START = 4500
-        DOWNWARD_START = 7000
+        PLATEAU_START = 2000 * 100
+        UPWARD_START = 4500 * 100
+        DOWNWARD_START = 7000 * 100
 
         n = 2.3
         upper, lower = window.upper_lower_bounds(n)
