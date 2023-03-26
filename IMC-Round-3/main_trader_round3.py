@@ -886,12 +886,10 @@ class Trader:
         if timestamp > long_term*100: # after enough number of gear prices is recorded
             # when big surge ends
             # 1. when a peak ends and starts to drop
-
-
             if exit_tracer > num_std_exit * self.exit_tracer_window.std():
                 self.gear_buy_flag = False
                 clear_volume = product_position
-                if clear_volume != 0:
+                if clear_volume!=0 and self.gear_sell_flag==False:
                     # note that clear volume must be the negative value of current position so that we reset to position 0 for short-term trade
                     product_orders.append(Order(product, best_bid_price, -clear_volume))
                     self.logger.log(f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
@@ -900,7 +898,7 @@ class Trader:
             if exit_tracer < -num_std_exit * self.exit_tracer_window.std():
                 self.gear_sell_flag = False
                 clear_volume = product_position
-                if clear_volume != 0:
+                if clear_volume != 0 and self.gear_buy_flag==False:
                     product_orders.append(Order(product, best_ask_price, -clear_volume))
                     self.logger.log(f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
         # push in the current exit tracer
