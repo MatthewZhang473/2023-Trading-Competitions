@@ -313,8 +313,8 @@ class Trader:
         main_product = PICNIC_BASKET
         main_product_best_bid_price = best_bids[PICNIC_BASKET]
         main_product_best_ask_price = best_asks[PICNIC_BASKET]
-        main_product_best_bid_volume = state.order_depths[PICNIC_BASKET].buy_orders[main_product_best_bid_price]
-        main_product_best_ask_volume = state.order_depths[PICNIC_BASKET].sell_orders[main_product_best_ask_price]
+        main_product_best_bid_volume = abs(state.order_depths[PICNIC_BASKET].buy_orders[main_product_best_bid_price])
+        main_product_best_ask_volume = abs(state.order_depths[PICNIC_BASKET].sell_orders[main_product_best_ask_price])
         main_product_position = positions[PICNIC_BASKET]
         main_product_position_limit = self.position_limits[PICNIC_BASKET]
 
@@ -1030,7 +1030,9 @@ class Trader:
 
         constant_difference_mean = 400
         constant_difference_sigma = 100
-        num_std = 1
+        num_std = 3
+
+        absolute_threshold = 20
 
         
 
@@ -1040,9 +1042,9 @@ class Trader:
 
         # suppose we are using rolling mean
         if len(self.difference_between_main_product_and_components_window.contents) == self.difference_between_main_product_and_components_window.size:
-            if current_difference - num_std * past_differences_sigma > past_differences_mean:
+            if current_difference - num_std * past_differences_sigma > past_differences_mean and current_difference > past_differences_mean + absolute_threshold:
                 # we consider this to be a high point and hence we sell PICNIC_BASKET and buy EQUAL WORTH of COMPONENTS
-                self.logger.log(f'selling main product because {current_difference} is much greater than {constant_difference_mean}', 'debug')
+                self.logger.log(f'selling main product because {current_difference} is much greater than {past_differences_mean}', 'debug')
                 main_product_sell_price = main_product_best_bid_price
                 main_product_max_sell_volume = min(main_product_best_bid_volume, main_product_position_limit + main_product_position)
                 
@@ -1069,9 +1071,9 @@ class Trader:
                     component_3_orders.append(Order(component_3, component_3_buy_price, component_3_buy_volume))
 
         
-            elif current_difference + num_std * past_differences_sigma < past_differences_mean:
+            elif current_difference + num_std * past_differences_sigma < past_differences_mean and current_difference < past_differences_mean - absolute_threshold:
                 # we consider this to be a low point and hence we buy PICNIC_BASKET and sell EQUAL WORTH of COMPONENTS
-                self.logger.log(f'buying main product because {current_difference} is much less than {constant_difference_mean}', 'debug')
+                self.logger.log(f'buying main product because {current_difference} is much less than {past_differences_mean}', 'debug')
                 main_product_buy_price = main_product_best_ask_price
                 main_product_max_buy_volume = min(main_product_best_ask_volume, main_product_position_limit - main_product_position)
                 
