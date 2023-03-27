@@ -64,6 +64,7 @@ class Trader:
 
         ### PICNIC_BASKET WINDOW ###
         self.difference_between_main_product_and_components_window = Window(50)
+        self.clearing_flag = False
 
 
         self.position_limits = {
@@ -1027,34 +1028,92 @@ class Trader:
         # 2. use rolling mean from the past differences from the difference window
         past_differences_sigma = self.difference_between_main_product_and_components_window.std()
         past_differences_mean = self.difference_between_main_product_and_components_window.avg()
+        absolute_threshold = 100
 
-        constant_difference_mean = 400
-        constant_difference_sigma = 100
-        num_std = 3
-
-        absolute_threshold = 20
+        constant_differences_mean = 400
+        constant_differences_sigma = 100
+        num_std = 1
 
         
 
         # suppose we are using the constant_difference_mean
-        # if the current difference between the main product and the sum of component prices (weighted) is much larger than absolute mean
-        # if current_difference - num_std * constant_difference_sigma > constant_difference_mean:
+        if current_difference - num_std * constant_differences_sigma > constant_differences_mean:
+            # we consider this to be a high point and hence we sell PICNIC_BASKET and buy EQUAL WORTH of COMPONENTS
+            self.logger.log(f'selling main product because {current_difference} is much greater than {constant_differences_mean}', 'debug')
+            main_product_sell_price = main_product_best_bid_price
+            main_product_max_sell_volume = min(main_product_best_bid_volume, main_product_position_limit + main_product_position)
+            
+            # we must do the opposite to the components
+            component_1_buy_price = components_best_ask_prices[component_1]
+            component_1_max_buy_volume_normalized = min(components_best_ask_volumes[component_1_buy_price], components_position_limits[component_1] - components_positions[component_1])//main_product_to_components_ratios[component_1]
+            component_2_buy_price = components_best_ask_prices[component_2]
+            component_2_max_buy_volume_normalized = min(components_best_ask_volumes[component_2_buy_price], components_position_limits[component_2] - components_positions[component_2])//main_product_to_components_ratios[component_2]
+            component_3_buy_price = components_best_ask_prices[component_3]
+            component_3_max_buy_volume_normalized = min(components_best_ask_volumes[component_3_buy_price], components_position_limits[component_3] - components_positions[component_3])//main_product_to_components_ratios[component_3]
+            
+            normalized_min_volume = min([main_product_max_sell_volume, component_1_max_buy_volume_normalized, component_2_max_buy_volume_normalized, component_3_max_buy_volume_normalized])
+            main_product_sell_volume = normalized_min_volume
+            component_1_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_1]
+            component_2_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
+            component_3_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
-        # suppose we are using rolling mean
-        if len(self.difference_between_main_product_and_components_window.contents) == self.difference_between_main_product_and_components_window.size:
-            if current_difference - num_std * past_differences_sigma > past_differences_mean and current_difference > past_differences_mean + absolute_threshold:
-                # we consider this to be a high point and hence we sell PICNIC_BASKET and buy EQUAL WORTH of COMPONENTS
-                self.logger.log(f'selling main product because {current_difference} is much greater than {past_differences_mean}', 'debug')
+            self.logger.log(f'the selling volume is {main_product_sell_volume}, and the buying volumes are {component_1_buy_volume, component_2_buy_volume, component_3_buy_volume}', 'debug')
+
+            if normalized_min_volume != 0:
+                main_product_orders.append(Order(main_product, main_product_sell_price, -main_product_sell_volume))
+                component_1_orders.append(Order(component_1, component_1_buy_price, component_1_buy_volume))
+                component_2_orders.append(Order(component_2, component_2_buy_price, component_2_buy_volume))
+                component_3_orders.append(Order(component_3, component_3_buy_price, component_3_buy_volume))
+
+    
+        elif current_difference + num_std * constant_differences_sigma < constant_differences_mean:
+            # we consider this to be a low point and hence we buy PICNIC_BASKET and sell EQUAL WORTH of COMPONENTS
+            self.logger.log(f'buying main product because {current_difference} is much less than {constant_differences_mean}', 'debug')
+            main_product_buy_price = main_product_best_ask_price
+            main_product_max_buy_volume = min(main_product_best_ask_volume, main_product_position_limit - main_product_position)
+            
+            # we must do the opposite to the component
+            component_1_sell_price = components_best_bid_prices[component_1]
+            component_1_max_sell_volume_normalized = min(components_best_bid_volumes[component_1_sell_price], components_position_limits[component_1] + components_positions[component_1])//main_product_to_components_ratios[component_1]
+            component_2_sell_price = components_best_bid_prices[component_2]
+            component_2_max_sell_volume_normalized = min(components_best_bid_volumes[component_2_sell_price], components_position_limits[component_2] + components_positions[component_2])//main_product_to_components_ratios[component_2]
+            component_3_sell_price = components_best_bid_prices[component_3]
+            component_3_max_sell_volume_normalized = min(components_best_bid_volumes[component_3_sell_price], components_position_limits[component_3] + components_positions[component_3])//main_product_to_components_ratios[component_3]
+            
+            normalized_min_volume = min([main_product_max_buy_volume, component_1_max_sell_volume_normalized, component_2_max_sell_volume_normalized, component_3_max_sell_volume_normalized])
+            main_product_buy_volume = normalized_min_volume
+            component_1_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_1]
+            component_2_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
+            component_3_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
+
+
+            self.logger.log(f'the buying volume is {main_product_buy_volume}, and the selling volumes are {component_1_sell_volume, component_2_sell_volume, component_3_sell_volume}', 'debug')
+            if normalized_min_volume != 0:
+                main_product_orders.append(Order(main_product, main_product_buy_price, main_product_buy_volume))
+                component_1_orders.append(Order(component_1, component_1_sell_price, -component_1_sell_volume))
+                component_2_orders.append(Order(component_2, component_2_sell_price, -component_2_sell_volume))
+                component_3_orders.append(Order(component_3, component_3_sell_price, -component_3_sell_volume))
+
+
+        
+        # clearing
+        clearing_threshold = 10
+        if ((abs(current_difference - constant_differences_mean) < clearing_threshold) and (main_product_position != 0 )) or (self.clearing_flag == True):
+            self.logger.log(f'clearing main product because current difference {current_difference} returned to constant difference mean {constant_differences_mean}', 'debug')
+            
+            if main_product_position > 0:
+                # we wish to sell the main product and buy the components to return to the 0 position
+                self.logger.log(f'selling main product because current position {main_product_position} is positive full', 'debug')
                 main_product_sell_price = main_product_best_bid_price
-                main_product_max_sell_volume = min(main_product_best_bid_volume, main_product_position_limit + main_product_position)
+                main_product_max_sell_volume = min(abs(main_product_position), main_product_best_bid_volume)
                 
                 # we must do the opposite to the components
                 component_1_buy_price = components_best_ask_prices[component_1]
-                component_1_max_buy_volume_normalized = min(components_best_ask_volumes[component_1_buy_price], components_position_limits[component_1] - components_positions[component_1])//main_product_to_components_ratios[component_1]
+                component_1_max_buy_volume_normalized = min(abs(components_positions[component_1]), components_best_ask_volumes[component_1_buy_price])//main_product_to_components_ratios[component_1]
                 component_2_buy_price = components_best_ask_prices[component_2]
-                component_2_max_buy_volume_normalized = min(components_best_ask_volumes[component_2_buy_price], components_position_limits[component_2] - components_positions[component_2])//main_product_to_components_ratios[component_2]
+                component_2_max_buy_volume_normalized = min(abs(components_positions[component_2]), components_best_ask_volumes[component_2_buy_price])//main_product_to_components_ratios[component_2]
                 component_3_buy_price = components_best_ask_prices[component_3]
-                component_3_max_buy_volume_normalized = min(components_best_ask_volumes[component_3_buy_price], components_position_limits[component_3] - components_positions[component_3])//main_product_to_components_ratios[component_3]
+                component_3_max_buy_volume_normalized = min(abs(components_positions[component_3]), components_best_ask_volumes[component_3_buy_price])//main_product_to_components_ratios[component_3]
                 
                 normalized_min_volume = min([main_product_max_sell_volume, component_1_max_buy_volume_normalized, component_2_max_buy_volume_normalized, component_3_max_buy_volume_normalized])
                 main_product_sell_volume = normalized_min_volume
@@ -1062,28 +1121,27 @@ class Trader:
                 component_2_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
                 component_3_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
-                self.logger.log(f'the selling volume is {main_product_sell_volume}, and the buying volumes are {component_1_buy_volume, component_2_buy_volume, component_3_buy_volume}', 'debug')
+                self.logger.log(f'the selling volume is {main_product_sell_volume}, and the buying volumes are {[component_1_buy_volume, component_2_buy_volume, component_3_buy_volume]}', 'debug')
 
                 if normalized_min_volume != 0:
                     main_product_orders.append(Order(main_product, main_product_sell_price, -main_product_sell_volume))
                     component_1_orders.append(Order(component_1, component_1_buy_price, component_1_buy_volume))
                     component_2_orders.append(Order(component_2, component_2_buy_price, component_2_buy_volume))
                     component_3_orders.append(Order(component_3, component_3_buy_price, component_3_buy_volume))
-
-        
-            elif current_difference + num_std * past_differences_sigma < past_differences_mean and current_difference < past_differences_mean - absolute_threshold:
-                # we consider this to be a low point and hence we buy PICNIC_BASKET and sell EQUAL WORTH of COMPONENTS
-                self.logger.log(f'buying main product because {current_difference} is much less than {past_differences_mean}', 'debug')
+            
+            if main_product_position < 0:
+                # we wish to buy the main product and sell the components to return to the 0 position
+                self.logger.log(f'buying main product because current position {main_product_position} is negative full', 'debug')
                 main_product_buy_price = main_product_best_ask_price
-                main_product_max_buy_volume = min(main_product_best_ask_volume, main_product_position_limit - main_product_position)
+                main_product_max_buy_volume =  min(abs(main_product_position), main_product_best_ask_volume)
                 
-                # we must do the opposite to the component
+                # we must do the opposite to the components
                 component_1_sell_price = components_best_bid_prices[component_1]
-                component_1_max_sell_volume_normalized = min(components_best_bid_volumes[component_1_sell_price], components_position_limits[component_1] + components_positions[component_1])//main_product_to_components_ratios[component_1]
+                component_1_max_sell_volume_normalized = min(abs(components_positions[component_1]), components_best_bid_volumes[component_1_sell_price])//main_product_to_components_ratios[component_1]
                 component_2_sell_price = components_best_bid_prices[component_2]
-                component_2_max_sell_volume_normalized = min(components_best_bid_volumes[component_2_sell_price], components_position_limits[component_2] + components_positions[component_2])//main_product_to_components_ratios[component_2]
+                component_2_max_sell_volume_normalized = min(abs(components_positions[component_2]), components_best_bid_volumes[component_2_sell_price])//main_product_to_components_ratios[component_2]
                 component_3_sell_price = components_best_bid_prices[component_3]
-                component_3_max_sell_volume_normalized = min(components_best_bid_volumes[component_3_sell_price], components_position_limits[component_3] + components_positions[component_3])//main_product_to_components_ratios[component_3]
+                component_3_max_sell_volume_normalized = min(abs(components_positions[component_3]), components_best_bid_volumes[component_3_sell_price])//main_product_to_components_ratios[component_3]
                 
                 normalized_min_volume = min([main_product_max_buy_volume, component_1_max_sell_volume_normalized, component_2_max_sell_volume_normalized, component_3_max_sell_volume_normalized])
                 main_product_buy_volume = normalized_min_volume
@@ -1091,13 +1149,22 @@ class Trader:
                 component_2_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
                 component_3_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
+                self.logger.log(f'the selling volume is {main_product_buy_volume}, and the buying volumes are {[component_1_sell_volume, component_2_sell_volume, component_3_sell_volume]}', 'debug')
 
-                self.logger.log(f'the buying volume is {main_product_buy_volume}, and the selling volumes are {component_1_sell_volume, component_2_sell_volume, component_3_sell_volume}', 'debug')
                 if normalized_min_volume != 0:
                     main_product_orders.append(Order(main_product, main_product_buy_price, main_product_buy_volume))
                     component_1_orders.append(Order(component_1, component_1_sell_price, -component_1_sell_volume))
                     component_2_orders.append(Order(component_2, component_2_sell_price, -component_2_sell_volume))
                     component_3_orders.append(Order(component_3, component_3_sell_price, -component_3_sell_volume))
+            if normalized_min_volume < abs(main_product_position):
+                self.clearing_flag = True
+            else:
+                self.clearing_flag = False
+            
+
+
+
+
 
         # push in the current difference into differences window
         self.difference_between_main_product_and_components_window.push(current_difference)
