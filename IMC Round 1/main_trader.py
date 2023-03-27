@@ -227,12 +227,12 @@ class Trader:
         # Buy / Sell, with volume proportional to the profit margin
         buy_profit_margin = true_price - best_ask
         if buy_profit_margin >= min_profit_margin:
-            mr_ask_price = best_ask
-            mr_ask_vol = min(alpha*buy_profit_margin*lot_size, pos_lim-pos)
+            mr_bid_price = best_ask
+            mr_bid_vol = min(alpha*buy_profit_margin*lot_size, pos_lim-pos)
         sell_profit_margin = best_bid - true_price
         if sell_profit_margin >= min_profit_margin:
-            mr_bid_price = best_bid
-            mr_bid_vol = -min(alpha*sell_profit_margin*lot_size, pos+pos_lim)
+            mr_ask_price = best_bid
+            mr_ask_vol = -min(alpha*sell_profit_margin*lot_size, pos+pos_lim)
 
         # send the orders
         if mr_bid_price != 0:
