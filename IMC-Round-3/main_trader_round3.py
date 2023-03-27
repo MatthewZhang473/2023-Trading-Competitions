@@ -61,6 +61,7 @@ class Trader:
         self.start_done = False
         self.peak_done = False
         self.end_done = False
+        self.good_clear_price = 0
 
         self.position_limits = {
             "BANANAS": 20,
@@ -270,9 +271,12 @@ class Trader:
         
         ### BERRIES ###
         BERRIES = "BERRIES"
-        berries_orders = self.mayberry_calc(state.timestamp, BERRIES, self.mayberry_window,
-                                            mid_prices[BERRIES], self.position_limits[BERRIES],
-                                            positions[BERRIES])
+        berries_orders = self.mayberry_calc(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
+                                            mid_price=mid_prices[BERRIES],
+                                            best_bid=best_bids[BERRIES], best_ask=best_asks[BERRIES],
+                                            best_bid_volume=state.order_depths[BERRIES].buy_orders[best_bids[BERRIES]],
+                                            best_ask_volume=abs(state.order_depths[BERRIES].sell_orders[best_asks[BERRIES]]),
+                                            position_limit=self.position_limits[BERRIES], position=positions[BERRIES])
         result[BERRIES] = berries_orders
         self.mayberry_window.push(mid_prices[BERRIES])
         self.logger.log(
@@ -905,35 +909,45 @@ class Trader:
         self.exit_tracer_window.push(exit_tracer)
 
         return product_orders
-    def mayberry_calc(self, timestamp, product: Product, window, mid_price, position_limit, position):
+    def mayberry_calc(self, timestamp, product: Product, window,
+                      mid_price,
+                      best_bid, best_ask, 
+                      best_bid_volume, best_ask_volume,
+                      position_limit, position):
         orders = []
-        PLATEAU_START = 2000 * 100
+        PLATEAU_START = 3500 * 100
         UPWARD_START = 4500 * 100
         DOWNWARD_START = 7000 * 100
+        renbuliaole_threshold = 20
 
-        n = 2.3
-        upper, lower = window.upper_lower_bounds(n)
+        long_term_average_price = window.avg()
 
         if timestamp >= PLATEAU_START and timestamp < UPWARD_START:
-            if mid_price < lower and not self.start_done:
+            if mid_price > long_term_average_price and not self.start_done:
                 # buy to limit
-                self.start_done = True
+                if position == position_limit:
+                    self.start_done = True
                 self.logger.log("BERRIES decide to buy to limit", "debug")
-                orders.append(Order(product, 5000, position_limit))
+                orders.append(Order(product, best_ask, min(position_limit-position,best_ask_volume)))
 
         elif timestamp >= UPWARD_START and timestamp < DOWNWARD_START:
-            if mid_price < window.avg() and not self.peak_done:
+            if mid_price < long_term_average_price and not self.peak_done:
                 # sell to limit
-                self.peak_done = True
+                if position == -position_limit:
+                    self.peak_done = True
                 self.logger.log("BERRIES decide to sell to limit", "debug")
-                orders.append(Order(product, 0, -(position + position_limit)))
+                orders.append(Order(product, best_bid, -min(best_bid_volume,position+position_limit)))
 
         elif timestamp >= DOWNWARD_START:
-            if mid_price < lower and not self.end_done:
+            if mid_price > long_term_average_price and self.good_clear_price == 0:
                 # buy to clear
-                self.end_done = True
-                self.logger.log("BERRIES decide to buy to clear", "debug")
-                orders.append(Order(product, 5000, -position))
+                self.logger.log("BERRIES decide found its good point to clear, but we wait", "debug")
+                self.good_clear_price = mid_price
+            if  self. good_clear_price != 0 and mid_price > self.good_clear_price + renbuliaole_threshold and not self.end_done:
+                self.logger.log("Renbuliaole!, now BERRIES decide to clear", "debug")
+                if position == 0:
+                    self.end_done = True
+                orders.append(Order(product, best_ask, min(position_limit-position,best_ask_volume)))
 
         return orders
 
