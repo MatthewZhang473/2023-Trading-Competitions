@@ -7,7 +7,25 @@ import pandas as pd
 
 class Trader:
     def __init__(self) -> None:
-        self.cash = 0
+
+        # {product : negative profit threshold to stop trading}
+        self.profit_threshold = {
+            "BANANAS": -10000,
+            "PEARLS": -10000,
+            "COCONUTS": -10000,
+            "PINA_COLADAS": -10000,
+            'DIVING_GEAR': -10000,
+            "BERRIES": -10000,
+            "BAGUETTE": -10000,
+            "DIP": -10000,
+            "UKULELE": -10000,
+            "PICNIC_BASKET": -10000,
+        }
+
+        # init cash
+        self.cash = {}
+        for product in self.profit_threshold.keys():
+            self.cash[product] = 0
 
         self.window = Window(10)
         self.mayberry_window = Window(1000)
@@ -69,12 +87,17 @@ class Trader:
             "COCONUTS": 600,
             "PINA_COLADAS": 300,
             'DIVING_GEAR': 50,
-            "BERRIES": 250
+            "BERRIES": 250,
+            "BAGUETTE": 150,
+            "DIP": 300,
+            "UKULELE": 70,
+            "PICNIC_BASKET": 70,
         }
 
         # comment out a category to disable it in the logs
         self.logger = Logger([
             "format",
+            "important",
             "timestamp",
             "bananas",
             "position",
@@ -96,10 +119,12 @@ class Trader:
                 # only consider trades from last iteration
                 if trade.buyer == "SUBMISSION" and trade.timestamp == now-100:
                     self.logger.log_buy(trade)
-                    self.cash -= trade.price * trade.quantity
+                    self.cash[product] -= trade.price * trade.quantity
                 elif trade.seller == "SUBMISSION" and trade.timestamp == now-100:
                     self.logger.log_sell(trade)
-                    self.cash += trade.price * trade.quantity
+                    self.cash[product] += trade.price * trade.quantity
+        for product in self.cash.keys():
+            self.logger.log(f"{product} -- {self.cash[product]}", "cash")
 
     def calculate_position(self, listing: Dict[Symbol, Listing], position: Dict[Product, Position]) -> Dict[Product, Position]:
         """add missing product with 0 to the position dictionary"""
@@ -113,12 +138,13 @@ class Trader:
 
     def calculate_last_round_profit(self, position: Dict[Product, Position], mid_prices: Dict[Symbol, Position]):
         """what the profit would be if it is last round"""
-        profit = self.cash
+        profits = self.cash.copy()
         for product in position:
             if product in mid_prices:
                 mid_price = mid_prices[product]
-                profit += position[product] * mid_price
-        return profit
+                profits[product] += position[product] * mid_price
+                self.logger.log(f"{product} -- {profits[product]}", "profit")
+        return profits
 
     def calculate_mid_prices(self, order_depths):
         """returns 3 dictionaries"""
@@ -160,10 +186,9 @@ class Trader:
         self.calculate_cash(state.own_trades, state.timestamp)
         self.logger.log(f"cash now is {self.cash}", "cash")
 
-        profit = self.calculate_last_round_profit(state.position, mid_prices)
-        self.logger.log(f"if it is last round, profit = {profit}", "profit")
+        profits = self.calculate_last_round_profit(state.position, mid_prices)
         if state.timestamp == self.LAST_ROUND:
-            self.logger.log(f"final profit = {profit}", "final_profit")
+            self.logger.log(f"final profit = {profits}", "final_profit")
 
         # self.logger.log(state.toJSON(), "debug")
 
@@ -173,114 +198,141 @@ class Trader:
 
         ### BANANAS TRADING ###
         BANANA = "BANANAS"
-        banana_orders = self.window_calc(BANANA, self.window, mid_prices[BANANA],
-                                         best_bids[BANANA], best_asks[BANANA],
-                                         state.position[BANANA] if BANANA in state.position else 0,
-                                         self.position_limits[BANANA])
-        result[BANANA] = banana_orders
-        self.logger.log(
-            f"BANANAS window mm: {banana_orders}", "orders")
-        self.window.push(mid_prices[BANANA])
+        if profits[BANANA] > self.profit_threshold[BANANA]:
+            banana_orders = self.window_calc(BANANA, self.window, mid_prices[BANANA],
+                                             best_bids[BANANA], best_asks[BANANA],
+                                             state.position[BANANA] if BANANA in state.position else 0,
+                                             self.position_limits[BANANA])
+            result[BANANA] = banana_orders
+            self.logger.log(
+                f"BANANAS window mm: {banana_orders}", "orders")
+            self.window.push(mid_prices[BANANA])
+        else:
+            self.logger.log(
+                f"{BANANA} stop trading because of profit {profits[BANANA]} below {self.profit_threshold[BANANA]}", "important")
 
         ### PEARLS TRADING ###
         PEARL = "PEARLS"
-        pearl_orders = self.mean_reversal_calc(
-            PEARL, 20, best_bids[PEARL], best_asks[PEARL], state.position)
-        result[PEARL] = pearl_orders
-        self.logger.log(
-            f"PEARLS mean reversal: {pearl_orders}", "orders")
+        if profits[PEARL] > self.profit_threshold[PEARL]:
+            pearl_orders = self.mean_reversal_calc(
+                PEARL, 20, best_bids[PEARL], best_asks[PEARL], state.position)
+            result[PEARL] = pearl_orders
+            self.logger.log(
+                f"PEARLS mean reversal: {pearl_orders}", "orders")
+        else:
+            self.logger.log(
+                f"{PEARL} stop trading because of profit {profits[PEARL]} below {self.profit_threshold[PEARL]}", "important")
 
         ## COCONUT AND PINA COLADAS TRADING ###
         COCONUTS = "COCONUTS"
         PINA_COLADAS = "PINA_COLADAS"
-        COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
-        COCONUTS_LOT_SIZE = 15
-        PINA_COLADAS_LOT_SIZE = 8
-        COCONUTS_best_bid_price = best_bids[COCONUTS]
-        COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
-        COCONUTS_best_ask_price = best_asks[COCONUTS]
-        COCONUTS_best_ask_volume = abs(
-            state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
-        PINAS_best_bid_price = best_bids[PINA_COLADAS]
-        PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
-        PINAS_best_ask_price = best_asks[PINA_COLADAS]
-        PINAS_best_ask_volume = abs(
-            state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
-        (arbitrage_COCONUTS_orders, arbitrage_PINAS_orders) = self.window_price_diff_calc(
-            state.timestamp,
-            # self.mid_window,
-            self.mid_window_larger, self.mid_window_smaller,
-            # self.cb_pa_window, self.pb_ca_window,
-            product_1=COCONUTS, product_2=PINA_COLADAS,
-            mid_price_product_1=mid_prices[
-                COCONUTS],
-            mid_price_product_2=mid_prices[
-                PINA_COLADAS],
-            best_bid_price_product_1=COCONUTS_best_bid_price,
-            best_ask_price_product_1=COCONUTS_best_ask_price,
-            best_bid_volume_product_1=COCONUTS_best_bid_volume,
-            best_ask_volume_product_1=COCONUTS_best_ask_volume,
-            best_bid_price_product_2=PINAS_best_bid_price,
-            best_ask_price_product_2=PINAS_best_ask_price,
-            best_bid_volume_product_2=PINAS_best_bid_volume,
-            best_ask_volume_product_2=PINAS_best_ask_volume,
-            position_product_1=positions[COCONUTS],
-            position_product_2=positions[
-                PINA_COLADAS],
-            product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
-            lot_size_product_1=COCONUTS_LOT_SIZE,
-            lot_size_product_2=PINA_COLADAS_LOT_SIZE,
-            position_limit_product_1=self.position_limits[
-                COCONUTS],
-            position_limit_product_2=self.position_limits[PINA_COLADAS])
-        result[COCONUTS] = arbitrage_COCONUTS_orders
-        result[PINA_COLADAS] = arbitrage_PINAS_orders
-        self.logger.log(
-            f"COCONUTS window arbitrage: {arbitrage_COCONUTS_orders}", "orders")
-        self.logger.log(
-            f"PINA_COLADAS window arbitrage: {arbitrage_PINAS_orders}", "orders")
-        mid_diff = mid_prices[COCONUTS] * COCONUTS_LOT_SIZE - \
-            mid_prices[PINA_COLADAS] * PINA_COLADAS_LOT_SIZE
-        cbpa_diff = COCONUTS_best_bid_price * COCONUTS_LOT_SIZE - \
-            PINAS_best_ask_price * PINA_COLADAS_LOT_SIZE
-        pbca_diff = PINAS_best_bid_price * PINA_COLADAS_LOT_SIZE - \
-            COCONUTS_best_ask_price * COCONUTS_LOT_SIZE
-        self.mid_window.push(mid_diff)
-        self.mid_window_larger.push(mid_diff)
-        self.mid_window_smaller.push(mid_diff)
-        self.cb_pa_window.push(cbpa_diff)
-        self.pb_ca_window.push(pbca_diff)
+        if profits[COCONUTS] > self.profit_threshold[COCONUTS] and profits[PINA_COLADAS] > self.profit_threshold[PINA_COLADAS]:
+            COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
+            COCONUTS_LOT_SIZE = 15
+            PINA_COLADAS_LOT_SIZE = 8
+            COCONUTS_best_bid_price = best_bids[COCONUTS]
+            COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
+            COCONUTS_best_ask_price = best_asks[COCONUTS]
+            COCONUTS_best_ask_volume = abs(
+                state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
+            PINAS_best_bid_price = best_bids[PINA_COLADAS]
+            PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
+            PINAS_best_ask_price = best_asks[PINA_COLADAS]
+            PINAS_best_ask_volume = abs(
+                state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
+            (arbitrage_COCONUTS_orders, arbitrage_PINAS_orders) = self.window_price_diff_calc(
+                state.timestamp,
+                # self.mid_window,
+                self.mid_window_larger, self.mid_window_smaller,
+                # self.cb_pa_window, self.pb_ca_window,
+                product_1=COCONUTS, product_2=PINA_COLADAS,
+                mid_price_product_1=mid_prices[
+                    COCONUTS],
+                mid_price_product_2=mid_prices[
+                    PINA_COLADAS],
+                best_bid_price_product_1=COCONUTS_best_bid_price,
+                best_ask_price_product_1=COCONUTS_best_ask_price,
+                best_bid_volume_product_1=COCONUTS_best_bid_volume,
+                best_ask_volume_product_1=COCONUTS_best_ask_volume,
+                best_bid_price_product_2=PINAS_best_bid_price,
+                best_ask_price_product_2=PINAS_best_ask_price,
+                best_bid_volume_product_2=PINAS_best_bid_volume,
+                best_ask_volume_product_2=PINAS_best_ask_volume,
+                position_product_1=positions[COCONUTS],
+                position_product_2=positions[
+                    PINA_COLADAS],
+                product_1_over_product_2_value_ratio=COCONUTS_OVER_PINAS_VALUE_RATIO,
+                lot_size_product_1=COCONUTS_LOT_SIZE,
+                lot_size_product_2=PINA_COLADAS_LOT_SIZE,
+                position_limit_product_1=self.position_limits[
+                    COCONUTS],
+                position_limit_product_2=self.position_limits[PINA_COLADAS])
+            result[COCONUTS] = arbitrage_COCONUTS_orders
+            result[PINA_COLADAS] = arbitrage_PINAS_orders
+            self.logger.log(
+                f"COCONUTS window arbitrage: {arbitrage_COCONUTS_orders}", "orders")
+            self.logger.log(
+                f"PINA_COLADAS window arbitrage: {arbitrage_PINAS_orders}", "orders")
+            mid_diff = mid_prices[COCONUTS] * COCONUTS_LOT_SIZE - \
+                mid_prices[PINA_COLADAS] * PINA_COLADAS_LOT_SIZE
+            cbpa_diff = COCONUTS_best_bid_price * COCONUTS_LOT_SIZE - \
+                PINAS_best_ask_price * PINA_COLADAS_LOT_SIZE
+            pbca_diff = PINAS_best_bid_price * PINA_COLADAS_LOT_SIZE - \
+                COCONUTS_best_ask_price * COCONUTS_LOT_SIZE
+            self.mid_window.push(mid_diff)
+            self.mid_window_larger.push(mid_diff)
+            self.mid_window_smaller.push(mid_diff)
+            self.cb_pa_window.push(cbpa_diff)
+            self.pb_ca_window.push(pbca_diff)
+        else:
+            self.logger.log(
+                f"{COCONUTS} stop trading because of profit {profits[COCONUTS]} below {self.profit_threshold[COCONUTS]} OR", "important")
+            self.logger.log(
+                f"{PINA_COLADAS} stop trading because of profit {profits[PINA_COLADAS]} below {self.profit_threshold[PINA_COLADAS]}", "important")
 
         ### DIVING_GEAR trade ###
         DIVING_GEAR = 'DIVING_GEAR'
-        indicator = 'DOLPHIN_SIGHTINGS'
-        indicator_mid_price = state.observations[indicator]
+        if profits[DIVING_GEAR] > self.profit_threshold[DIVING_GEAR]:
+            indicator = 'DOLPHIN_SIGHTINGS'
+            indicator_mid_price = state.observations[indicator]
 
-        DIVING_GEAR_best_bid_price = best_bids[DIVING_GEAR]
-        DIVING_GEAR_best_bid_volume = state.order_depths[DIVING_GEAR].buy_orders[DIVING_GEAR_best_bid_price]
-        DIVING_GEAR_best_ask_price = best_asks[DIVING_GEAR]
-        DIVING_GEAR_best_ask_volume = abs(state.order_depths[DIVING_GEAR].sell_orders[DIVING_GEAR_best_ask_price])
-        DIVING_GEAR_position = positions[DIVING_GEAR]
-        DIVING_GEAR_position_limit = self.position_limits[DIVING_GEAR]
+            DIVING_GEAR_best_bid_price = best_bids[DIVING_GEAR]
+            DIVING_GEAR_best_bid_volume = state.order_depths[
+                DIVING_GEAR].buy_orders[DIVING_GEAR_best_bid_price]
+            DIVING_GEAR_best_ask_price = best_asks[DIVING_GEAR]
+            DIVING_GEAR_best_ask_volume = abs(
+                state.order_depths[DIVING_GEAR].sell_orders[DIVING_GEAR_best_ask_price])
+            DIVING_GEAR_position = positions[DIVING_GEAR]
+            DIVING_GEAR_position_limit = self.position_limits[DIVING_GEAR]
 
-        diving_gear_orders = self.indicator_trade(state.timestamp, DIVING_GEAR, indicator_mid_price, DIVING_GEAR_best_bid_price, 
-                                                    DIVING_GEAR_best_bid_volume, DIVING_GEAR_best_ask_price, DIVING_GEAR_best_ask_volume, 
-                                                    DIVING_GEAR_position, DIVING_GEAR_position_limit, self.dolphin_diff_term, self.gear_diff_term)
-        result[DIVING_GEAR] = diving_gear_orders
-        self.logger.log(f'{DIVING_GEAR} window indicator trade: {diving_gear_orders}', 'orders')
-        
+            diving_gear_orders = self.indicator_trade(state.timestamp, DIVING_GEAR, indicator_mid_price, DIVING_GEAR_best_bid_price,
+                                                      DIVING_GEAR_best_bid_volume, DIVING_GEAR_best_ask_price, DIVING_GEAR_best_ask_volume,
+                                                      DIVING_GEAR_position, DIVING_GEAR_position_limit, self.dolphin_diff_term, self.gear_diff_term)
+            result[DIVING_GEAR] = diving_gear_orders
+            self.logger.log(
+                f'{DIVING_GEAR} window indicator trade: {diving_gear_orders}', 'orders')
+        else:
+            self.logger.log(
+                f"{DIVING_GEAR} stop trading because of profit {profits[DIVING_GEAR]} below {self.profit_threshold[DIVING_GEAR]} OR", "important")
+
         ### BERRIES ###
         BERRIES = "BERRIES"
-        berries_orders = self.mayberry_calc(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
-                                            mid_price=mid_prices[BERRIES],
-                                            best_bid=best_bids[BERRIES], best_ask=best_asks[BERRIES],
-                                            best_bid_volume=state.order_depths[BERRIES].buy_orders[best_bids[BERRIES]],
-                                            best_ask_volume=abs(state.order_depths[BERRIES].sell_orders[best_asks[BERRIES]]),
-                                            position_limit=self.position_limits[BERRIES], position=positions[BERRIES])
-        result[BERRIES] = berries_orders
-        self.mayberry_window.push(mid_prices[BERRIES])
-        self.logger.log(
-            f"BERRIES: {berries_orders}", "orders")
+        if profits[BERRIES] > self.profit_threshold[BERRIES]:
+            berries_orders = self.mayberry_calc(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
+                                                mid_price=mid_prices[BERRIES],
+                                                best_bid=best_bids[BERRIES], best_ask=best_asks[BERRIES],
+                                                best_bid_volume=state.order_depths[
+                                                    BERRIES].buy_orders[best_bids[BERRIES]],
+                                                best_ask_volume=abs(
+                                                    state.order_depths[BERRIES].sell_orders[best_asks[BERRIES]]),
+                                                position_limit=self.position_limits[BERRIES], position=positions[BERRIES])
+            result[BERRIES] = berries_orders
+            self.mayberry_window.push(mid_prices[BERRIES])
+            self.logger.log(
+                f"BERRIES: {berries_orders}", "orders")
+        else:
+            self.logger.log(
+                f"{BERRIES} stop trading because of profit {profits[BERRIES]} below {self.profit_threshold[BERRIES]}", "important")
 
         ### RETURN RESULT ###
         self.logger.divider_big()
@@ -823,8 +875,8 @@ class Trader:
 
         return (product_1_orders, product_2_orders)
 
-    def indicator_trade(self, timestamp, product, indicator_mid_price, 
-                        best_bid_price, best_bid_volume, best_ask_price, 
+    def indicator_trade(self, timestamp, product, indicator_mid_price,
+                        best_bid_price, best_bid_volume, best_ask_price,
                         best_ask_volume, product_position, product_position_limit, dolphin_diff_term, gear_diff_term):
         # push the current price into the indicator window and product window
         product_mid_price = (best_bid_price + best_ask_price)/2
@@ -837,13 +889,15 @@ class Trader:
         time_span_for_calculating_entrance_tracer = 10
 
         # create a DOLPHIN_SIGHTINGS difference series, containing the differences between i th and i+diff th elements
-        dolphin_differences_series = pd.Series(self.dolphin_window.contents).diff(periods = dolphin_diff_term)
+        dolphin_differences_series = pd.Series(
+            self.dolphin_window.contents).diff(periods=dolphin_diff_term)
         # calculate entrance tracer
         entrance_tracer = dolphin_differences_series.iloc[-time_span_for_calculating_entrance_tracer:].mean()\
-              if len(dolphin_differences_series) == time_span_for_calculating_entrance_tracer + dolphin_diff_term + 1 else np.nan
+            if len(dolphin_differences_series) == time_span_for_calculating_entrance_tracer + dolphin_diff_term + 1 else np.nan
 
         # long term and short term sigma and mean for the DIVING_GEAR series
-        gear_differences_series = pd.Series(self.gear_window.contents).diff(periods = gear_diff_term)
+        gear_differences_series = pd.Series(
+            self.gear_window.contents).diff(periods=gear_diff_term)
         long_gear_differences_series = gear_differences_series.iloc[-long_term:]
         short_gear_differences_series = gear_differences_series.iloc[-short_term:]
 
@@ -859,59 +913,73 @@ class Trader:
 
         product_orders = []
 
-        self.logger.log(f"entrance tracer window: {self.entrance_tracer_window.contents}", "debug")
-        self.logger.log(f'exit tracer window: {self.exit_tracer_window.contents}', "debug")
-        # when big peak & big troughts comes: 
-        if timestamp > time_span_for_calculating_entrance_tracer*100: # after enough number of entrance_tracer in recorded
+        self.logger.log(
+            f"entrance tracer window: {self.entrance_tracer_window.contents}", "debug")
+        self.logger.log(
+            f'exit tracer window: {self.exit_tracer_window.contents}', "debug")
+        # when big peak & big troughts comes:
+        # after enough number of entrance_tracer in recorded
+        if timestamp > time_span_for_calculating_entrance_tracer*100:
             # 1. condition to buy
             if (entrance_tracer > num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer > absolute_threshold)\
-                or (self.gear_buy_flag==True and product_position < product_position_limit): # if there is a new trade signal or a flag
-                
+                    or (self.gear_buy_flag == True and product_position < product_position_limit):  # if there is a new trade signal or a flag
+
                 self.gear_buy_flag = True
                 self.gear_sell_flag = False
-                buy_volume = min(best_ask_volume, product_position_limit - product_position)
+                buy_volume = min(
+                    best_ask_volume, product_position_limit - product_position)
                 if buy_volume > 0:
-                    product_orders.append(Order(product, best_ask_price, buy_volume))
-                    self.logger.log(f'buying because indicator indicates upward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
-            
+                    product_orders.append(
+                        Order(product, best_ask_price, buy_volume))
+                    self.logger.log(
+                        f'buying because indicator indicates upward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
+
             # 2. condition to sell
             elif (entrance_tracer < -num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer < -absolute_threshold)\
-                or (self.gear_sell_flag==True and product_position > -product_position_limit): # if there is a new trade signal or a flag
-                
+                    or (self.gear_sell_flag == True and product_position > -product_position_limit):  # if there is a new trade signal or a flag
+
                 self.gear_sell_flag = True
                 self.gear_buy_flag = False
-                sell_volume = min(best_bid_volume, product_position_limit + product_position)
+                sell_volume = min(
+                    best_bid_volume, product_position_limit + product_position)
                 if sell_volume > 0:
-                    product_orders.append(Order(product, best_bid_price, -sell_volume))
-                    self.logger.log(f'selling because indicator indicates downward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
+                    product_orders.append(
+                        Order(product, best_bid_price, -sell_volume))
+                    self.logger.log(
+                        f'selling because indicator indicates downward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
         # push in the current entrance tracer
         self.entrance_tracer_window.push(entrance_tracer)
-        
-        if timestamp > long_term*100: # after enough number of gear prices is recorded
+
+        if timestamp > long_term*100:  # after enough number of gear prices is recorded
             # when big surge ends
             # 1. when a peak ends and starts to drop
             if exit_tracer > num_std_exit * self.exit_tracer_window.std():
                 self.gear_buy_flag = False
                 clear_volume = product_position
-                if clear_volume!=0 and self.gear_sell_flag==False:
+                if clear_volume != 0 and self.gear_sell_flag == False:
                     # note that clear volume must be the negative value of current position so that we reset to position 0 for short-term trade
-                    product_orders.append(Order(product, best_bid_price, -clear_volume))
-                    self.logger.log(f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
-        
+                    product_orders.append(
+                        Order(product, best_bid_price, -clear_volume))
+                    self.logger.log(
+                        f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
+
             # 2. when a big trough ends and starts to increase
             if exit_tracer < -num_std_exit * self.exit_tracer_window.std():
                 self.gear_sell_flag = False
                 clear_volume = product_position
-                if clear_volume != 0 and self.gear_buy_flag==False:
-                    product_orders.append(Order(product, best_ask_price, -clear_volume))
-                    self.logger.log(f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
+                if clear_volume != 0 and self.gear_buy_flag == False:
+                    product_orders.append(
+                        Order(product, best_ask_price, -clear_volume))
+                    self.logger.log(
+                        f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
         # push in the current exit tracer
         self.exit_tracer_window.push(exit_tracer)
 
         return product_orders
+
     def mayberry_calc(self, timestamp, product: Product, window,
                       mid_price,
-                      best_bid, best_ask, 
+                      best_bid, best_ask,
                       best_bid_volume, best_ask_volume,
                       position_limit, position):
         orders = []
@@ -928,7 +996,8 @@ class Trader:
                 if position == position_limit:
                     self.start_done = True
                 self.logger.log("BERRIES decide to buy to limit", "debug")
-                orders.append(Order(product, best_ask, min(position_limit-position,best_ask_volume)))
+                orders.append(Order(product, best_ask, min(
+                    position_limit-position, best_ask_volume)))
 
         elif timestamp >= UPWARD_START and timestamp < DOWNWARD_START:
             if mid_price < long_term_average_price and not self.peak_done:
@@ -936,18 +1005,22 @@ class Trader:
                 if position == -position_limit:
                     self.peak_done = True
                 self.logger.log("BERRIES decide to sell to limit", "debug")
-                orders.append(Order(product, best_bid, -min(best_bid_volume,position+position_limit)))
+                orders.append(Order(product, best_bid, -
+                              min(best_bid_volume, position+position_limit)))
 
         elif timestamp >= DOWNWARD_START:
             if mid_price > long_term_average_price and self.good_clear_price == 0:
                 # buy to clear
-                self.logger.log("BERRIES decide found its good point to clear, but we wait", "debug")
+                self.logger.log(
+                    "BERRIES decide found its good point to clear, but we wait", "debug")
                 self.good_clear_price = mid_price
-            if  self. good_clear_price != 0 and mid_price > self.good_clear_price + renbuliaole_threshold and not self.end_done:
-                self.logger.log("Renbuliaole!, now BERRIES decide to clear", "debug")
+            if self. good_clear_price != 0 and mid_price > self.good_clear_price + renbuliaole_threshold and not self.end_done:
+                self.logger.log(
+                    "Renbuliaole!, now BERRIES decide to clear", "debug")
                 if position == 0:
                     self.end_done = True
-                orders.append(Order(product, best_ask, min(position_limit-position,best_ask_volume)))
+                orders.append(Order(product, best_ask, min(
+                    position_limit-position, best_ask_volume)))
 
         return orders
 
