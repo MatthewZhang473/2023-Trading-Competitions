@@ -88,7 +88,7 @@ class Trader:
         self.new_arbitrage_short_term_flag_duration_counter = 0
         self.new_arbitrage_buy_to_limit_signal = False
         self.new_arbitrage_sell_to_limit_signal = False
-        self.new_arbitrage_short_term_flag = False
+        self.new_arbitrage_short_term_flag = True
         self.new_arbitrage_long_term_flag = False
 
         ### PICNIC_BASKET WINDOW ###
@@ -1107,7 +1107,7 @@ class Trader:
             sell_volume_product_1,
             sell_volume_product_2) = short_term_trade()
         else:
-            raise ValueError("No short_term / long_term flag detected")
+            self.logger.log('There is not a valid flag to tell long term / short term, most likely because of lamda reset','important')
 
         # Send orders
         if sell_volume_product_1!=0 and buy_volume_product_2!=0:
