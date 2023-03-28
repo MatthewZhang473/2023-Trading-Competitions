@@ -1031,10 +1031,8 @@ class Trader:
         absolute_threshold = 100
 
         constant_differences_mean = 400
-        constant_differences_sigma = 100
+        constant_differences_sigma = 125
         num_std = 1
-
-        
 
         # suppose we are using the constant_difference_mean
         if current_difference - num_std * constant_differences_sigma > constant_differences_mean:
@@ -1064,7 +1062,6 @@ class Trader:
                 component_1_orders.append(Order(component_1, component_1_buy_price, component_1_buy_volume))
                 component_2_orders.append(Order(component_2, component_2_buy_price, component_2_buy_volume))
                 component_3_orders.append(Order(component_3, component_3_buy_price, component_3_buy_volume))
-
     
         elif current_difference + num_std * constant_differences_sigma < constant_differences_mean:
             # we consider this to be a low point and hence we buy PICNIC_BASKET and sell EQUAL WORTH of COMPONENTS
@@ -1094,8 +1091,6 @@ class Trader:
                 component_2_orders.append(Order(component_2, component_2_sell_price, -component_2_sell_volume))
                 component_3_orders.append(Order(component_3, component_3_sell_price, -component_3_sell_volume))
 
-
-        
         # clearing
         clearing_threshold = 10
         if ((abs(current_difference - constant_differences_mean) < clearing_threshold) and (main_product_position != 0 )) or (self.clearing_flag == True):
@@ -1161,11 +1156,6 @@ class Trader:
             else:
                 self.clearing_flag = False
             
-
-
-
-
-
         # push in the current difference into differences window
         self.difference_between_main_product_and_components_window.push(current_difference)
 
