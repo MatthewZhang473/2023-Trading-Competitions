@@ -1,5 +1,5 @@
-from ruige_berry_backtest import Trader
-# from dontlooseshells_algo import Trader
+# from ruige_berry_backtest import Trader
+from dontlooseshells_algo import Trader
 
 from datamodel import *
 from typing import Any  # , Callable
@@ -356,7 +356,7 @@ def clear_order_book(trader_orders: Dict[str, List[Order]], order_depth: Dict[st
                         min_ask = min(asks)
                         if order.price <= statistics.median([max_bid, min_ask]):
                             trades.append(
-                                Trade(symbol, order.price, order.quantity, "BOT", "YOU", time))
+                                Trade(symbol, order.price, order.quantity, "BOT", "SUBMISSION", time))
                         else:
                             print(
                                 f'No matches for order {order} at time {time}')
@@ -374,7 +374,7 @@ def clear_order_book(trader_orders: Dict[str, List[Order]], order_depth: Dict[st
                                 # this should be negative
                                 final_volume = -match[1]
                             trades.append(
-                                Trade(symbol, order.price, final_volume, "BOT", "YOU", time))
+                                Trade(symbol, order.price, final_volume, "BOT", "SUBMISSION", time))
                         else:
                             print(
                                 f'No matches for order {order} at time {time}')
@@ -388,7 +388,7 @@ def clear_order_book(trader_orders: Dict[str, List[Order]], order_depth: Dict[st
                         min_ask = min(asks)
                         if order.price >= statistics.median([max_bid, min_ask]):
                             trades.append(
-                                Trade(symbol, order.price, order.quantity, "YOU", "BOT", time))
+                                Trade(symbol, order.price, order.quantity, "SUBMISSION", "BOT", time))
                         else:
                             print(
                                 f'No matches for order {order} at time {time}')
@@ -406,7 +406,7 @@ def clear_order_book(trader_orders: Dict[str, List[Order]], order_depth: Dict[st
                             else:
                                 final_volume = abs(match[1])
                             trades.append(
-                                Trade(symbol, order.price, final_volume, "YOU", "BOT", time))
+                                Trade(symbol, order.price, final_volume, "SUBMISSION", "BOT", time))
                         else:
                             print(
                                 f'No matches for order {order} at time {time}')
@@ -502,7 +502,7 @@ def create_log_file(round: int, day: int, states: Dict[int, TradingState], profi
             f"\nSimulation on round {round} day {day} for time {max_time} complete")
 
 
-# Adjust accordingly the round and day to your needs
+# Adjust accordingly the round and day to SUBMISSIONr needs
 if __name__ == "__main__":
     trader = Trader()
     max_time = int(

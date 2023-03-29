@@ -17,8 +17,11 @@ class Logger:
         self.our_log_only = our_log_only
         self.print_output = print_output
 
-    def testlogger_print(self, *objects: Any, sep: str = " ", end: str = "\n") -> None:
-        self.logs += sep.join(map(str, objects)) + end
+    def testlogger_print(self, string: str) -> None:
+        self.logs += string + "\n"
+
+    # def testlogger_print(self, *objects: Any, sep: str = " ", end: str = "\n") -> None:
+    #     self.logs += sep.join(map(str, objects)) + end
 
     def flush(self, state: TradingState, orders: "dict[Symbol, list[Order]]") -> None:
         if not self.our_log_only:

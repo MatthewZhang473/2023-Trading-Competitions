@@ -131,6 +131,9 @@ class Trader:
             ])
 
     def calculate_cash(self, own_trades: Dict[Symbol, List[Trade]], now) -> None:
+        self.our_logger.log([[(trades.timestamp, trades.buyer, trades.seller,
+                            trades.timestamp, trades.quantity, trades.price) for trades in own_trades[product]] for product in own_trades])
+        self.our_logger.log(now)
         for product in own_trades:
             # trades of a product
             trades = own_trades[product]
@@ -141,7 +144,7 @@ class Trader:
                     self.cash[product] -= trade.price * trade.quantity
                 elif trade.seller == "SUBMISSION" and trade.timestamp == now-100:
                     self.our_logger.log_sell(trade)
-                    self.cash[product] += trade.price * trade.quantity
+                    self.cash[product] -= trade.price * trade.quantity
         for product in self.cash.keys():
             self.our_logger.log(f"{product} -- {self.cash[product]}", "cash")
 
