@@ -1,5 +1,5 @@
 # from ruige_berry_backtest import Trader
-from dontlooseshells_algo import Trader
+from final_main_trader_round_5_back_test import Trader
 
 from datamodel import *
 from typing import Any  # , Callable
