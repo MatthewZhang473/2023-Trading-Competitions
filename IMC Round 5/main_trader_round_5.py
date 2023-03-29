@@ -90,6 +90,7 @@ class Trader:
         self.new_arbitrage_sell_to_limit_signal = False
         self.new_arbitrage_short_term_flag = True
         self.new_arbitrage_long_term_flag = False
+        self.new_arbitrage_clear_flag = False
 
         ### PICNIC_BASKET WINDOW ###
         self.difference_between_main_product_and_components_window = Window(50)
@@ -241,9 +242,6 @@ class Trader:
         COCONUTS = "COCONUTS"
         PINA_COLADAS = "PINA_COLADAS"
         if profits[COCONUTS] + profits[PINA_COLADAS] > self.profit_threshold[COCONUTS] + self.profit_threshold[PINA_COLADAS]:
-            ## COCONUT AND PINA COLADAS TRADING ###
-            COCONUTS = "COCONUTS"
-            PINA_COLADAS = "PINA_COLADAS"
             COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
             COCONUTS_LOT_SIZE = 15
             PINA_COLADAS_LOT_SIZE = 8
@@ -884,7 +882,7 @@ class Trader:
             """
             if detected buy signal --> buy to limit
             if detected sell signal --> sell to limit
-            if position is not zero and (no signal /passed zero) --> clear 
+            if price passes through zero --> clear to zero 
             """
             self.logger.log(f"We are still in long term mode", 'debug')
             long_term_average_mid_price = self.new_arbitrage_long_term_mid_diff_prices.avg()\
@@ -894,12 +892,11 @@ class Trader:
             self.logger.log(f'diff mid price = {diff_normalized_mid_price}','debug')
             num_std = 1
 
-            current_rise_signal = (diff_normalized_mid_price< -long_term_profit_threshold) and (self.new_arbitrage_short_term_mid_price_window.upper_lower_bounds(n=num_std)[1] > long_term_average_mid_price)
-            current_fall_signal = (diff_normalized_mid_price > long_term_profit_threshold) and (self.new_arbitrage_short_term_mid_price_window.upper_lower_bounds(n=num_std)[0] < long_term_average_mid_price)
+            current_rise_signal = (diff_normalized_mid_price< -long_term_profit_threshold) and (diff_normalized_mid_price - self.new_arbitrage_short_term_mid_price_window.std() > long_term_average_mid_price)
+            current_fall_signal = (diff_normalized_mid_price > long_term_profit_threshold) and (diff_normalized_mid_price + self.new_arbitrage_short_term_mid_price_window.std() < long_term_average_mid_price)
             # buy signal: price is below the threhold and rises higher than the long term average
-            if (position_product_1 < position_limit_product_1 and position_product_2 < position_limit_product_2) and (self.new_arbitrage_buy_to_limit_signal or current_rise_signal):
+            if (position_product_1 < position_limit_product_1 and position_product_2 < position_limit_product_2) and current_rise_signal:
                 if current_rise_signal:
-                    self.new_arbitrage_buy_to_limit_signal = True
                     self.logger.log(f'Rising signal (at bottom) detected, we now buy in, current coconut position is {position_product_1}', 'debug')
 
                 # buy product 1, sell product 2: (i.e. buy product1 - product 2)
@@ -922,9 +919,8 @@ class Trader:
                         0,long_term_sell_volume_product_2)
                 
             # sell signal: price is above the threhold and falls lower than the long term average
-            elif(position_product_1 > -position_limit_product_1 and position_product_2 > -position_limit_product_2) and (self.new_arbitrage_sell_to_limit_signal or current_fall_signal):
+            elif(position_product_1 > -position_limit_product_1 and position_product_2 > -position_limit_product_2) and current_fall_signal:
                 if current_fall_signal:
-                    self.new_arbitrage_sell_to_limit_signal = True
                     self.logger.log(f'Falling signal (at top) detected, we now sell out, current coconut position is {position_product_1}', 'debug')
 
                 # buy product 2, sell product 1 (i.e. sell product 1 - product 2)
@@ -946,59 +942,6 @@ class Trader:
                         long_term_sell_price_product_1,0,
                         0,long_term_buy_volume_product_2,
                         long_term_sell_volume_product_1,0)
-            # if we started with long term trade, we need to clear the positions
-            # 1.  when we just started
-            # 2.  when the price diff has gone back to zero.
-            elif (position_product_1!=0 or position_product_2!=0)and\
-                 (not(self.new_arbitrage_buy_to_limit_signal or self.new_arbitrage_sell_to_limit_signal) or self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0):
-                # clear the position
-                if self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0:
-                    self.logger.log(f'We are now clearing the positions from long term trade as price goes to zero, current position of coconut is {position_product_1}','debug')
-                else:
-                    self.logger.log(f'We are now clearing the position from long term as previous price went to zero, current position of coconut is {position_product_1}','debug')
-                self.new_arbitrage_buy_to_limit_signal = False
-                self.new_arbitrage_sell_to_limit_signal = False
-                if position_product_1 > 0 and position_product_2 < 0:
-                    # sell product 1, buy product 2
-                    max_number_buy_lots = min(best_ask_volume_product_2,\
-                                             (-position_product_2))//lot_size_product_2
-
-                    # how many lots of product 1 can I sell from the order book, without breaching position limit
-                    max_number_sell_lots = min(best_bid_volume_product_1,\
-                                            (position_product_1))//lot_size_product_1
-                    
-                    number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
-                    
-                    long_term_buy_volume_product_2 = number_trade_lots * lot_size_product_2
-                    long_term_sell_volume_product_1 = number_trade_lots * lot_size_product_1
-                    long_term_buy_price_product_2 = best_ask_price_product_2
-                    long_term_sell_price_product_1 = best_bid_price_product_1
-
-                    return (0,long_term_buy_price_product_2,
-                            long_term_sell_price_product_1,0,
-                            0,long_term_buy_volume_product_2,
-                            long_term_sell_volume_product_1,0)
-
-                elif position_product_1 < 0 and position_product_2 >0:
-                    # buy product 1, sell product 2
-                    max_number_buy_lots = min(best_ask_volume_product_1,\
-                                             (-position_product_1))// lot_size_product_1
-                        
-                    # how many lots of product 2 can I sell from the order book, without breaching position limit
-                    max_number_sell_lots = min(best_bid_volume_product_2,\
-                                            (position_product_2))//lot_size_product_2
-                    number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
-                    
-                    long_term_buy_volume_product_1 = number_trade_lots * lot_size_product_1
-                    long_term_sell_volume_product_2 = number_trade_lots * lot_size_product_2
-                    long_term_buy_price_product_1 = best_ask_price_product_1
-                    long_term_sell_price_product_2 = best_bid_price_product_2
-
-                    return (long_term_buy_price_product_1,0,
-                            0,long_term_sell_price_product_2,
-                            long_term_buy_volume_product_1,0,
-                            0,long_term_sell_volume_product_2)
-
             else:
                 # Dont't do any trade otherwise
                 return (0,0,0,0,
@@ -1057,6 +1000,53 @@ class Trader:
             
             return (0,0,0,0,
                     0,0,0,0)
+        
+        def clear_position():
+            # clear our position (when we reached a zero point)
+            self.logger.log(f'We are now clearing the positions as price goes to zero, current position of coconut is {position_product_1}','debug')
+            if position_product_1 > 0 and position_product_2 < 0:
+                # sell product 1, buy product 2
+                max_number_buy_lots = min(best_ask_volume_product_2,\
+                                            (-position_product_2))//lot_size_product_2
+
+                # how many lots of product 1 can I sell from the order book, without breaching position limit
+                max_number_sell_lots = min(best_bid_volume_product_1,\
+                                        (position_product_1))//lot_size_product_1
+                
+                number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                
+                long_term_buy_volume_product_2 = number_trade_lots * lot_size_product_2
+                long_term_sell_volume_product_1 = number_trade_lots * lot_size_product_1
+                long_term_buy_price_product_2 = best_ask_price_product_2
+                long_term_sell_price_product_1 = best_bid_price_product_1
+
+                return (0,long_term_buy_price_product_2,
+                        long_term_sell_price_product_1,0,
+                        0,long_term_buy_volume_product_2,
+                        long_term_sell_volume_product_1,0)
+
+            elif position_product_1 < 0 and position_product_2 >0:
+                # buy product 1, sell product 2
+                max_number_buy_lots = min(best_ask_volume_product_1,\
+                                            (-position_product_1))// lot_size_product_1
+                    
+                # how many lots of product 2 can I sell from the order book, without breaching position limit
+                max_number_sell_lots = min(best_bid_volume_product_2,\
+                                        (position_product_2))//lot_size_product_2
+                number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                
+                long_term_buy_volume_product_1 = number_trade_lots * lot_size_product_1
+                long_term_sell_volume_product_2 = number_trade_lots * lot_size_product_2
+                long_term_buy_price_product_1 = best_ask_price_product_1
+                long_term_sell_price_product_2 = best_bid_price_product_2
+
+                return (long_term_buy_price_product_1,0,
+                        0,long_term_sell_price_product_2,
+                        long_term_buy_volume_product_1,0,
+                        0,long_term_sell_volume_product_2)
+            else:
+                return(0,0,0,0,
+                       0,0,0,0)
 
         self.new_arbitrage_short_term_flag_duration_counter -=1 if self.new_arbitrage_short_term_flag_duration_counter >0 else 0
         # if not enough points to tell if we are in short term or long term
@@ -1065,18 +1055,18 @@ class Trader:
             self.new_arbitrage_short_term_flag = True
             self.new_arbitrage_long_term_flag = False
         elif self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0: # switch the flag if it passes through zero
+            # clear out later
+            self.new_arbitrage_clear_flag = True
+            ## Just entered a zero, switch between short/long term
             self.logger.log(f'now we have enough data distinguishing long/short', 'debug')
             # count the number of zeros in the last 50 prices
             number_of_zeros = 0
             for index in range(1,self.new_arbitrage_zero_counter_window.size):
                 if self.new_arbitrage_zero_counter_window.contents[index] * self.new_arbitrage_zero_counter_window.contents[index-1] <= 0:# passed through a zero
                     number_of_zeros += 1
-                    self.logger.log(f'number of zeroes over the last 50 ticks is {number_of_zeros}', 'debug')
-
+            self.logger.log(f'number of zeroes over the last 50 ticks is {number_of_zeros}', 'debug')
             if self.new_arbitrage_short_term_flag_duration_counter>0 or  number_of_zeros >= zero_frequency_threshold:
                 if number_of_zeros >= zero_frequency_threshold: # if we come here because of short term trade signal
-                    self.new_arbitrage_buy_to_limit_signal = False
-                    self.new_arbitrage_sell_to_limit_signal = False
                     self.new_arbitrage_short_term_flag_duration_counter = short_term_flag_duration
                     self.logger.log(f'entering short term trade as number of zeroes is {number_of_zeros}, current coconut position is {position_product_1}', 'debug')
                 else:
@@ -1087,8 +1077,22 @@ class Trader:
                 self.logger.log(f'entering long term trade as number of zeroes is {number_of_zeros}, current coconut position is {position_product_1}', 'debug')
                 self.new_arbitrage_short_term_flag = False
                 self.new_arbitrage_long_term_flag = True
-                
-        if self.new_arbitrage_long_term_flag:
+
+        if self.new_arbitrage_clear_flag:
+            # clear the position when we entered the zero
+            clear_orders = clear_position()
+            if clear_orders == (0,0,0,0,
+                               0,0,0,0):
+                self.new_arbitrage_clear_flag = False
+            (buy_price_product_1,
+            buy_price_product_2,
+            sell_price_product_1,
+            sell_price_product_2,
+            buy_volume_product_1,
+            buy_volume_product_2,
+            sell_volume_product_1,
+            sell_volume_product_2) = clear_orders
+        elif self.new_arbitrage_long_term_flag:
             (buy_price_product_1,
             buy_price_product_2,
             sell_price_product_1,
@@ -1154,7 +1158,8 @@ class Trader:
             if len(short_gear_differences_series) == short_term else np.nan
         exit_tracer = gear_long_term_average_diff - gear_short_term_average_diff
 
-        absolute_threshold = 0.5
+        entrance_absolute_threshold = 0.6
+        exit_absolute_threshold = 0.6
         num_std_entrance = 4
         num_std_exit = 4
 
@@ -1168,7 +1173,7 @@ class Trader:
         # after enough number of entrance_tracer in recorded
         if timestamp > time_span_for_calculating_entrance_tracer*100:
             # 1. condition to buy
-            if (entrance_tracer > num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer > absolute_threshold)\
+            if (entrance_tracer > num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer > entrance_absolute_threshold)\
                     or (self.gear_buy_flag == True and product_position < product_position_limit):  # if there is a new trade signal or a flag
 
                 self.gear_buy_flag = True
@@ -1182,7 +1187,7 @@ class Trader:
                         f'buying because indicator indicates upward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
 
             # 2. condition to sell
-            elif (entrance_tracer < -num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer < -absolute_threshold)\
+            elif (entrance_tracer < -num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer < -entrance_absolute_threshold)\
                     or (self.gear_sell_flag == True and product_position > -product_position_limit):  # if there is a new trade signal or a flag
 
                 self.gear_sell_flag = True
@@ -1200,7 +1205,7 @@ class Trader:
         if timestamp > long_term*100:  # after enough number of gear prices is recorded
             # when big surge ends
             # 1. when a peak ends and starts to drop
-            if exit_tracer > num_std_exit * self.exit_tracer_window.std():
+            if exit_tracer > max(num_std_exit * self.exit_tracer_window.std(), exit_absolute_threshold):
                 self.gear_buy_flag = False
                 clear_volume = product_position
                 if clear_volume != 0 and self.gear_sell_flag == False:
@@ -1211,7 +1216,7 @@ class Trader:
                         f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
 
             # 2. when a big trough ends and starts to increase
-            if exit_tracer < -num_std_exit * self.exit_tracer_window.std():
+            if exit_tracer < -max(num_std_exit * self.exit_tracer_window.std(), exit_absolute_threshold):
                 self.gear_sell_flag = False
                 clear_volume = product_position
                 if clear_volume != 0 and self.gear_buy_flag == False:
