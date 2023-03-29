@@ -11,17 +11,6 @@ class Trader:
 
     def __init__(self) -> None:
 
-        self.products = ["BANANAS",
-            "PEARLS",
-            "COCONUTS",
-            "PINA_COLADAS",
-            'DIVING_GEAR',
-            "BERRIES",
-            "BAGUETTE",
-            "DIP",
-            "UKULELE",
-            "PICNIC_BASKET"]
-
         # {product : negative profit threshold to stop trading}
         self.profit_threshold = {
             "BANANAS": -10000,
@@ -104,6 +93,7 @@ class Trader:
         self.new_arbitrage_sell_to_limit_signal = False
         self.new_arbitrage_short_term_flag = True
         self.new_arbitrage_long_term_flag = False
+        self.new_arbitrage_clear_flag = False
 
         ### PICNIC_BASKET WINDOW ###
         self.difference_between_main_product_and_components_window = Window(50)
@@ -123,49 +113,23 @@ class Trader:
         }
 
         # comment out a category to disable it in the logs
-        self.our_logger = OurLogger(self.logger,
+        self.our_logger = OurLogger(
+            self.logger,
             [
-            "format",
-            "important",
-            "timestamp",
-            "bananas",
-            "position",
-            "profit",
-            "final_profit",
-            "cash",
-            "error",
-            "debug",
-            "mid_price",
-            "orders",
-            "default",
-        ])
-
-        self.traders = ['Peter', 
-                        'Gary', 
-                        'Mitch', 
-                        'Penelope', 
-                        'Omar', 
-                        'Camilla', 
-                        'Caesar', 
-                        'Giulia', 
-                        'Mabel',
-                        'Pablo', 
-                        'Charlie',
-                        'Olivia',
-                        'Orson',
-                        'Casey',
-                        'George',
-                        'Mya',
-                        'Max',
-                        'Paris',
-                        'Gina',
-                        'Olga'
-                        ]
-        self.olivia_buy_flag = False
-        self.olivia_sell_flag = False
-        self.paris_buy_flag = False
-        self.paris_sell_flag = False
-        self.olivia_takeover = False
+                "format",
+                "important",
+                "timestamp",
+                "bananas",
+                "position",
+                "profit",
+                "final_profit",
+                "cash",
+                "error",
+                "debug",
+                "mid_price",
+                "orders",
+                "default",
+            ])
 
     def calculate_cash(self, own_trades: Dict[Symbol, List[Trade]], now) -> None:
         self.our_logger.log([[(trades.timestamp, trades.buyer, trades.seller,
@@ -251,7 +215,7 @@ class Trader:
         if state.timestamp == self.LAST_ROUND:
             self.our_logger.log(f"final profit = {profits}", "final_profit")
 
-        # self.our_logger.log(state.toJSON(), "debug")
+        # self.logger.log(state.toJSON(), "debug")
 
         ### TRADING ALGORITHM ###
 
@@ -360,29 +324,13 @@ class Trader:
                 f"{DIVING_GEAR} stop trading because of profit {profits[DIVING_GEAR]} below {self.profit_threshold[DIVING_GEAR]} OR", "important")
 
         ### BERRIES ###
-        # Key information: OLIVIA
-        ### Other traders ###
-        market_trades = state.market_trades # this returns a a dictionary, with keys being the products and values being lists of trade objects for that product
-        BERRIES = 'BERRIES'
-        OLIVIA = 'Olivia'
-        for trade in market_trades[BERRIES]: 
-            self.our_logger.log(f'the buyer is {trade.buyer}','debug')
-            self.our_logger.log(f'the seller is {trade.seller}','debug')
-            if trade.buyer == OLIVIA:
-                self.olivia_buy_flag = True
-                self.our_logger.log(f'{OLIVIA} buys, triggering {BERRIES} buy flag to {self.olivia_buy_flag}', 'debug')
-            elif trade.seller == OLIVIA:
-                self.olivia_sell_flag = True
-                self.our_logger.log(f'{OLIVIA} sells, triggering {BERRIES} sell flag to {self.olivia_sell_flag}', 'debug')
-
-
         BERRIES = "BERRIES"
         if profits[BERRIES] > self.profit_threshold[BERRIES]:
-            berries_orders = self.mayberry_calc_olivia(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
+            berries_orders = self.mayberry_calc(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
                                                 mid_price=mid_prices[BERRIES],
                                                 best_bid=best_bids[BERRIES], best_ask=best_asks[BERRIES],
-                                                best_bid_volume=abs(state.order_depths[
-                                                    BERRIES].buy_orders[best_bids[BERRIES]]),
+                                                best_bid_volume=state.order_depths[
+                                                    BERRIES].buy_orders[best_bids[BERRIES]],
                                                 best_ask_volume=abs(
                                                     state.order_depths[BERRIES].sell_orders[best_asks[BERRIES]]),
                                                 position_limit=self.position_limits[BERRIES], position=positions[BERRIES])
@@ -393,6 +341,7 @@ class Trader:
         else:
             self.our_logger.log(
                 f"{BERRIES} stop trading because of profit {profits[BERRIES]} below {self.profit_threshold[BERRIES]}", "important")
+
         ### PICNIC BASKETS ###
         PICNIC_BASKET = 'PICNIC_BASKET'
         BAGUETTE = 'BAGUETTE'
@@ -963,141 +912,70 @@ class Trader:
             """
             if detected buy signal --> buy to limit
             if detected sell signal --> sell to limit
-            if position is not zero and (no signal /passed zero) --> clear 
+            if price passes through zero --> clear to zero 
             """
             self.our_logger.log(f"We are still in long term mode", 'debug')
             long_term_average_mid_price = self.new_arbitrage_long_term_mid_diff_prices.avg()\
                 if len(self.new_arbitrage_long_term_mid_diff_prices.contents) == self.new_arbitrage_long_term_mid_diff_prices.size\
                 else np.nan
-            self.our_logger.log(
-                f"Long term Average = {long_term_average_mid_price}", 'debug')
-            self.our_logger.log(
-                f'diff mid price = {diff_normalized_mid_price}', 'debug')
+            self.our_logger.log(f"Long term Average = {long_term_average_mid_price}", 'debug')
+            self.our_logger.log(f'diff mid price = {diff_normalized_mid_price}','debug')
             num_std = 1
 
-            current_rise_signal = (diff_normalized_mid_price < -long_term_profit_threshold) and (
-                self.new_arbitrage_short_term_mid_price_window.upper_lower_bounds(n=num_std)[1] > long_term_average_mid_price)
-            current_fall_signal = (diff_normalized_mid_price > long_term_profit_threshold) and (
-                self.new_arbitrage_short_term_mid_price_window.upper_lower_bounds(n=num_std)[0] < long_term_average_mid_price)
+            current_rise_signal = (diff_normalized_mid_price< -long_term_profit_threshold) and (diff_normalized_mid_price-self.new_arbitrage_short_term_mid_price_window.std() >= long_term_average_mid_price)
+            current_fall_signal = (diff_normalized_mid_price > long_term_profit_threshold) and (diff_normalized_mid_price+self.new_arbitrage_short_term_mid_price_window.std() <= long_term_average_mid_price)
             # buy signal: price is below the threhold and rises higher than the long term average
-            if (position_product_1 < position_limit_product_1 and position_product_2 < position_limit_product_2) and (self.new_arbitrage_buy_to_limit_signal or current_rise_signal):
+            if (position_product_1 < position_limit_product_1 and position_product_2 < position_limit_product_2) and current_rise_signal:
                 if current_rise_signal:
-                    self.new_arbitrage_buy_to_limit_signal = True
-                    self.our_logger.log(
-                        f'Rising signal (at bottom) detected, we now buy in, current coconut position is {position_product_1}', 'debug')
+                    self.our_logger.log(f'Rising signal (at bottom) detected, we now buy in, current coconut position is {position_product_1}', 'debug')
 
                 # buy product 1, sell product 2: (i.e. buy product1 - product 2)
-                max_number_buy_lots = min(best_ask_volume_product_1,
-                                          (position_limit_product_1 - position_product_1)) // lot_size_product_1
-
+                max_number_buy_lots = min(best_ask_volume_product_1,\
+                                         (position_limit_product_1 - position_product_1))// lot_size_product_1
+                    
                 # how many lots of product 2 can I sell from the order book, without breaching position limit
-                max_number_sell_lots = min(best_bid_volume_product_2,
-                                           (position_limit_product_2 + position_product_2))//lot_size_product_2
-                # the number of lots I can trade, this is the smaller of the two
-                number_trade_lots = min(
-                    max_number_buy_lots, max_number_sell_lots)
-
+                max_number_sell_lots = min(best_bid_volume_product_2,\
+                                        (position_limit_product_2 + position_product_2))//lot_size_product_2
+                number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                
                 long_term_buy_volume_product_1 = number_trade_lots * lot_size_product_1
                 long_term_sell_volume_product_2 = number_trade_lots * lot_size_product_2
                 long_term_buy_price_product_1 = best_ask_price_product_1
                 long_term_sell_price_product_2 = best_bid_price_product_2
 
-                return (long_term_buy_price_product_1, 0,
-                        0, long_term_sell_price_product_2,
-                        long_term_buy_volume_product_1, 0,
-                        0, long_term_sell_volume_product_2)
-
+                return (long_term_buy_price_product_1,0,
+                        0,long_term_sell_price_product_2,
+                        long_term_buy_volume_product_1,0,
+                        0,long_term_sell_volume_product_2)
+                
             # sell signal: price is above the threhold and falls lower than the long term average
-            elif (position_product_1 > -position_limit_product_1 and position_product_2 > -position_limit_product_2) and (self.new_arbitrage_sell_to_limit_signal or current_fall_signal):
+            elif(position_product_1 > -position_limit_product_1 and position_product_2 > -position_limit_product_2) and current_fall_signal:
                 if current_fall_signal:
-                    self.new_arbitrage_sell_to_limit_signal = True
-                    self.our_logger.log(
-                        f'Falling signal (at top) detected, we now sell out, current coconut position is {position_product_1}', 'debug')
+                    self.our_logger.log(f'Falling signal (at top) detected, we now sell out, current coconut position is {position_product_1}', 'debug')
 
                 # buy product 2, sell product 1 (i.e. sell product 1 - product 2)
-                max_number_buy_lots = min(best_ask_volume_product_2,
-                                          (position_limit_product_2 - position_product_2))//lot_size_product_2
+                max_number_buy_lots = min(best_ask_volume_product_2,\
+                                         (position_limit_product_2 - position_product_2))//lot_size_product_2
 
                 # how many lots of product 1 can I sell from the order book, without breaching position limit
-                max_number_sell_lots = min(best_bid_volume_product_1,
-                                           (position_limit_product_1 + position_product_1))//lot_size_product_1
-
-                # the number of lots I can trade, this is the smaller of the two
-                number_trade_lots = min(
-                    max_number_buy_lots, max_number_sell_lots)
-
+                max_number_sell_lots = min(best_bid_volume_product_1,\
+                                        (position_limit_product_1 + position_product_1))//lot_size_product_1
+                
+                number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                
                 long_term_buy_volume_product_2 = number_trade_lots * lot_size_product_2
                 long_term_sell_volume_product_1 = number_trade_lots * lot_size_product_1
                 long_term_buy_price_product_2 = best_ask_price_product_2
                 long_term_sell_price_product_1 = best_bid_price_product_1
 
-                return (0, long_term_buy_price_product_2,
-                        long_term_sell_price_product_1, 0,
-                        0, long_term_buy_volume_product_2,
-                        long_term_sell_volume_product_1, 0)
-            # if we started with long term trade, we need to clear the positions
-            # 1.  when we just started
-            # 2.  when the price diff has gone back to zero.
-            elif (position_product_1 != 0 or position_product_2 != 0) and\
-                 (not (self.new_arbitrage_buy_to_limit_signal or self.new_arbitrage_sell_to_limit_signal) or self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0):
-                # clear the position
-                if self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0:
-                    self.our_logger.log(
-                        f'We are now clearing the positions from long term trade as price goes to zero, current position of coconut is {position_product_1}', 'debug')
-                else:
-                    self.our_logger.log(
-                        f'We are now clearing the position from long term as previous price went to zero, current position of coconut is {position_product_1}', 'debug')
-                self.new_arbitrage_buy_to_limit_signal = False
-                self.new_arbitrage_sell_to_limit_signal = False
-                if position_product_1 > 0 and position_product_2 < 0:
-                    # sell product 1, buy product 2
-                    max_number_buy_lots = min(best_ask_volume_product_2,
-                                              (-position_product_2))//lot_size_product_2
-
-                    # how many lots of product 1 can I sell from the order book, without breaching position limit
-                    max_number_sell_lots = min(best_bid_volume_product_1,
-                                               (position_product_1))//lot_size_product_1
-
-                    # the number of lots I can trade, this is the smaller of the two
-                    number_trade_lots = min(
-                        max_number_buy_lots, max_number_sell_lots)
-
-                    long_term_buy_volume_product_2 = number_trade_lots * lot_size_product_2
-                    long_term_sell_volume_product_1 = number_trade_lots * lot_size_product_1
-                    long_term_buy_price_product_2 = best_ask_price_product_2
-                    long_term_sell_price_product_1 = best_bid_price_product_1
-
-                    return (0, long_term_buy_price_product_2,
-                            long_term_sell_price_product_1, 0,
-                            0, long_term_buy_volume_product_2,
-                            long_term_sell_volume_product_1, 0)
-
-                elif position_product_1 < 0 and position_product_2 > 0:
-                    # buy product 1, sell product 2
-                    max_number_buy_lots = min(best_ask_volume_product_1,
-                                              (-position_product_1)) // lot_size_product_1
-
-                    # how many lots of product 2 can I sell from the order book, without breaching position limit
-                    max_number_sell_lots = min(best_bid_volume_product_2,
-                                               (position_product_2))//lot_size_product_2
-                    # the number of lots I can trade, this is the smaller of the two
-                    number_trade_lots = min(
-                        max_number_buy_lots, max_number_sell_lots)
-
-                    long_term_buy_volume_product_1 = number_trade_lots * lot_size_product_1
-                    long_term_sell_volume_product_2 = number_trade_lots * lot_size_product_2
-                    long_term_buy_price_product_1 = best_ask_price_product_1
-                    long_term_sell_price_product_2 = best_bid_price_product_2
-
-                    return (long_term_buy_price_product_1, 0,
-                            0, long_term_sell_price_product_2,
-                            long_term_buy_volume_product_1, 0,
-                            0, long_term_sell_volume_product_2)
-
+                return (0,long_term_buy_price_product_2,
+                        long_term_sell_price_product_1,0,
+                        0,long_term_buy_volume_product_2,
+                        long_term_sell_volume_product_1,0)
             else:
                 # Dont't do any trade otherwise
-                return (0, 0, 0, 0,
-                        0, 0, 0, 0)
+                return (0,0,0,0,
+                        0,0,0,0)
 
         def short_term_trade():
             self.our_logger.log(f"btw, we are in short term mode", 'debug')
@@ -1108,131 +986,176 @@ class Trader:
                 # buy in product 2, sell product 1
                 if best_bid_price_product_1 * lot_size_product_1 - best_ask_price_product_2 * lot_size_product_2 > big_diff:
                     # how many lots of product 2 can I buy from the order book, without breaching position limit
-                    max_number_buy_lots = min(best_ask_volume_product_2,
-                                              (position_limit_product_2 - position_product_2))//lot_size_product_2
+                    max_number_buy_lots = min(best_ask_volume_product_2,\
+                                            (position_limit_product_2 - position_product_2))//lot_size_product_2
 
                     # how many lots of product 1 can I sell from the order book, without breaching position limit
-                    max_number_sell_lots = min(best_bid_volume_product_1,
-                                               (position_limit_product_1 + position_product_1))//lot_size_product_1
-
-                    # the number of lots I can trade, this is the smaller of the two
-                    number_trade_lots = min(
-                        max_number_buy_lots, max_number_sell_lots)
-
+                    max_number_sell_lots = min(best_bid_volume_product_1,\
+                                            (position_limit_product_1 + position_product_1))//lot_size_product_1
+                    
+                    number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                    
                     short_term_buy_volume_product_2 = number_trade_lots * lot_size_product_2
                     short_term_sell_volume_product_1 = number_trade_lots * lot_size_product_1
                     short_term_buy_price_product_2 = best_ask_price_product_2
                     short_term_sell_price_product_1 = best_bid_price_product_1
 
-                    return (0, short_term_buy_price_product_2,
-                            short_term_sell_price_product_1, 0,
-                            0, short_term_buy_volume_product_2,
-                            short_term_sell_volume_product_1, 0)
-
+                    return (0,short_term_buy_price_product_2,
+                            short_term_sell_price_product_1,0,
+                            0,short_term_buy_volume_product_2,
+                            short_term_sell_volume_product_1,0)
+        
             # if normalized product 1 is cheaper than prodcut 2
             if best_bid_price_product_2 * product_1_over_product_2_value_ratio > best_ask_price_product_1:
                 # buy in product 1, sell product 2
                 if best_bid_price_product_2 * lot_size_product_2 - best_ask_price_product_1 * lot_size_product_1 > big_diff:
                     # how many lots of product 1 can I buy from the order book, without breaching position limit
-                    max_number_buy_lots = min(best_ask_volume_product_1,
-                                              (position_limit_product_1 - position_product_1)) // lot_size_product_1
-
+                    max_number_buy_lots = min(best_ask_volume_product_1,\
+                                            (position_limit_product_1 - position_product_1))// lot_size_product_1
+                    
                     # how many lots of product 2 can I sell from the order book, without breaching position limit
-                    max_number_sell_lots = min(best_bid_volume_product_2,
-                                               (position_limit_product_2 + position_product_2))//lot_size_product_2
-                    # the number of lots I can trade, this is the smaller of the two
-                    number_trade_lots = min(
-                        max_number_buy_lots, max_number_sell_lots)
-
+                    max_number_sell_lots = min(best_bid_volume_product_2,\
+                                            (position_limit_product_2 + position_product_2))//lot_size_product_2
+                    number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                    
                     short_term_buy_volume_product_1 = number_trade_lots * lot_size_product_1
                     short_term_sell_volume_product_2 = number_trade_lots * lot_size_product_2
                     short_term_buy_price_product_1 = best_ask_price_product_1
                     short_term_sell_price_product_2 = best_bid_price_product_2
 
-                    return (short_term_buy_price_product_1, 0,
-                            0, short_term_sell_price_product_2,
-                            short_term_buy_volume_product_1, 0,
-                            0, short_term_sell_volume_product_2)
+                    return (short_term_buy_price_product_1,0,
+                            0,short_term_sell_price_product_2,
+                            short_term_buy_volume_product_1,0,
+                            0,short_term_sell_volume_product_2)
+            
+            return (0,0,0,0,
+                    0,0,0,0)
+        
+        def clear_position():
+            # clear our position (when we reached a zero point)
+            self.our_logger.log(f'We are now clearing the positions as price goes to zero, current position of coconut is {position_product_1}','debug')
+            if position_product_1 > 0 and position_product_2 < 0:
+                # sell product 1, buy product 2
+                max_number_buy_lots = min(best_ask_volume_product_2,\
+                                            (-position_product_2))//lot_size_product_2
 
-            return (0, 0, 0, 0,
-                    0, 0, 0, 0)
+                # how many lots of product 1 can I sell from the order book, without breaching position limit
+                max_number_sell_lots = min(best_bid_volume_product_1,\
+                                        (position_product_1))//lot_size_product_1
+                
+                number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                
+                long_term_buy_volume_product_2 = number_trade_lots * lot_size_product_2
+                long_term_sell_volume_product_1 = number_trade_lots * lot_size_product_1
+                long_term_buy_price_product_2 = best_ask_price_product_2
+                long_term_sell_price_product_1 = best_bid_price_product_1
 
-        self.new_arbitrage_short_term_flag_duration_counter -= 1 if self.new_arbitrage_short_term_flag_duration_counter > 0 else 0
+                return (0,long_term_buy_price_product_2,
+                        long_term_sell_price_product_1,0,
+                        0,long_term_buy_volume_product_2,
+                        long_term_sell_volume_product_1,0)
+
+            elif position_product_1 < 0 and position_product_2 >0:
+                # buy product 1, sell product 2
+                max_number_buy_lots = min(best_ask_volume_product_1,\
+                                            (-position_product_1))// lot_size_product_1
+                    
+                # how many lots of product 2 can I sell from the order book, without breaching position limit
+                max_number_sell_lots = min(best_bid_volume_product_2,\
+                                        (position_product_2))//lot_size_product_2
+                number_trade_lots = min(max_number_buy_lots, max_number_sell_lots) # the number of lots I can trade, this is the smaller of the two
+                
+                long_term_buy_volume_product_1 = number_trade_lots * lot_size_product_1
+                long_term_sell_volume_product_2 = number_trade_lots * lot_size_product_2
+                long_term_buy_price_product_1 = best_ask_price_product_1
+                long_term_sell_price_product_2 = best_bid_price_product_2
+
+                return (long_term_buy_price_product_1,0,
+                        0,long_term_sell_price_product_2,
+                        long_term_buy_volume_product_1,0,
+                        0,long_term_sell_volume_product_2)
+            else:
+                return(0,0,0,0,
+                       0,0,0,0)
+
+        self.new_arbitrage_short_term_flag_duration_counter -=1 if self.new_arbitrage_short_term_flag_duration_counter >0 else 0
         # if not enough points to tell if we are in short term or long term
         if timestamp <= self.new_arbitrage_zero_counter_window.size*100:
-            self.our_logger.log(
-                f'enter short term trade because not enough 0 counter with size of zero counter: {len(self.new_arbitrage_zero_counter_window.contents)}', 'debug')
+            self.our_logger.log(f'enter short term trade because not enough 0 counter with size of zero counter: {len(self.new_arbitrage_zero_counter_window.contents)}', 'debug')
             self.new_arbitrage_short_term_flag = True
             self.new_arbitrage_long_term_flag = False
-        # switch the flag if it passes through zero
-        elif self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0:
-            self.our_logger.log(
-                f'now we have enough data distinguishing long/short', 'debug')
+        elif self.new_arbitrage_zero_counter_window.contents[-1] * self.new_arbitrage_zero_counter_window.contents[-2] <= 0: # switch the flag if it passes through zero
+            # clear out later
+            self.new_arbitrage_clear_flag = True
+            ## Just entered a zero, switch between short/long term
+            self.our_logger.log(f'now we have enough data distinguishing long/short', 'debug')
             # count the number of zeros in the last 50 prices
             number_of_zeros = 0
-            for index in range(1, self.new_arbitrage_zero_counter_window.size):
-                # passed through a zero
-                if self.new_arbitrage_zero_counter_window.contents[index] * self.new_arbitrage_zero_counter_window.contents[index-1] <= 0:
+            for index in range(1,self.new_arbitrage_zero_counter_window.size):
+                if self.new_arbitrage_zero_counter_window.contents[index] * self.new_arbitrage_zero_counter_window.contents[index-1] <= 0:# passed through a zero
                     number_of_zeros += 1
-                    self.our_logger.log(
-                        f'number of zeroes over the last 50 ticks is {number_of_zeros}', 'debug')
-
-            if self.new_arbitrage_short_term_flag_duration_counter > 0 or number_of_zeros >= zero_frequency_threshold:
-                if number_of_zeros >= zero_frequency_threshold:  # if we come here because of short term trade signal
-                    self.new_arbitrage_buy_to_limit_signal = False
-                    self.new_arbitrage_sell_to_limit_signal = False
+            self.our_logger.log(f'number of zeroes over the last 50 ticks is {number_of_zeros}', 'debug')
+            if self.new_arbitrage_short_term_flag_duration_counter>0 or  number_of_zeros >= zero_frequency_threshold:
+                if number_of_zeros >= zero_frequency_threshold: # if we come here because of short term trade signal
                     self.new_arbitrage_short_term_flag_duration_counter = short_term_flag_duration
-                    self.our_logger.log(
-                        f'entering short term trade as number of zeroes is {number_of_zeros}, current coconut position is {position_product_1}', 'debug')
+                    self.our_logger.log(f'entering short term trade as number of zeroes is {number_of_zeros}, current coconut position is {position_product_1}', 'debug')
                 else:
-                    self.our_logger.log(
-                        f'We are in short term mode because there was a trigger within 200 ticks', 'debug')
+                    self.our_logger.log(f'We are in short term mode because there was a trigger within 200 ticks','debug')
                 self.new_arbitrage_short_term_flag = True
                 self.new_arbitrage_long_term_flag = False
             else:
-                self.our_logger.log(
-                    f'entering long term trade as number of zeroes is {number_of_zeros}, current coconut position is {position_product_1}', 'debug')
+                self.our_logger.log(f'entering long term trade as number of zeroes is {number_of_zeros}, current coconut position is {position_product_1}', 'debug')
                 self.new_arbitrage_short_term_flag = False
                 self.new_arbitrage_long_term_flag = True
 
-        if self.new_arbitrage_long_term_flag:
+        if self.new_arbitrage_clear_flag:
+            # clear the position when we entered the zero
+            clear_orders = clear_position()
+            if clear_orders == (0,0,0,0,
+                               0,0,0,0):
+                self.new_arbitrage_clear_flag = False
             (buy_price_product_1,
-             buy_price_product_2,
-             sell_price_product_1,
-             sell_price_product_2,
-             buy_volume_product_1,
-             buy_volume_product_2,
-             sell_volume_product_1,
-             sell_volume_product_2) = long_term_trade()
+            buy_price_product_2,
+            sell_price_product_1,
+            sell_price_product_2,
+            buy_volume_product_1,
+            buy_volume_product_2,
+            sell_volume_product_1,
+            sell_volume_product_2) = clear_orders
+        elif self.new_arbitrage_long_term_flag:
+            (buy_price_product_1,
+            buy_price_product_2,
+            sell_price_product_1,
+            sell_price_product_2,
+            buy_volume_product_1,
+            buy_volume_product_2,
+            sell_volume_product_1,
+            sell_volume_product_2) = long_term_trade()
         elif self.new_arbitrage_short_term_flag:
             (buy_price_product_1,
-             buy_price_product_2,
-             sell_price_product_1,
-             sell_price_product_2,
-             buy_volume_product_1,
-             buy_volume_product_2,
-             sell_volume_product_1,
-             sell_volume_product_2) = short_term_trade()
+            buy_price_product_2,
+            sell_price_product_1,
+            sell_price_product_2,
+            buy_volume_product_1,
+            buy_volume_product_2,
+            sell_volume_product_1,
+            sell_volume_product_2) = short_term_trade()
         else:
-            self.our_logger.log(
-                'There is not a valid flag to tell long term / short term, most likely because of lamda reset', 'important')
+            self.our_logger.log('There is not a valid flag to tell long term / short term, most likely because of lamda reset','important')
 
         # Send orders
-        if sell_volume_product_1 != 0 and buy_volume_product_2 != 0:
+        if sell_volume_product_1!=0 and buy_volume_product_2!=0:
             # if we can sell product 1 and buy product 2
             # N.B. I assumed all the volumes given are positive
-            product_1_orders.append(
-                Order(product_1, sell_price_product_1, -sell_volume_product_1))
-            product_2_orders.append(
-                Order(product_2, buy_price_product_2, buy_volume_product_2))
+            product_1_orders.append(Order(product_1, sell_price_product_1, -sell_volume_product_1))
+            product_2_orders.append(Order(product_2, buy_price_product_2, buy_volume_product_2))
 
-        if sell_volume_product_2 != 0 and buy_volume_product_1 != 0:
+        if sell_volume_product_2!=0 and buy_volume_product_1!=0:
             # if we can sell product 2 and buy product 1
-            product_2_orders.append(
-                Order(product_2, sell_price_product_2, -sell_volume_product_2))
-            product_1_orders.append(
-                Order(product_1, buy_price_product_1, buy_volume_product_1))
-        return (product_1_orders, product_2_orders)
+            product_2_orders.append(Order(product_2, sell_price_product_2, -sell_volume_product_2))
+            product_1_orders.append(Order(product_1, buy_price_product_1, buy_volume_product_1))
+        return (product_1_orders,product_2_orders)
+
 
     def indicator_trade(self, timestamp, product, indicator_mid_price,
                         best_bid_price, best_bid_volume, best_ask_price,
@@ -1266,7 +1189,8 @@ class Trader:
             if len(short_gear_differences_series) == short_term else np.nan
         exit_tracer = gear_long_term_average_diff - gear_short_term_average_diff
 
-        absolute_threshold = 0.5
+        entrance_absolute_threshold = 0.6
+        exit_absolute_threshold = 0.6
         num_std_entrance = 4
         num_std_exit = 4
 
@@ -1280,7 +1204,7 @@ class Trader:
         # after enough number of entrance_tracer in recorded
         if timestamp > time_span_for_calculating_entrance_tracer*100:
             # 1. condition to buy
-            if (entrance_tracer > num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer > absolute_threshold)\
+            if (entrance_tracer > num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer > entrance_absolute_threshold)\
                     or (self.gear_buy_flag == True and product_position < product_position_limit):  # if there is a new trade signal or a flag
 
                 self.gear_buy_flag = True
@@ -1294,7 +1218,7 @@ class Trader:
                         f'buying because indicator indicates upward surge, with indicator value: {entrance_tracer} at timestamp: {timestamp}, with standard deviation {self.entrance_tracer_window.std()}', 'debug')
 
             # 2. condition to sell
-            elif (entrance_tracer < -num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer < -absolute_threshold)\
+            elif (entrance_tracer < -num_std_entrance * self.entrance_tracer_window.std() and entrance_tracer < -entrance_absolute_threshold)\
                     or (self.gear_sell_flag == True and product_position > -product_position_limit):  # if there is a new trade signal or a flag
 
                 self.gear_sell_flag = True
@@ -1312,7 +1236,7 @@ class Trader:
         if timestamp > long_term*100:  # after enough number of gear prices is recorded
             # when big surge ends
             # 1. when a peak ends and starts to drop
-            if exit_tracer > num_std_exit * self.exit_tracer_window.std():
+            if exit_tracer > max(num_std_exit * self.exit_tracer_window.std(), exit_absolute_threshold):
                 self.gear_buy_flag = False
                 clear_volume = product_position
                 if clear_volume != 0 and self.gear_sell_flag == False:
@@ -1323,7 +1247,7 @@ class Trader:
                         f'clearing as plateau reached, with exit tracer value: {exit_tracer} at timestamp: {timestamp}, with standard deviation {self.exit_tracer_window.std()}', 'debug')
 
             # 2. when a big trough ends and starts to increase
-            if exit_tracer < -num_std_exit * self.exit_tracer_window.std():
+            if exit_tracer < -max(num_std_exit * self.exit_tracer_window.std(), exit_absolute_threshold):
                 self.gear_sell_flag = False
                 clear_volume = product_position
                 if clear_volume != 0 and self.gear_buy_flag == False:
@@ -1382,57 +1306,6 @@ class Trader:
                     position_limit-position, best_ask_volume)))
 
         return orders
-    def mayberry_calc_olivia(self, timestamp, product: Product, window,
-                      mid_price,
-                      best_bid, best_ask,
-                      best_bid_volume, best_ask_volume,
-                      position_limit, position):
-        
-        orders = []
-        PLATEAU_START = 3500 * 100
-        UPWARD_START = 4500 * 100
-        # DOWNWARD_START = 7000 * 100
-        # renbuliaole_threshold = 20
-
-        long_term_average_price = window.avg()
-
-
-        # determine when we can sit back and wait
-        if position == position_limit and self.olivia_buy_flag == True:
-            self.olivia_buy_flag = False
-            self.our_logger.log(f'we can stop buying now, setting olivia buy flag to {self.olivia_buy_flag} and sit back for the next time olivia sells', 'debug')
-
-        elif position == -position_limit and self.olivia_sell_flag == True:
-            self.olivia_sell_flag = False
-            self.our_logger.log(f'we can stop selling now, setting olivia sell flag to {self.olivia_sell_flag} and sit back for the next time olivia buys', 'debug')
-
-        # three action scenarios
-        if (timestamp >= PLATEAU_START) and (timestamp < UPWARD_START) and self.olivia_takeover == False:
-            if mid_price > long_term_average_price and not self.start_done:
-                # buy to limit
-                if position == position_limit:
-                    self.start_done = True
-                self.our_logger.log("BERRIES decide to buy to limit", "debug")
-                orders.append(Order(product, best_ask, min(
-                    position_limit-position, best_ask_volume)))
-        
-        if self.olivia_sell_flag:
-            # sell to limit
-            self.our_logger.log(f"BERRIES decide to sell to limit because olivia sell flag is {self.olivia_sell_flag}", "debug")
-            orders.append(Order(product, best_bid, -
-                            min(best_bid_volume, position+position_limit)))
-            self.olivia_takeover = True
-        
-        if self.olivia_buy_flag:
-            # buy to limit
-            self.our_logger.log(f"BERRIES decide to sell to limit because olivia sell flag is {self.olivia_buy_flag}", "debug")
-            orders.append(Order(product, best_ask, min(
-                    position_limit-position, best_ask_volume)))
-            self.olivia_takeover = True
-            
-        
-        return orders
-
 
     def difference_mean_reversion(self, timestamp, components: list, main_product_to_components_ratios: dict,
                                   components_best_bid_prices: dict, components_best_ask_prices: dict, components_best_bid_volumes: dict,
@@ -1493,195 +1366,123 @@ class Trader:
 
             # we must do the opposite to the components
             component_1_buy_price = components_best_ask_prices[component_1]
-            component_1_max_buy_volume_normalized = min(components_best_ask_volumes[component_1_buy_price], components_position_limits[
-                                                        component_1] - components_positions[component_1])//main_product_to_components_ratios[component_1]
+            component_1_max_buy_volume_normalized = min(components_best_ask_volumes[component_1_buy_price], components_position_limits[component_1] - components_positions[component_1])//main_product_to_components_ratios[component_1]
             component_2_buy_price = components_best_ask_prices[component_2]
-            component_2_max_buy_volume_normalized = min(components_best_ask_volumes[component_2_buy_price], components_position_limits[
-                                                        component_2] - components_positions[component_2])//main_product_to_components_ratios[component_2]
+            component_2_max_buy_volume_normalized = min(components_best_ask_volumes[component_2_buy_price], components_position_limits[component_2] - components_positions[component_2])//main_product_to_components_ratios[component_2]
             component_3_buy_price = components_best_ask_prices[component_3]
-            component_3_max_buy_volume_normalized = min(components_best_ask_volumes[component_3_buy_price], components_position_limits[
-                                                        component_3] - components_positions[component_3])//main_product_to_components_ratios[component_3]
-
-            normalized_min_volume = min([main_product_max_sell_volume, component_1_max_buy_volume_normalized,
-                                        component_2_max_buy_volume_normalized, component_3_max_buy_volume_normalized])
+            component_3_max_buy_volume_normalized = min(components_best_ask_volumes[component_3_buy_price], components_position_limits[component_3] - components_positions[component_3])//main_product_to_components_ratios[component_3]
+            
+            normalized_min_volume = min([main_product_max_sell_volume, component_1_max_buy_volume_normalized, component_2_max_buy_volume_normalized, component_3_max_buy_volume_normalized])
             main_product_sell_volume = normalized_min_volume
-            component_1_buy_volume = normalized_min_volume * \
-                main_product_to_components_ratios[component_1]
-            component_2_buy_volume = normalized_min_volume * \
-                main_product_to_components_ratios[component_2]
-            component_3_buy_volume = normalized_min_volume * \
-                main_product_to_components_ratios[component_3]
+            component_1_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_1]
+            component_2_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
+            component_3_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
-            self.our_logger.log(
-                f'the selling volume is {main_product_sell_volume}, and the buying volumes are {component_1_buy_volume, component_2_buy_volume, component_3_buy_volume}', 'debug')
+            self.our_logger.log(f'the selling volume is {main_product_sell_volume}, and the buying volumes are {component_1_buy_volume, component_2_buy_volume, component_3_buy_volume}', 'debug')
 
             if normalized_min_volume != 0:
-                main_product_orders.append(
-                    Order(main_product, main_product_sell_price, -main_product_sell_volume))
-                component_1_orders.append(
-                    Order(component_1, component_1_buy_price, component_1_buy_volume))
-                component_2_orders.append(
-                    Order(component_2, component_2_buy_price, component_2_buy_volume))
-                component_3_orders.append(
-                    Order(component_3, component_3_buy_price, component_3_buy_volume))
-
+                main_product_orders.append(Order(main_product, main_product_sell_price, -main_product_sell_volume))
+                component_1_orders.append(Order(component_1, component_1_buy_price, component_1_buy_volume))
+                component_2_orders.append(Order(component_2, component_2_buy_price, component_2_buy_volume))
+                component_3_orders.append(Order(component_3, component_3_buy_price, component_3_buy_volume))
+    
         elif current_difference + num_std * constant_differences_sigma < constant_differences_mean:
             # we consider this to be a low point and hence we buy PICNIC_BASKET and sell EQUAL WORTH of COMPONENTS
-            self.our_logger.log(
-                f'buying main product because {current_difference} is much less than {constant_differences_mean}', 'debug')
+            self.our_logger.log(f'buying main product because {current_difference} is much less than {constant_differences_mean}', 'debug')
             main_product_buy_price = main_product_best_ask_price
-            main_product_max_buy_volume = min(
-                main_product_best_ask_volume, main_product_position_limit - main_product_position)
-
+            main_product_max_buy_volume = min(main_product_best_ask_volume, main_product_position_limit - main_product_position)
+            
             # we must do the opposite to the component
             component_1_sell_price = components_best_bid_prices[component_1]
-            component_1_max_sell_volume_normalized = min(components_best_bid_volumes[component_1_sell_price], components_position_limits[
-                                                         component_1] + components_positions[component_1])//main_product_to_components_ratios[component_1]
+            component_1_max_sell_volume_normalized = min(components_best_bid_volumes[component_1_sell_price], components_position_limits[component_1] + components_positions[component_1])//main_product_to_components_ratios[component_1]
             component_2_sell_price = components_best_bid_prices[component_2]
-            component_2_max_sell_volume_normalized = min(components_best_bid_volumes[component_2_sell_price], components_position_limits[
-                                                         component_2] + components_positions[component_2])//main_product_to_components_ratios[component_2]
+            component_2_max_sell_volume_normalized = min(components_best_bid_volumes[component_2_sell_price], components_position_limits[component_2] + components_positions[component_2])//main_product_to_components_ratios[component_2]
             component_3_sell_price = components_best_bid_prices[component_3]
-            component_3_max_sell_volume_normalized = min(components_best_bid_volumes[component_3_sell_price], components_position_limits[
-                                                         component_3] + components_positions[component_3])//main_product_to_components_ratios[component_3]
-
-            normalized_min_volume = min([main_product_max_buy_volume, component_1_max_sell_volume_normalized,
-                                        component_2_max_sell_volume_normalized, component_3_max_sell_volume_normalized])
+            component_3_max_sell_volume_normalized = min(components_best_bid_volumes[component_3_sell_price], components_position_limits[component_3] + components_positions[component_3])//main_product_to_components_ratios[component_3]
+            
+            normalized_min_volume = min([main_product_max_buy_volume, component_1_max_sell_volume_normalized, component_2_max_sell_volume_normalized, component_3_max_sell_volume_normalized])
             main_product_buy_volume = normalized_min_volume
-            component_1_sell_volume = normalized_min_volume * \
-                main_product_to_components_ratios[component_1]
-            component_2_sell_volume = normalized_min_volume * \
-                main_product_to_components_ratios[component_2]
-            component_3_sell_volume = normalized_min_volume * \
-                main_product_to_components_ratios[component_3]
+            component_1_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_1]
+            component_2_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
+            component_3_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
-            self.our_logger.log(
-                f'the buying volume is {main_product_buy_volume}, and the selling volumes are {component_1_sell_volume, component_2_sell_volume, component_3_sell_volume}', 'debug')
+
+            self.our_logger.log(f'the buying volume is {main_product_buy_volume}, and the selling volumes are {component_1_sell_volume, component_2_sell_volume, component_3_sell_volume}', 'debug')
             if normalized_min_volume != 0:
-                main_product_orders.append(
-                    Order(main_product, main_product_buy_price, main_product_buy_volume))
-                component_1_orders.append(
-                    Order(component_1, component_1_sell_price, -component_1_sell_volume))
-                component_2_orders.append(
-                    Order(component_2, component_2_sell_price, -component_2_sell_volume))
-                component_3_orders.append(
-                    Order(component_3, component_3_sell_price, -component_3_sell_volume))
+                main_product_orders.append(Order(main_product, main_product_buy_price, main_product_buy_volume))
+                component_1_orders.append(Order(component_1, component_1_sell_price, -component_1_sell_volume))
+                component_2_orders.append(Order(component_2, component_2_sell_price, -component_2_sell_volume))
+                component_3_orders.append(Order(component_3, component_3_sell_price, -component_3_sell_volume))
 
         # clearing
         clearing_threshold = 10
-        if ((abs(current_difference - constant_differences_mean) < clearing_threshold) and (main_product_position != 0)) or (self.clearing_flag == True):
-            self.our_logger.log(
-                f'clearing main product because current difference {current_difference} returned to constant difference mean {constant_differences_mean}', 'debug')
-
+        if ((abs(current_difference - constant_differences_mean) < clearing_threshold) and (main_product_position != 0 )) or (self.clearing_flag == True):
+            self.our_logger.log(f'clearing main product because current difference {current_difference} returned to constant difference mean {constant_differences_mean}', 'debug')
+            
             if main_product_position > 0:
                 # we wish to sell the main product and buy the components to return to the 0 position
-                self.our_logger.log(
-                    f'selling main product because current position {main_product_position} is positive full', 'debug')
+                self.our_logger.log(f'selling main product because current position {main_product_position} is positive full', 'debug')
                 main_product_sell_price = main_product_best_bid_price
-                main_product_max_sell_volume = min(
-                    abs(main_product_position), main_product_best_bid_volume)
-
+                main_product_max_sell_volume = min(abs(main_product_position), main_product_best_bid_volume)
+                
                 # we must do the opposite to the components
                 component_1_buy_price = components_best_ask_prices[component_1]
-                component_1_max_buy_volume_normalized = min(abs(
-                    components_positions[component_1]), components_best_ask_volumes[component_1_buy_price])//main_product_to_components_ratios[component_1]
+                component_1_max_buy_volume_normalized = min(abs(components_positions[component_1]), components_best_ask_volumes[component_1_buy_price])//main_product_to_components_ratios[component_1]
                 component_2_buy_price = components_best_ask_prices[component_2]
-                component_2_max_buy_volume_normalized = min(abs(
-                    components_positions[component_2]), components_best_ask_volumes[component_2_buy_price])//main_product_to_components_ratios[component_2]
+                component_2_max_buy_volume_normalized = min(abs(components_positions[component_2]), components_best_ask_volumes[component_2_buy_price])//main_product_to_components_ratios[component_2]
                 component_3_buy_price = components_best_ask_prices[component_3]
-                component_3_max_buy_volume_normalized = min(abs(
-                    components_positions[component_3]), components_best_ask_volumes[component_3_buy_price])//main_product_to_components_ratios[component_3]
-
-                normalized_min_volume = min([main_product_max_sell_volume, component_1_max_buy_volume_normalized,
-                                            component_2_max_buy_volume_normalized, component_3_max_buy_volume_normalized])
+                component_3_max_buy_volume_normalized = min(abs(components_positions[component_3]), components_best_ask_volumes[component_3_buy_price])//main_product_to_components_ratios[component_3]
+                
+                normalized_min_volume = min([main_product_max_sell_volume, component_1_max_buy_volume_normalized, component_2_max_buy_volume_normalized, component_3_max_buy_volume_normalized])
                 main_product_sell_volume = normalized_min_volume
-                component_1_buy_volume = normalized_min_volume * \
-                    main_product_to_components_ratios[component_1]
-                component_2_buy_volume = normalized_min_volume * \
-                    main_product_to_components_ratios[component_2]
-                component_3_buy_volume = normalized_min_volume * \
-                    main_product_to_components_ratios[component_3]
+                component_1_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_1]
+                component_2_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
+                component_3_buy_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
-                self.our_logger.log(
-                    f'the selling volume is {main_product_sell_volume}, and the buying volumes are {[component_1_buy_volume, component_2_buy_volume, component_3_buy_volume]}', 'debug')
+                self.our_logger.log(f'the selling volume is {main_product_sell_volume}, and the buying volumes are {[component_1_buy_volume, component_2_buy_volume, component_3_buy_volume]}', 'debug')
 
                 if normalized_min_volume != 0:
-                    main_product_orders.append(
-                        Order(main_product, main_product_sell_price, -main_product_sell_volume))
-                    component_1_orders.append(
-                        Order(component_1, component_1_buy_price, component_1_buy_volume))
-                    component_2_orders.append(
-                        Order(component_2, component_2_buy_price, component_2_buy_volume))
-                    component_3_orders.append(
-                        Order(component_3, component_3_buy_price, component_3_buy_volume))
-
+                    main_product_orders.append(Order(main_product, main_product_sell_price, -main_product_sell_volume))
+                    component_1_orders.append(Order(component_1, component_1_buy_price, component_1_buy_volume))
+                    component_2_orders.append(Order(component_2, component_2_buy_price, component_2_buy_volume))
+                    component_3_orders.append(Order(component_3, component_3_buy_price, component_3_buy_volume))
+            
             if main_product_position < 0:
                 # we wish to buy the main product and sell the components to return to the 0 position
-                self.our_logger.log(
-                    f'buying main product because current position {main_product_position} is negative full', 'debug')
+                self.our_logger.log(f'buying main product because current position {main_product_position} is negative full', 'debug')
                 main_product_buy_price = main_product_best_ask_price
-                main_product_max_buy_volume = min(
-                    abs(main_product_position), main_product_best_ask_volume)
-
+                main_product_max_buy_volume =  min(abs(main_product_position), main_product_best_ask_volume)
+                
                 # we must do the opposite to the components
                 component_1_sell_price = components_best_bid_prices[component_1]
-                component_1_max_sell_volume_normalized = min(abs(
-                    components_positions[component_1]), components_best_bid_volumes[component_1_sell_price])//main_product_to_components_ratios[component_1]
+                component_1_max_sell_volume_normalized = min(abs(components_positions[component_1]), components_best_bid_volumes[component_1_sell_price])//main_product_to_components_ratios[component_1]
                 component_2_sell_price = components_best_bid_prices[component_2]
-                component_2_max_sell_volume_normalized = min(abs(
-                    components_positions[component_2]), components_best_bid_volumes[component_2_sell_price])//main_product_to_components_ratios[component_2]
+                component_2_max_sell_volume_normalized = min(abs(components_positions[component_2]), components_best_bid_volumes[component_2_sell_price])//main_product_to_components_ratios[component_2]
                 component_3_sell_price = components_best_bid_prices[component_3]
-                component_3_max_sell_volume_normalized = min(abs(
-                    components_positions[component_3]), components_best_bid_volumes[component_3_sell_price])//main_product_to_components_ratios[component_3]
-
-                normalized_min_volume = min([main_product_max_buy_volume, component_1_max_sell_volume_normalized,
-                                            component_2_max_sell_volume_normalized, component_3_max_sell_volume_normalized])
+                component_3_max_sell_volume_normalized = min(abs(components_positions[component_3]), components_best_bid_volumes[component_3_sell_price])//main_product_to_components_ratios[component_3]
+                
+                normalized_min_volume = min([main_product_max_buy_volume, component_1_max_sell_volume_normalized, component_2_max_sell_volume_normalized, component_3_max_sell_volume_normalized])
                 main_product_buy_volume = normalized_min_volume
-                component_1_sell_volume = normalized_min_volume * \
-                    main_product_to_components_ratios[component_1]
-                component_2_sell_volume = normalized_min_volume * \
-                    main_product_to_components_ratios[component_2]
-                component_3_sell_volume = normalized_min_volume * \
-                    main_product_to_components_ratios[component_3]
+                component_1_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_1]
+                component_2_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_2]
+                component_3_sell_volume = normalized_min_volume * main_product_to_components_ratios[component_3]
 
-                self.our_logger.log(
-                    f'the selling volume is {main_product_buy_volume}, and the buying volumes are {[component_1_sell_volume, component_2_sell_volume, component_3_sell_volume]}', 'debug')
+                self.our_logger.log(f'the selling volume is {main_product_buy_volume}, and the buying volumes are {[component_1_sell_volume, component_2_sell_volume, component_3_sell_volume]}', 'debug')
 
                 if normalized_min_volume != 0:
-                    main_product_orders.append(
-                        Order(main_product, main_product_buy_price, main_product_buy_volume))
-                    component_1_orders.append(
-                        Order(component_1, component_1_sell_price, -component_1_sell_volume))
-                    component_2_orders.append(
-                        Order(component_2, component_2_sell_price, -component_2_sell_volume))
-                    component_3_orders.append(
-                        Order(component_3, component_3_sell_price, -component_3_sell_volume))
+                    main_product_orders.append(Order(main_product, main_product_buy_price, main_product_buy_volume))
+                    component_1_orders.append(Order(component_1, component_1_sell_price, -component_1_sell_volume))
+                    component_2_orders.append(Order(component_2, component_2_sell_price, -component_2_sell_volume))
+                    component_3_orders.append(Order(component_3, component_3_sell_price, -component_3_sell_volume))
             if normalized_min_volume < abs(main_product_position):
                 self.clearing_flag = True
             else:
                 self.clearing_flag = False
-
+            
         # push in the current difference into differences window
-        self.difference_between_main_product_and_components_window.push(
-            current_difference)
+        self.difference_between_main_product_and_components_window.push(current_difference)
 
         return main_product_orders, component_1_orders, component_2_orders, component_3_orders
-    
-    def stop_loss_clear_volume(self, product, product_position, best_ask, best_bid, 
-                               best_ask_volume, best_bid_volume):
-        # execute trade to return product position to zero
-        orders = []
-        if product_position < 0:
-            buy_price = best_ask
-            buy_volume = min(abs(product_position), best_ask_volume)
-            if buy_volume != 0:
-                orders.append(Order(product, buy_price, buy_volume))
-        
-        elif product_position > 0:
-            sell_price = best_bid
-            sell_volume = min(abs(product_position), best_bid_volume)
-
-
-
 
 
 class OurLogger:
