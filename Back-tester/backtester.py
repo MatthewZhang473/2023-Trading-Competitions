@@ -1,4 +1,4 @@
-from dontlooseshells_algo import Trader
+from ruige_berry_backtest import Trader
 
 from datamodel import *
 from typing import Any  #, Callable
