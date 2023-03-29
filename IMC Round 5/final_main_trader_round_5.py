@@ -24,7 +24,7 @@ class Trader:
             "BANANAS": -10000,
             "PEARLS": -10000,
             "COCONUTS": -10000,
-            "PINA_COLADAS": 10000,
+            "PINA_COLADAS": -10000,
             'DIVING_GEAR': -10000,
             "BERRIES": -10000,
             "BAGUETTE": -5000,
