@@ -107,6 +107,10 @@ class Trader:
         self.difference_between_main_product_and_components_window = Window(50)
         self.clearing_flag = False
 
+
+        ### Lambda Reset Checker ###
+        self.resetted = True
+
         self.position_limits = {
             "BANANAS": 20,
             "PEARLS": 20,
@@ -370,15 +374,16 @@ class Trader:
         market_trades = state.market_trades # this returns a a dictionary, with keys being the products and values being lists of trade objects for that product
         BERRIES = 'BERRIES'
         OLIVIA = 'Olivia'
-        for trade in market_trades[BERRIES]: 
-            self.logger.log(f'the buyer is {trade.buyer}','debug')
-            self.logger.log(f'the seller is {trade.seller}','debug')
-            if trade.buyer == OLIVIA:
-                self.olivia_buy_flag = True
-                self.logger.log(f'{OLIVIA} buys, triggering {BERRIES} buy flag to {self.olivia_buy_flag}', 'debug')
-            elif trade.seller == OLIVIA:
-                self.olivia_sell_flag = True
-                self.logger.log(f'{OLIVIA} sells, triggering {BERRIES} sell flag to {self.olivia_sell_flag}', 'debug')
+        if BERRIES in market_trades.keys():
+            for trade in market_trades[BERRIES]: 
+                self.logger.log(f'the buyer is {trade.buyer}','debug')
+                self.logger.log(f'the seller is {trade.seller}','debug')
+                if trade.buyer == OLIVIA:
+                    self.olivia_buy_flag = True
+                    self.logger.log(f'{OLIVIA} buys, triggering {BERRIES} buy flag to {self.olivia_buy_flag}', 'debug')
+                elif trade.seller == OLIVIA:
+                    self.olivia_sell_flag = True
+                    self.logger.log(f'{OLIVIA} sells, triggering {BERRIES} sell flag to {self.olivia_sell_flag}', 'debug')
 
 
         BERRIES = "BERRIES"
@@ -490,6 +495,9 @@ class Trader:
             self.logger.log(
                 f"{PICNIC_BASKET} clearing because of profit {profits[PICNIC_BASKET] + profits[BAGUETTE] + profits[DIP] + profits[UKULELE]} below {self.profit_threshold[PICNIC_BASKET] + self.profit_threshold[BAGUETTE] + self.profit_threshold[DIP] + self.profit_threshold[UKULELE]}", "important")
 
+        ### Reset check ###
+        # you can check in all functions that if resetted is True.
+        self.resetted = False
 
         ### RETURN RESULT ###
         self.logger.divider_big()
@@ -1158,7 +1166,7 @@ class Trader:
 
         self.new_arbitrage_short_term_flag_duration_counter -=1 if self.new_arbitrage_short_term_flag_duration_counter >0 else 0
         # if not enough points to tell if we are in short term or long term
-        if timestamp <= self.new_arbitrage_zero_counter_window.size*100:
+        if len(self.new_arbitrage_zero_counter_window.contents) < self.new_arbitrage_zero_counter_window.size:
             self.logger.log(f'enter short term trade because not enough 0 counter with size of zero counter: {len(self.new_arbitrage_zero_counter_window.contents)}', 'debug')
             self.new_arbitrage_short_term_flag = True
             self.new_arbitrage_long_term_flag = False
