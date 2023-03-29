@@ -11,6 +11,17 @@ class Trader:
 
     def __init__(self) -> None:
 
+        self.products = ["BANANAS",
+            "PEARLS",
+            "COCONUTS",
+            "PINA_COLADAS",
+            'DIVING_GEAR',
+            "BERRIES",
+            "BAGUETTE",
+            "DIP",
+            "UKULELE",
+            "PICNIC_BASKET"]
+
         # {product : negative profit threshold to stop trading}
         self.profit_threshold = {
             "BANANAS": -10000,
@@ -112,23 +123,49 @@ class Trader:
         }
 
         # comment out a category to disable it in the logs
-        self.our_logger = OurLogger(
-            self.logger,
+        self.our_logger = OurLogger(self.logger,
             [
-                "format",
-                "important",
-                "timestamp",
-                "bananas",
-                "position",
-                "profit",
-                "final_profit",
-                "cash",
-                "error",
-                "debug",
-                "mid_price",
-                "orders",
-                "default",
-            ])
+            "format",
+            "important",
+            "timestamp",
+            "bananas",
+            "position",
+            "profit",
+            "final_profit",
+            "cash",
+            "error",
+            "debug",
+            "mid_price",
+            "orders",
+            "default",
+        ])
+
+        self.traders = ['Peter', 
+                        'Gary', 
+                        'Mitch', 
+                        'Penelope', 
+                        'Omar', 
+                        'Camilla', 
+                        'Caesar', 
+                        'Giulia', 
+                        'Mabel',
+                        'Pablo', 
+                        'Charlie',
+                        'Olivia',
+                        'Orson',
+                        'Casey',
+                        'George',
+                        'Mya',
+                        'Max',
+                        'Paris',
+                        'Gina',
+                        'Olga'
+                        ]
+        self.olivia_buy_flag = False
+        self.olivia_sell_flag = False
+        self.paris_buy_flag = False
+        self.paris_sell_flag = False
+        self.olivia_takeover = False
 
     def calculate_cash(self, own_trades: Dict[Symbol, List[Trade]], now) -> None:
         self.our_logger.log([[(trades.timestamp, trades.buyer, trades.seller,
@@ -214,7 +251,7 @@ class Trader:
         if state.timestamp == self.LAST_ROUND:
             self.our_logger.log(f"final profit = {profits}", "final_profit")
 
-        # self.logger.log(state.toJSON(), "debug")
+        # self.our_logger.log(state.toJSON(), "debug")
 
         ### TRADING ALGORITHM ###
 
@@ -323,13 +360,29 @@ class Trader:
                 f"{DIVING_GEAR} stop trading because of profit {profits[DIVING_GEAR]} below {self.profit_threshold[DIVING_GEAR]} OR", "important")
 
         ### BERRIES ###
+        # Key information: OLIVIA
+        ### Other traders ###
+        market_trades = state.market_trades # this returns a a dictionary, with keys being the products and values being lists of trade objects for that product
+        BERRIES = 'BERRIES'
+        OLIVIA = 'Olivia'
+        for trade in market_trades[BERRIES]: 
+            self.our_logger.log(f'the buyer is {trade.buyer}','debug')
+            self.our_logger.log(f'the seller is {trade.seller}','debug')
+            if trade.buyer == OLIVIA:
+                self.olivia_buy_flag = True
+                self.our_logger.log(f'{OLIVIA} buys, triggering {BERRIES} buy flag to {self.olivia_buy_flag}', 'debug')
+            elif trade.seller == OLIVIA:
+                self.olivia_sell_flag = True
+                self.our_logger.log(f'{OLIVIA} sells, triggering {BERRIES} sell flag to {self.olivia_sell_flag}', 'debug')
+
+
         BERRIES = "BERRIES"
         if profits[BERRIES] > self.profit_threshold[BERRIES]:
-            berries_orders = self.mayberry_calc(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
+            berries_orders = self.mayberry_calc_olivia(timestamp=state.timestamp, product=BERRIES, window=self.mayberry_window,
                                                 mid_price=mid_prices[BERRIES],
                                                 best_bid=best_bids[BERRIES], best_ask=best_asks[BERRIES],
-                                                best_bid_volume=state.order_depths[
-                                                    BERRIES].buy_orders[best_bids[BERRIES]],
+                                                best_bid_volume=abs(state.order_depths[
+                                                    BERRIES].buy_orders[best_bids[BERRIES]]),
                                                 best_ask_volume=abs(
                                                     state.order_depths[BERRIES].sell_orders[best_asks[BERRIES]]),
                                                 position_limit=self.position_limits[BERRIES], position=positions[BERRIES])
@@ -340,7 +393,6 @@ class Trader:
         else:
             self.our_logger.log(
                 f"{BERRIES} stop trading because of profit {profits[BERRIES]} below {self.profit_threshold[BERRIES]}", "important")
-
         ### PICNIC BASKETS ###
         PICNIC_BASKET = 'PICNIC_BASKET'
         BAGUETTE = 'BAGUETTE'
@@ -1330,6 +1382,57 @@ class Trader:
                     position_limit-position, best_ask_volume)))
 
         return orders
+    def mayberry_calc_olivia(self, timestamp, product: Product, window,
+                      mid_price,
+                      best_bid, best_ask,
+                      best_bid_volume, best_ask_volume,
+                      position_limit, position):
+        
+        orders = []
+        PLATEAU_START = 3500 * 100
+        UPWARD_START = 4500 * 100
+        # DOWNWARD_START = 7000 * 100
+        # renbuliaole_threshold = 20
+
+        long_term_average_price = window.avg()
+
+
+        # determine when we can sit back and wait
+        if position == position_limit and self.olivia_buy_flag == True:
+            self.olivia_buy_flag = False
+            self.our_logger.log(f'we can stop buying now, setting olivia buy flag to {self.olivia_buy_flag} and sit back for the next time olivia sells', 'debug')
+
+        elif position == -position_limit and self.olivia_sell_flag == True:
+            self.olivia_sell_flag = False
+            self.our_logger.log(f'we can stop selling now, setting olivia sell flag to {self.olivia_sell_flag} and sit back for the next time olivia buys', 'debug')
+
+        # three action scenarios
+        if (timestamp >= PLATEAU_START) and (timestamp < UPWARD_START) and self.olivia_takeover == False:
+            if mid_price > long_term_average_price and not self.start_done:
+                # buy to limit
+                if position == position_limit:
+                    self.start_done = True
+                self.our_logger.log("BERRIES decide to buy to limit", "debug")
+                orders.append(Order(product, best_ask, min(
+                    position_limit-position, best_ask_volume)))
+        
+        if self.olivia_sell_flag:
+            # sell to limit
+            self.our_logger.log(f"BERRIES decide to sell to limit because olivia sell flag is {self.olivia_sell_flag}", "debug")
+            orders.append(Order(product, best_bid, -
+                            min(best_bid_volume, position+position_limit)))
+            self.olivia_takeover = True
+        
+        if self.olivia_buy_flag:
+            # buy to limit
+            self.our_logger.log(f"BERRIES decide to sell to limit because olivia sell flag is {self.olivia_buy_flag}", "debug")
+            orders.append(Order(product, best_ask, min(
+                    position_limit-position, best_ask_volume)))
+            self.olivia_takeover = True
+            
+        
+        return orders
+
 
     def difference_mean_reversion(self, timestamp, components: list, main_product_to_components_ratios: dict,
                                   components_best_bid_prices: dict, components_best_ask_prices: dict, components_best_bid_volumes: dict,
@@ -1562,6 +1665,23 @@ class Trader:
             current_difference)
 
         return main_product_orders, component_1_orders, component_2_orders, component_3_orders
+    
+    def stop_loss_clear_volume(self, product, product_position, best_ask, best_bid, 
+                               best_ask_volume, best_bid_volume):
+        # execute trade to return product position to zero
+        orders = []
+        if product_position < 0:
+            buy_price = best_ask
+            buy_volume = min(abs(product_position), best_ask_volume)
+            if buy_volume != 0:
+                orders.append(Order(product, buy_price, buy_volume))
+        
+        elif product_position > 0:
+            sell_price = best_bid
+            sell_volume = min(abs(product_position), best_bid_volume)
+
+
+
 
 
 class OurLogger:

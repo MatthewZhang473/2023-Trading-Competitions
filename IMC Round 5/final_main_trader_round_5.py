@@ -23,14 +23,14 @@ class Trader:
         self.profit_threshold = {
             "BANANAS": -10000,
             "PEARLS": -10000,
-            "COCONUTS": -7500,
-            "PINA_COLADAS": -7500,
-            'DIVING_GEAR': -10000,
+            "COCONUTS": 0,
+            "PINA_COLADAS": 0,
+            'DIVING_GEAR': 0,
             "BERRIES": -10000,
-            "BAGUETTE": -5000,
-            "DIP": -5000,
-            "UKULELE": -5000,
-            "PICNIC_BASKET": -5000,
+            "BAGUETTE": 0,
+            "DIP": 0,
+            "UKULELE": 0,
+            "PICNIC_BASKET": 0,
         }
 
         # init cash
@@ -283,21 +283,21 @@ class Trader:
         ## COCONUT AND PINA COLADAS TRADING ###
         COCONUTS = "COCONUTS"
         PINA_COLADAS = "PINA_COLADAS"
+        ## COCONUT AND PINA COLADAS TRADING ###
+        COCONUTS = "COCONUTS"
+        PINA_COLADAS = "PINA_COLADAS"
+        COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
+        COCONUTS_LOT_SIZE = 15
+        PINA_COLADAS_LOT_SIZE = 8
+        COCONUTS_best_bid_price = best_bids[COCONUTS]
+        COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
+        COCONUTS_best_ask_price = best_asks[COCONUTS]
+        COCONUTS_best_ask_volume = abs(state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
+        PINAS_best_bid_price = best_bids[PINA_COLADAS]
+        PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
+        PINAS_best_ask_price = best_asks[PINA_COLADAS]
+        PINAS_best_ask_volume = abs(state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
         if profits[COCONUTS] + profits[PINA_COLADAS] > self.profit_threshold[COCONUTS] + self.profit_threshold[PINA_COLADAS]:
-            ## COCONUT AND PINA COLADAS TRADING ###
-            COCONUTS = "COCONUTS"
-            PINA_COLADAS = "PINA_COLADAS"
-            COCONUTS_OVER_PINAS_VALUE_RATIO = 8/15
-            COCONUTS_LOT_SIZE = 15
-            PINA_COLADAS_LOT_SIZE = 8
-            COCONUTS_best_bid_price = best_bids[COCONUTS]
-            COCONUTS_best_bid_volume = state.order_depths[COCONUTS].buy_orders[COCONUTS_best_bid_price]
-            COCONUTS_best_ask_price = best_asks[COCONUTS]
-            COCONUTS_best_ask_volume = abs(state.order_depths[COCONUTS].sell_orders[COCONUTS_best_ask_price])
-            PINAS_best_bid_price = best_bids[PINA_COLADAS]
-            PINAS_best_bid_volume = state.order_depths[PINA_COLADAS].buy_orders[PINAS_best_bid_price]
-            PINAS_best_ask_price = best_asks[PINA_COLADAS]
-            PINAS_best_ask_volume = abs(state.order_depths[PINA_COLADAS].sell_orders[PINAS_best_ask_price])
             arbitrage_COCONUTS_orders, arbitrage_PINAS_orders =\
                 self.arbitrage_calc(timestamp=state.timestamp,
                                     product_1=COCONUTS, product_2=PINA_COLADAS,
@@ -323,25 +323,34 @@ class Trader:
             self.logger.log(
                 f"Making PINAS orders by arbitrage:\n{arbitrage_PINAS_orders}", "orders")
         else:
+            arbitrage_COCONUTS_orders = self.stop_loss_clear_volume(COCONUTS, state.position[COCONUTS], COCONUTS_best_ask_price,
+                                                                    COCONUTS_best_bid_price, COCONUTS_best_ask_volume, COCONUTS_best_bid_volume)
+
+            arbitrage_PINAS_orders = self.stop_loss_clear_volume(PINA_COLADAS, state.position[PINA_COLADAS], PINAS_best_ask_price,
+                                                                    PINAS_best_bid_price, PINAS_best_ask_volume, PINAS_best_bid_volume)
+
+
+            result[COCONUTS] = arbitrage_COCONUTS_orders
+            result[PINA_COLADAS] = arbitrage_PINAS_orders
             self.logger.log(
-                f"{COCONUTS} stop trading because of profit {profits[COCONUTS]} below {self.profit_threshold[COCONUTS]} OR", "important")
+                f"{COCONUTS} clearing because of profit {profits[COCONUTS]} below {self.profit_threshold[COCONUTS]} OR", "important")
             self.logger.log(
-                f"{PINA_COLADAS} stop trading because of profit {profits[PINA_COLADAS]} below {self.profit_threshold[PINA_COLADAS]}", "important")
+                f"{PINA_COLADAS} clearing because of profit {profits[PINA_COLADAS]} below {self.profit_threshold[PINA_COLADAS]}", "important")
 
         ### DIVING_GEAR trade ###
         DIVING_GEAR = 'DIVING_GEAR'
-        if profits[DIVING_GEAR] > self.profit_threshold[DIVING_GEAR]:
-            indicator = 'DOLPHIN_SIGHTINGS'
-            indicator_mid_price = state.observations[indicator]
+        indicator = 'DOLPHIN_SIGHTINGS'
+        indicator_mid_price = state.observations[indicator]
 
-            DIVING_GEAR_best_bid_price = best_bids[DIVING_GEAR]
-            DIVING_GEAR_best_bid_volume = state.order_depths[
-                DIVING_GEAR].buy_orders[DIVING_GEAR_best_bid_price]
-            DIVING_GEAR_best_ask_price = best_asks[DIVING_GEAR]
-            DIVING_GEAR_best_ask_volume = abs(
-                state.order_depths[DIVING_GEAR].sell_orders[DIVING_GEAR_best_ask_price])
-            DIVING_GEAR_position = positions[DIVING_GEAR]
-            DIVING_GEAR_position_limit = self.position_limits[DIVING_GEAR]
+        DIVING_GEAR_best_bid_price = best_bids[DIVING_GEAR]
+        DIVING_GEAR_best_bid_volume = state.order_depths[
+            DIVING_GEAR].buy_orders[DIVING_GEAR_best_bid_price]
+        DIVING_GEAR_best_ask_price = best_asks[DIVING_GEAR]
+        DIVING_GEAR_best_ask_volume = abs(
+            state.order_depths[DIVING_GEAR].sell_orders[DIVING_GEAR_best_ask_price])
+        DIVING_GEAR_position = positions[DIVING_GEAR]
+        DIVING_GEAR_position_limit = self.position_limits[DIVING_GEAR]
+        if profits[DIVING_GEAR] > self.profit_threshold[DIVING_GEAR]:
 
             diving_gear_orders = self.indicator_trade(state.timestamp, DIVING_GEAR, indicator_mid_price, DIVING_GEAR_best_bid_price,
                                                       DIVING_GEAR_best_bid_volume, DIVING_GEAR_best_ask_price, DIVING_GEAR_best_ask_volume,
@@ -350,6 +359,9 @@ class Trader:
             self.logger.log(
                 f'{DIVING_GEAR} window indicator trade: {diving_gear_orders}', 'orders')
         else:
+            diving_gear_orders = self.stop_loss_clear_volume(DIVING_GEAR, DIVING_GEAR_position, DIVING_GEAR_best_ask_price, DIVING_GEAR_best_bid_price,
+                                                             DIVING_GEAR_best_ask_volume, DIVING_GEAR_best_bid_volume)
+            result[DIVING_GEAR] = diving_gear_orders
             self.logger.log(
                 f"{DIVING_GEAR} stop trading because of profit {profits[DIVING_GEAR]} below {self.profit_threshold[DIVING_GEAR]} OR", "important")
 
@@ -410,31 +422,33 @@ class Trader:
         DIP = 'DIP'
         UKULELE = 'UKULELE'
 
+        # preprocessing for components
+        components = [BAGUETTE, DIP, UKULELE]
+        best_bid_prices = [best_bids[i] for i in components]
+        best_ask_prices = [best_asks[i] for i in components]
+        components_best_bid_prices = dict(zip(components, best_bid_prices))
+        components_best_ask_prices = dict(zip(components, best_ask_prices))
+        components_positions = {component:positions[component] for component in components}
+        components_position_limits = {component:self.position_limits[component] for component in components}
+
+        components_best_bid_volumes = {best_bid_price: abs(state.order_depths[component].buy_orders[best_bid_price]) for component, best_bid_price in components_best_bid_prices.items()}
+        components_best_ask_volumes = {best_ask_price: abs(state.order_depths[component].sell_orders[best_ask_price]) for component, best_ask_price in components_best_ask_prices.items()}
+
+        # define main product to component volume ratios
+        ratios = [2, 4, 1]
+        main_product_to_components_ratios = dict(zip(components, ratios))
+
+        # preprocessing for the main product 
+        main_product = PICNIC_BASKET
+        main_product_best_bid_price = best_bids[PICNIC_BASKET]
+        main_product_best_ask_price = best_asks[PICNIC_BASKET]
+        main_product_best_bid_volume = abs(state.order_depths[PICNIC_BASKET].buy_orders[main_product_best_bid_price])
+        main_product_best_ask_volume = abs(state.order_depths[PICNIC_BASKET].sell_orders[main_product_best_ask_price])
+        main_product_position = positions[PICNIC_BASKET]
+        main_product_position_limit = self.position_limits[PICNIC_BASKET]
+
+
         if profits[PICNIC_BASKET] + profits[BAGUETTE] + profits[DIP] + profits[UKULELE] > self.profit_threshold[PICNIC_BASKET] + self.profit_threshold[BAGUETTE] + self.profit_threshold[DIP] + self.profit_threshold[UKULELE]:
-            # preprocessing for components
-            components = [BAGUETTE, DIP, UKULELE]
-            best_bid_prices = [best_bids[i] for i in components]
-            best_ask_prices = [best_asks[i] for i in components]
-            components_best_bid_prices = dict(zip(components, best_bid_prices))
-            components_best_ask_prices = dict(zip(components, best_ask_prices))
-            components_positions = {component:positions[component] for component in components}
-            components_position_limits = {component:self.position_limits[component] for component in components}
-
-            components_best_bid_volumes = {best_bid_price: abs(state.order_depths[component].buy_orders[best_bid_price]) for component, best_bid_price in components_best_bid_prices.items()}
-            components_best_ask_volumes = {best_ask_price: abs(state.order_depths[component].sell_orders[best_ask_price]) for component, best_ask_price in components_best_ask_prices.items()}
-
-            # define main product to component volume ratios
-            ratios = [2, 4, 1]
-            main_product_to_components_ratios = dict(zip(components, ratios))
-
-            # preprocessing for the main product 
-            main_product = PICNIC_BASKET
-            main_product_best_bid_price = best_bids[PICNIC_BASKET]
-            main_product_best_ask_price = best_asks[PICNIC_BASKET]
-            main_product_best_bid_volume = abs(state.order_depths[PICNIC_BASKET].buy_orders[main_product_best_bid_price])
-            main_product_best_ask_volume = abs(state.order_depths[PICNIC_BASKET].sell_orders[main_product_best_ask_price])
-            main_product_position = positions[PICNIC_BASKET]
-            main_product_position_limit = self.position_limits[PICNIC_BASKET]
 
             main_product_orders, component_1_orders, component_2_orders, component_3_orders = self.difference_mean_reversion(state.timestamp, components, main_product_to_components_ratios, 
                                     components_best_bid_prices, components_best_ask_prices, components_best_bid_volumes, 
@@ -456,8 +470,26 @@ class Trader:
             self.logger.log(
                 f"UKULELE: {component_3_orders}", "orders")
         else:
+            main_product_orders = self.stop_loss_clear_volume(main_product, main_product_position, main_product_best_ask_price, main_product_best_bid_price,
+                                                              main_product_best_ask_volume, main_product_best_bid_volume)
+            component_1, component_2, component_3 = components
+            component_1_orders = self.stop_loss_clear_volume(component_1, components_positions[component_1], components_best_ask_prices[component_1],
+                                                             components_best_bid_prices[component_1], components_best_ask_volumes[components_best_ask_prices[component_1]],
+                                                             components_best_bid_volumes[components_best_bid_prices[component_1]])
+            component_2_orders = self.stop_loss_clear_volume(component_2, components_positions[component_2], components_best_ask_prices[component_2],
+                                                             components_best_bid_prices[component_2], components_best_ask_volumes[components_best_ask_prices[component_2]],
+                                                             components_best_bid_volumes[components_best_bid_prices[component_2]])
+            component_3_orders = self.stop_loss_clear_volume(component_3, components_positions[component_3], components_best_ask_prices[component_3],
+                                                             components_best_bid_prices[component_3], components_best_ask_volumes[components_best_ask_prices[component_3]],
+                                                             components_best_bid_volumes[components_best_bid_prices[component_3]])
+            
+            result[PICNIC_BASKET] = main_product_orders
+            result[BAGUETTE] = component_1_orders
+            result[DIP] = component_2_orders
+            result[UKULELE] = component_3_orders
+
             self.logger.log(
-                f"{PICNIC_BASKET} stop trading because of profit {profits[PICNIC_BASKET] + profits[BAGUETTE] + profits[DIP] + profits[UKULELE]} below {self.profit_threshold[PICNIC_BASKET] + self.profit_threshold[BAGUETTE] + self.profit_threshold[DIP] + self.profit_threshold[UKULELE]}", "important")
+                f"{PICNIC_BASKET} clearing because of profit {profits[PICNIC_BASKET] + profits[BAGUETTE] + profits[DIP] + profits[UKULELE]} below {self.profit_threshold[PICNIC_BASKET] + self.profit_threshold[BAGUETTE] + self.profit_threshold[DIP] + self.profit_threshold[UKULELE]}", "important")
 
 
         ### RETURN RESULT ###
@@ -1573,13 +1605,13 @@ class Trader:
         orders = []
         if product_position < 0:
             buy_price = best_ask
-            buy_volume = min(abs(product_position), best_ask_volume)
+            buy_volume = min(abs(product_position), abs(best_ask_volume))
             if buy_volume != 0:
                 orders.append(Order(product, buy_price, buy_volume))
         
         elif product_position > 0:
             sell_price = best_bid
-            sell_volume = min(abs(product_position), best_bid_volume)
+            sell_volume = min(abs(product_position), abs(best_bid_volume))
             if sell_volume != 0:
                 orders.append(Order(product, sell_price, -sell_volume))
         
